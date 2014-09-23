@@ -1,0 +1,8 @@
+Package: pretty
+Title: What the package does (one line)
+Version: 0.1
+Authors@R: "First Last <first.last@example.com> [aut, cre]"
+Description: What the package does (one paragraph)
+Depends: R (>= 3.1.1)
+License: What license is it under?
+LazyData: true
