@@ -1,8 +1,13 @@
 Package: pretty
-Title: What the package does (one line)
-Version: 0.1
-Authors@R: "First Last <first.last@example.com> [aut, cre]"
-Description: What the package does (one paragraph)
-Depends: R (>= 3.1.1)
-License: What license is it under?
+Title: Pretty Command Line Applications
+Version: 1.0.0
+Authors@R: "Gabor Csardi <csardi.gabor@gmail.com> [aut, cre]"
+Description: Various tools to provide a prettier command line user
+    interface from R packages. Pretty symbols, file sizes,
+    time intervals, tables, progress bars, sparklines.
+License: MIT + file LICENSE
 LazyData: true
+URL: https://github.com/gaborcsardi/pretty
+BugReports: https://github.com/gaborcsardi/pretty/issues
+Imports:
+    crayon
