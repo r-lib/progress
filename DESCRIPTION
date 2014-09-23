@@ -10,4 +10,5 @@ LazyData: true
 URL: https://github.com/gaborcsardi/pretty
 BugReports: https://github.com/gaborcsardi/pretty/issues
 Imports:
-    crayon
+    crayon,
+    magrittr
