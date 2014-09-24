@@ -3,5 +3,6 @@
 export(pretty_dt)
 export(pretty_ms)
 export(pretty_sec)
+export(signs)
 importFrom(crayon,has_color)
 importFrom(magrittr,"%>%")
