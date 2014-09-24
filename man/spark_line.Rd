@@ -3,13 +3,20 @@
 \alias{spark_line}
 \title{Spark line of a numeric vector on the terminal}
 \usage{
-spark_line(data)
+spark_line(data, width = c("data", "auto", "screen"))
 }
 \arguments{
 \item{data}{The data to visualize. It can be a numeric
 vector, or anything that can be cut into intervals
 with \code{cut}. Infinite values in numeric data are ignored,
 and a black character is plotted instead of them.}
+
+\item{width}{The width (number of characters) of the output.
+\sQuote{data} means that it will match the length of the data.
+\sQuote{screen} means that it will be scaled to match the
+width of the screen. \sQuote{auto} means \sQuote{data}
+if the length of the data is not longer than the screen width,
+and \sQuote{screen} otherwise.}
 }
 \value{
 Character scalar containing the spark line.
