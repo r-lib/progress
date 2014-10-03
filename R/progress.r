@@ -112,6 +112,7 @@ pb_tick <- function(self, private, len) {
 }
 
 #' @importFrom magrittr subtract
+#' @importFrom prettyunits vague_dt
 
 pb_render <- function(self, private) {
   if (!isatty(private$stream)) return(invisible())

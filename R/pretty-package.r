@@ -1,9 +1,8 @@
 
-#' Prettier command line user interface
+#' Progress bar in your terminal
 #'
 #' @docType package
-#' @name pretty
-#' @importFrom crayon has_color
+#' @name progress
 #' @importFrom magrittr %>%
 NULL
 

@@ -3,7 +3,7 @@
 \name{progress_bar}
 \alias{progress_bar}
 \title{Progress bar on the terminal}
-\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x7f91f32d52b0> 
+\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x7fd254921d08> 
  - attr(*, "name")= chr "progress_bar_generator"
 }}
 \usage{

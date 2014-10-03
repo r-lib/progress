@@ -1,16 +1,13 @@
-Package: pretty
-Title: Pretty Command Line Applications
+Package: progress
+Title: Progress Bar in Your Terminal
 Version: 1.0.0
 Authors@R: "Gabor Csardi <csardi.gabor@gmail.com> [aut, cre]"
-Description: Various tools to provide a prettier command line user
-    interface from R packages. Pretty symbols, file sizes,
-    time intervals, tables, progress bars, sparklines.
+Description: Progress bar in your terminal.
 License: MIT + file LICENSE
 LazyData: true
-URL: https://github.com/gaborcsardi/pretty
-BugReports: https://github.com/gaborcsardi/pretty/issues
+URL: https://github.com/gaborcsardi/progress
+BugReports: https://github.com/gaborcsardi/progress/issues
 Imports:
-    crayon,
+    prettyunits,
     magrittr,
-    assertthat,
     R6

@@ -1,13 +1,4 @@
 
-#' @importFrom assertthat assert_that is.string
-
-`%s%` <- function(lhs, rhs) {
-  assert_that(is.string(lhs))
-  list(lhs) %>%
-    c(as.list(rhs)) %>%
-    do.call(what = sprintf)
-}
-
 clear_line <- function(tty, width) {
   if (!isatty(tty)) { return(invisible()) }
   str <- paste0(c("\r", rep(" ", width)), collapse = "")
@@ -68,8 +59,4 @@ assert_function <- function(x) {
 
 assert_flag <- function(x) {
   stopifnot(is.logical(x), length(x) == 1, !is.na(x))
-}
-
-assert_diff_time <- function(x) {
-  stopifnot(inherits(x, "difftime"))
 }
