@@ -12,4 +12,5 @@ BugReports: https://github.com/gaborcsardi/pretty/issues
 Imports:
     crayon,
     magrittr,
-    assertthat
+    assertthat,
+    R6
