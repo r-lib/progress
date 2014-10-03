@@ -69,3 +69,7 @@ assert_function <- function(x) {
 assert_flag <- function(x) {
   stopifnot(is.logical(x), length(x) == 1, !is.na(x))
 }
+
+assert_diff_time <- function(x) {
+  stopifnot(inherits(x, "difftime"))
+}

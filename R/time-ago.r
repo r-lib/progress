@@ -1,7 +1,7 @@
 
 e <- expression
 
-time_ago_default <- list(
+vague_dt_default <- list(
   list(c = e(seconds < 10), s = "moments ago"),
   list(c = e(seconds < 45), s = "less than a minute ago"),
   list(c = e(seconds < 90), s = "about a minute ago"),
@@ -16,7 +16,7 @@ time_ago_default <- list(
   list(c = TRUE,            s = e("%d years ago" %s% round(years)))
 )
 
-time_ago_short <- list(
+vague_dt_short <- list(
   list(c = e(seconds < 50), s = "<1 min"),
   list(c = e(minutes < 50), s = e("%d min" %s% round(minutes))),
   list(c = e(hours < 1.5),  s = "1 hour"),
@@ -29,7 +29,7 @@ time_ago_short <- list(
   list(c = TRUE,            s = e("%d years" %s% round(years)))
 )
 
-time_ago_terse <- list(
+vague_dt_terse <- list(
   list(c = e(seconds < 50), s = e("%2ds" %s% round(seconds))),
   list(c = e(minutes < 50), s = e("%2dm" %s% round(minutes))),
   list(c = e(hours < 18),   s = e("%2dh" %s% round(hours))),
@@ -38,13 +38,15 @@ time_ago_terse <- list(
   list(c = TRUE,            s = e("%2dy" %s% round(years)))
 )
 
-time_ago_formats <- list(
-  "default" = time_ago_default,
-  "short" = time_ago_short,
-  "terse" = time_ago_terse
+vague_dt_formats <- list(
+  "default" = vague_dt_default,
+  "short" = vague_dt_short,
+  "terse" = vague_dt_terse
 )
 
 #' Human readable format of the time interval since a time point
+#'
+#' It calls \code{\link{vague_dt}} to do the actual formatting.
 #'
 #' @param date Date(s), \code{as.POSIXct} will be called on them.
 #' @param format Format, currently available formats are:
@@ -91,13 +93,58 @@ time_ago <- function(date, format = c("default", "short", "terse")) {
 
   date <- as.POSIXct(date)
 
-  if (length(date) > 1) return(sapply(date, time_ago))
-
-  format <- match.arg(format)
+  if (length(date) > 1) return(sapply(date, time_ago, format = format))
 
   seconds <- Sys.time() %>%
-    difftime(date, units = "secs") %>%
-    as.vector()
+    difftime(date, units = "secs")
+
+  vague_dt(seconds, format = format)
+}
+
+#' Human readable format of a time interval
+#'
+#' @param dt A \code{difftime} object, the time interval(s).
+#' @param format Format, currently available formats are:
+#'   \sQuote{default}, \sQuote{short}, \sQuote{terse}. See examples below.
+#' @return Character vector of the formatted time intervals.
+#'
+#' @export
+#' @examples
+#' vague_dt(as.difftime(30, units = "secs"))
+#' vague_dt(as.difftime(14, units = "mins"))
+#' vague_dt(as.difftime(5, units = "hours"))
+#' vague_dt(as.difftime(25, units = "hours"))
+#' vague_dt(as.difftime(5, units = "days"))
+#' vague_dt(as.difftime(30, units = "days"))
+#' vague_dt(as.difftime(365, units = "days"))
+#' vague_dt(as.difftime(365 * 10, units = "days"))
+#'
+#' ## Short format
+#' vague_dt(format = "short", as.difftime(30, units = "secs"))
+#' vague_dt(format = "short", as.difftime(14, units = "mins"))
+#' vague_dt(format = "short", as.difftime(5, units = "hours"))
+#' vague_dt(format = "short", as.difftime(25, units = "hours"))
+#' vague_dt(format = "short", as.difftime(5, units = "days"))
+#' vague_dt(format = "short", as.difftime(30, units = "days"))
+#' vague_dt(format = "short", as.difftime(365, units = "days"))
+#' vague_dt(format = "short", as.difftime(365 * 10, units = "days"))
+#'
+#' ## Even shorter, terse format, (almost always) exactly 3 characters wide
+#' vague_dt(format = "terse", as.difftime(30, units = "secs"))
+#' vague_dt(format = "terse", as.difftime(14, units = "mins"))
+#' vague_dt(format = "terse", as.difftime(5, units = "hours"))
+#' vague_dt(format = "terse", as.difftime(25, units = "hours"))
+#' vague_dt(format = "terse", as.difftime(5, units = "days"))
+#' vague_dt(format = "terse", as.difftime(30, units = "days"))
+#' vague_dt(format = "terse", as.difftime(365, units = "days"))
+#' vague_dt(format = "terse", as.difftime(365 * 10, units = "days"))
+
+vague_dt <- function(dt, format = c("default", "short", "terse")) {
+
+  assert_diff_time(dt)
+
+  units(dt) <- "secs"
+  seconds <- as.vector(dt)
 
   pieces <- list(
     minutes = seconds / 60,
@@ -106,7 +153,9 @@ time_ago <- function(date, format = c("default", "short", "terse")) {
     years = seconds / 60 / 60 / 24 / 365.25
   )
 
-  for (p in time_ago_formats[[format]]) {
+  format <- match.arg(format)
+
+  for (p in vague_dt_formats[[format]]) {
     if (eval(p$c, pieces)) return(eval(p$s, pieces))
   }
 }
