@@ -7,19 +7,34 @@
 #' @export
 #' @examples
 #'
+#' \dontrun{
 #' pb <- progress_bar$new(total = 100)
 #' for (i in 1:100) {
 #'   pb$tick()
-#'   Sys.sleep(i / 100 * 5)
+#'   Sys.sleep(1 / 100)
 #' }
 #'
+#' pb <- progress_bar$new(format = "  downloading [:bar] :percent eta: :eta",
+#'                        total = 100, clear = FALSE, width= 60)
+#' for (i in 1:100) {
+#'   pb$tick()
+#'   Sys.sleep(1 / 100)
+#' }
+#'
+#' pb <- progress_bar$new(format = "  downloading [:bar] :percent in :elapsed",
+#'                        total = 100, clear = FALSE, width= 60)
+#' for (i in 1:100) {
+#'   pb$tick()
+#'   Sys.sleep(1 / 100)
+#' }
+#' }
 
 progress_bar <- R6Class("progress_bar",
 
   public = list(
 
     initialize = function(format = "[:bar] :percent", total = 100,
-      width = getOption("width"), stream = stderr(), complete = "=",
+      width = getOption("width") - 2, stream = stderr(), complete = "=",
       incomplete = "-", callback = function(self) {}, clear = TRUE) {
         pb_init(self, private, format, total, width, stream, complete,
           incomplete, callback, clear)
@@ -96,24 +111,34 @@ pb_tick <- function(self, private, len) {
   self
 }
 
+#' @importFrom magrittr subtract
+
 pb_render <- function(self, private) {
   if (!isatty(private$stream)) return(invisible())
 
-  ratio <- (private$current / private$total) %>%  max(0) %>% min(1)
+  ratio <- (private$current / private$total) %>%
+    max(0) %>%
+    min(1)
   percent <- ratio * 100
-  elapsed <- Sys.time() %>% subtract(private$start) %>% as.vector()
-  eta <- if (isTRUE(all.equal(percent, 100))) {
+  elapsed_secs <- Sys.time() %>%
+    subtract(private$start)
+  elapsed <- vague_dt(elapsed_secs, format = "terse")
+  eta_secs <- if (isTRUE(all.equal(percent, 100))) {
     0
   } else {
-    elapsed * (private$total / private$current - 1.0)
+    elapsed_secs * (private$total / private$current - 1.0)
   }
+  eta <- eta_secs %>%
+    as.difftime(units = "secs") %>%
+    vague_dt(format = "terse")
 
   str <- private$format %>%
     sub(pattern = ":current", replacement = round(private$current)) %>%
     sub(pattern = ":total", replacement = round(private$total)) %>%
-    sub(pattern = ":elapsed", replacement = round(elapsed, 1)) %>%
-    sub(pattern = ":eta", replacement = round(eta, 1)) %>%
-    sub(pattern = ":percent", replacement = paste0(round(percent), "%"))
+    sub(pattern = ":elapsed", replacement = elapsed) %>%
+    sub(pattern = ":eta", replacement = eta) %>%
+    sub(pattern = ":percent", replacement =
+          paste0(format(round(percent), width = 3), "%"))
 
   bar_width <- str %>%
     sub(pattern = ":bar", replacement = "") %>%
@@ -130,7 +155,9 @@ pb_render <- function(self, private) {
   str <- sub(":bar", paste0(complete, incomplete), str)
 
   if (private$last_draw != str) {
-    clear_line(private$stream, private$width)
+    if (nchar(private$last_draw) > nchar(str)) {
+      clear_line(private$stream, private$width)
+    }
     cursor_to_start(private$stream)
     cat(str, file = private$stream)
     private$last_draw <- str
@@ -139,7 +166,7 @@ pb_render <- function(self, private) {
   self
 }
 
-pb_update <- function(self, rivate, ratio) {
+pb_update <- function(self, private, ratio) {
   assert_ratio(ratio)
   goal <- floor(ratio * private$total)
   private$tick(goal - private$current)
@@ -149,5 +176,7 @@ pb_terminate <- function(self, private) {
   if (private$clear) {
     clear_line(private$stream, private$width)
     cursor_to_start(private$stream)
+  } else {
+    cat("\n")
   }
 }
