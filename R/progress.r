@@ -19,15 +19,17 @@ NULL
 #'   Sys.sleep(1 / 100)
 #' }
 #'
-#' pb <- progress_bar$new(format = "  downloading [:bar] :percent eta: :eta",
-#'                        total = 100, clear = FALSE, width= 60)
+#' pb <- progress_bar$new(
+#'   format = "  downloading [:bar] :percent eta: :eta",
+#'   total = 100, clear = FALSE, width= 60)
 #' for (i in 1:100) {
 #'   pb$tick()
 #'   Sys.sleep(1 / 100)
 #' }
 #'
-#' pb <- progress_bar$new(format = "  downloading [:bar] :percent in :elapsed",
-#'                        total = 100, clear = FALSE, width= 60)
+#' pb <- progress_bar$new(
+#'   format = "  downloading [:bar] :percent in :elapsed",
+#'   total = 100, clear = FALSE, width= 60)
 #' for (i in 1:100) {
 #'   pb$tick()
 #'   Sys.sleep(1 / 100)
