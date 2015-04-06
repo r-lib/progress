@@ -14,7 +14,6 @@ progress_bar
 Progress bar on the terminal
 }
 \examples{
-\dontrun{
 pb <- progress_bar$new(total = 100)
 for (i in 1:100) {
   pb$tick()
@@ -35,7 +34,6 @@ pb <- progress_bar$new(
 for (i in 1:100) {
   pb$tick()
   Sys.sleep(1 / 100)
-}
 }
 }
 \keyword{datasets}

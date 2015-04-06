@@ -11,8 +11,6 @@ NULL
 #'
 #' @export
 #' @examples
-#'
-#' \dontrun{
 #' pb <- progress_bar$new(total = 100)
 #' for (i in 1:100) {
 #'   pb$tick()
@@ -33,7 +31,6 @@ NULL
 #' for (i in 1:100) {
 #'   pb$tick()
 #'   Sys.sleep(1 / 100)
-#' }
 #' }
 
 progress_bar <- R6Class("progress_bar",
