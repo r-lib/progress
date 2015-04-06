@@ -1,13 +1,36 @@
 
 clear_line <- function(tty, width) {
-  if (!isatty(tty)) { return(invisible()) }
+  if (!is_supported(tty)) { return(invisible()) }
   str <- paste0(c("\r", rep(" ", width)), collapse = "")
   cat(str, file = tty)
 }
 
 cursor_to_start <- function(tty) {
-  if (!isatty(tty)) { return(invisible()) }
+  if (!is_supported(tty)) { return(invisible()) }
   cat("\r", file = tty)
+}
+
+is_r_studio <- function() {
+  Sys.getenv("RSTUDIO") == 1
+}
+
+r_studio_stdout <- function(stream) {
+  interactive() &&
+    is_r_studio() &&
+    identical(stream, stdout()) &&
+    sink.number() == 0
+}
+
+is_supported <- function(stream) {
+  isatty(stream) || r_studio_stdout(stream)
+}
+
+default_stream <- function(stream) {
+  if (! is.null(stream)) {
+    stream
+  } else {
+    if (is_r_studio()) stdout() else stderr()
+  }
 }
 
 assert_character_scalar <- function(x) {

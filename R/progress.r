@@ -41,7 +41,7 @@ progress_bar <- R6Class("progress_bar",
   public = list(
 
     initialize = function(format = "[:bar] :percent", total = 100,
-      width = getOption("width") - 2, stream = stderr(), complete = "=",
+      width = getOption("width") - 2, stream = NULL, complete = "=",
       incomplete = "-", callback = function(self) {}, clear = TRUE) {
         pb_init(self, private, format, total, width, stream, complete,
           incomplete, callback, clear)
@@ -76,6 +76,8 @@ progress_bar <- R6Class("progress_bar",
 
 pb_init <- function(self, private, format, total, width, stream,
                     complete, incomplete, callback, clear) {
+
+  stream <- default_stream(stream)
 
   assert_character_scalar(format)
   assert_positive_scalar(total)
@@ -122,7 +124,8 @@ pb_tick <- function(self, private, len) {
 #' @importFrom prettyunits vague_dt
 
 pb_render <- function(self, private) {
-  if (!isatty(private$stream)) return(invisible())
+
+  if (! is_supported(private$stream)) return(invisible())
 
   ratio <- (private$current / private$total) %>%
     max(0) %>%
