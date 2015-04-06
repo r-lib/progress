@@ -1,4 +1,9 @@
 
+#' @importFrom magrittr %>%
+NULL
+
+. <- "STFU"
+
 #' Progress bar on the terminal
 #'
 #'
