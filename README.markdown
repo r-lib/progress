@@ -1,0 +1,67 @@
+
+# progress
+
+> Progress bar in your R terminal
+
+An R package to show ASCII progress bars. Heavily influenced by
+the https://github.com/tj/node-progress JavaScript project.
+
+## Installation
+
+```r
+devtools::install_github("gaborcsardi/progress")
+```
+
+## Usage
+
+Use the `progress_bar` R6 class:
+
+```r
+pb <- progress_bar$new(total = 100)
+for (i in 1:100) {
+  pb$tick()
+  Sys.sleep(1 / 100)
+}
+```
+
+```
+[==========================================================-------------]  81%
+```
+
+Custom format, with estimated time of completion:
+
+```r
+pb <- progress_bar$new(
+  format = "  downloading [:bar] :percent eta: :eta",
+  total = 100, clear = FALSE, width= 60)
+for (i in 1:100) {
+  pb$tick()
+  Sys.sleep(1 / 100)
+}
+```
+
+```
+  downloading [========----------------------]  28% eta:  1s
+```
+
+With elapsed time:
+
+```r
+pb <- progress_bar$new(
+  format = "  downloading [:bar] :percent in :elapsed",
+  total = 100, clear = FALSE, width= 60)
+for (i in 1:100) {
+  pb$tick()
+  Sys.sleep(1 / 100)
+}
+```
+
+```
+  downloading [==========================------]  80% in  1s
+```
+
+See the manual for details and other options.
+
+## License
+
+MIT
