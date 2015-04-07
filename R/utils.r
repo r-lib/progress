@@ -10,6 +10,14 @@ cursor_to_start <- function(tty) {
   cat("\r", file = tty)
 }
 
+is_stdout <- function(stream) {
+  identical(stream, stdout()) && sink.number() == 0
+}
+
+is_stderr <- function(stream) {
+  identical(stream, stderr())
+}
+
 is_r_studio <- function() {
   Sys.getenv("RSTUDIO") == 1
 }
@@ -18,11 +26,21 @@ r_studio_stdout <- function(stream) {
   interactive() &&
     is_r_studio() &&
     identical(stream, stdout()) &&
-    sink.number() == 0
+    is_stdout(stream)
+}
+
+is_r_app <- function() {
+  Sys.getenv("R_GUI_APP_VERSION") != ""
+}
+
+r_app_stdx <- function(stream) {
+  interactive() &&
+    is_r_app() &&
+    (is_stdout(stream) || is_stderr(stream))
 }
 
 is_supported <- function(stream) {
-  isatty(stream) || r_studio_stdout(stream)
+  isatty(stream) || r_studio_stdout(stream) || r_app_stdx(stream)
 }
 
 default_stream <- function(stream) {
