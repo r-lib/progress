@@ -5,7 +5,7 @@ Authors@R: "Gabor Csardi <csardi.gabor@gmail.com> [aut, cre]"
 Description: Progress bars in your terminal. They are
     configurable, may include percentage, elapsed time, and/or
     the estimated completion time. They work in the command line,
-    in Emacs and in R Studio.
+    in Emacs, R Studio, Windows Rgui and Mac OSX R.app.
 License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/gaborcsardi/progress
