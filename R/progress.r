@@ -4,8 +4,55 @@ NULL
 
 . <- "STFU"
 
-#' Progress bar on the terminal
+#' Progress bar in the terminal
 #'
+#' Progress bars are configurable, may include percentage, elapsed time,
+#' and/or the estimated completion time. They work in the command line,
+#' in Emacs and in R Studio. The progress package was heavily influenced by
+#' https://github.com/tj/node-progress
+#'
+#' @section Creating the progress bar:
+#' A progress bar is an R6 object, that can be created with
+#' \code{progress_bar$new()}. It has the following arguments:
+#' \describe{
+#'   \item{format}{The format of the progress bar. A number of
+#'     tokens can be used here, see them below. It defaults to
+#'     \code{"[:bar] :percent"}, which means that the progress
+#'     bar is within brackets on the left, and the percentage
+#'     is printed on the right.}
+#'   \item{total}{Total number of ticks to complete. Defaults to 100.}
+#'   \item{width}{Width of the progress bar. Default is the current
+#'     terminal width (see \code{options()} and \code{width}) minus two.}
+#'   \item{stream}{The output stream to put the progress bar on.
+#'     It defaults to \code{stderr()}, except in R Studio that has
+#'     a bug when printing on the standard error, so there we use
+#'     \code{stdout}. If the output stream is not a terminal and
+#'     we are not in R Studio, then no progress bar is printed.}
+#'   \item{complete}{Completion character, defaults to \code{=}.}
+#'   \item{incomplete}{Incomplete character, defaults to \code{-}.}
+#'   \item{callback}{Callback function to call when the progress
+#'     bar finishes. The progress bar object itself is passed to it
+#'     as the single parameter.}
+#'   \item{clear}{Whether to clear the progress bar on completion.
+#'     Defaults to \code{TRUE}.}
+#' }
+#'
+#' @section Using the progress bar:
+#' Two functions can update a progress bar. \code{progress_bar$tick()}
+#' increases the number of ticks by one (or another specified value).
+#' \code{progress_bar$update()} sets a given ratio.
+#'
+#' @section Tokens:
+#' They can be used in the \code{format} argument when creating the
+#' progress bar.
+#' \describe{
+#'   \item{:bar}{The progress bar itself.}
+#'   \item{:current}{Current tick number.}
+#'   \item{:total}{Total ticks.}
+#'   \item{:elapsed}{Elapsed time in seconds.}
+#'   \item{:eta}{Estimated completion time in seconds.}
+#'   \item{:percent}{Completion percentage.}
+#' }
 #'
 #' @importFrom R6 R6Class
 #'
@@ -32,6 +79,9 @@ NULL
 #'   pb$tick()
 #'   Sys.sleep(1 / 100)
 #' }
+#'
+#' @name progress_bar
+NULL
 
 progress_bar <- R6Class("progress_bar",
 
