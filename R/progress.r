@@ -169,6 +169,7 @@ pb_tick <- function(self, private, len) {
 
 #' @importFrom magrittr subtract
 #' @importFrom prettyunits vague_dt
+#' @importFrom utils flush.console
 
 pb_render <- function(self, private) {
 
@@ -220,6 +221,8 @@ pb_render <- function(self, private) {
     cat(str, file = private$stream)
     private$last_draw <- str
   }
+
+  flush.console()
 
   self
 }
