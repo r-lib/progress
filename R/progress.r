@@ -54,16 +54,23 @@ NULL
 #'   \item{:percent}{Completion percentage.}
 #' }
 #'
+#' Custom tokens are also supported, and you need to pass their
+#' values to \code{progress_bar$tick()} or \code{progress_bar$update()},
+#' in a named list. See example below.
+#'
 #' @importFrom R6 R6Class
 #'
 #' @export
 #' @examples
+#' \donttest{
+#' ## Basic
 #' pb <- progress_bar$new(total = 100)
 #' for (i in 1:100) {
 #'   pb$tick()
 #'   Sys.sleep(1 / 100)
 #' }
 #'
+#' ## ETA
 #' pb <- progress_bar$new(
 #'   format = "  downloading [:bar] :percent eta: :eta",
 #'   total = 100, clear = FALSE, width= 60)
@@ -72,12 +79,30 @@ NULL
 #'   Sys.sleep(1 / 100)
 #' }
 #'
+#' ## Elapsed time
 #' pb <- progress_bar$new(
 #'   format = "  downloading [:bar] :percent in :elapsed",
 #'   total = 100, clear = FALSE, width= 60)
 #' for (i in 1:100) {
 #'   pb$tick()
 #'   Sys.sleep(1 / 100)
+#' }
+#'
+#' ## Custom tokens
+#' pb <- progress_bar$new(
+#'   format = "  downloading :what [:bar] : percent eta: :eta",
+#'   clear = FALSE, total = 200, width = 60)
+#' f <- function() {
+#'   for (i in 1:100) {
+#'     pb$tick(tokens = list(what = "foo   "))
+#'     Sys.sleep(2 / 100)
+#'   }
+#'   for (i in 1:100) {
+#'     pb$tick(tokens = list(what = "foobar"))
+#'     Sys.sleep(2 / 100)
+#'   }
+#' }
+#' f()
 #' }
 #'
 #' @name progress_bar
@@ -93,13 +118,14 @@ progress_bar <- R6Class("progress_bar",
         pb_init(self, private, format, total, width, stream, complete,
           incomplete, callback, clear)
     },
-    tick = function(len = 1) { pb_tick(self, private, len) },
-    update = function(ratio) { pb_update(self, rivate, ratio) }
+    tick = function(len = 1, tokens = list()) {
+      pb_tick(self, private, len, tokens) },
+    update = function(ratio, tokens) { pb_update(self, rivate, ratio, tokens) }
   ),
 
   private = list(
 
-    render = function() { pb_render(self, private) },
+    render = function(tokens) { pb_render(self, private, tokens) },
     terminate = function() { pb_terminate(self, private) },
 
     format = NULL,
@@ -147,15 +173,16 @@ pb_init <- function(self, private, format, total, width, stream,
   self
 }
 
-pb_tick <- function(self, private, len) {
+pb_tick <- function(self, private, len, tokens) {
 
   assert_positive_scalar(len)
+  assert_named_or_empty_list(tokens)
 
   if (private$current == 0) private$start = Sys.time()
 
   private$current <- private$current + len
 
-  private$render()
+  private$render(tokens)
 
   if (private$current > private$total ||
       isTRUE(all.equal(private$current, private$total))) {
@@ -171,7 +198,7 @@ pb_tick <- function(self, private, len) {
 #' @importFrom prettyunits vague_dt
 #' @importFrom utils flush.console
 
-pb_render <- function(self, private) {
+pb_render <- function(self, private, tokens) {
 
   if (! is_supported(private$stream)) return(invisible())
 
@@ -213,6 +240,10 @@ pb_render <- function(self, private) {
 
   str <- sub(":bar", paste0(complete, incomplete), str)
 
+  for (t in names(tokens)) {
+    str <- gsub(paste0(":", t), tokens[[t]], str, fixed = TRUE)
+  }
+
   if (private$last_draw != str) {
     if (nchar(private$last_draw) > nchar(str)) {
       clear_line(private$stream, private$width)
@@ -227,10 +258,10 @@ pb_render <- function(self, private) {
   self
 }
 
-pb_update <- function(self, private, ratio) {
+pb_update <- function(self, private, ratio, tokens) {
   assert_ratio(ratio)
   goal <- floor(ratio * private$total)
-  private$tick(goal - private$current)
+  private$tick(goal - private$current, tokens)
 }
 
 pb_terminate <- function(self, private) {

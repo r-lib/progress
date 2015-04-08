@@ -56,14 +56,21 @@ progress bar.
   \item{:eta}{Estimated completion time in seconds.}
   \item{:percent}{Completion percentage.}
 }
+
+Custom tokens are also supported, and you need to pass their
+values to \code{progress_bar$tick()} or \code{progress_bar$update()},
+in a named list. See example below.
 }
 \examples{
+\donttest{
+## Basic
 pb <- progress_bar$new(total = 100)
 for (i in 1:100) {
   pb$tick()
   Sys.sleep(1 / 100)
 }
 
+## ETA
 pb <- progress_bar$new(
   format = "  downloading [:bar] :percent eta: :eta",
   total = 100, clear = FALSE, width= 60)
@@ -72,12 +79,30 @@ for (i in 1:100) {
   Sys.sleep(1 / 100)
 }
 
+## Elapsed time
 pb <- progress_bar$new(
   format = "  downloading [:bar] :percent in :elapsed",
   total = 100, clear = FALSE, width= 60)
 for (i in 1:100) {
   pb$tick()
   Sys.sleep(1 / 100)
+}
+
+## Custom tokens
+pb <- progress_bar$new(
+  format = "  downloading :what [:bar] : percent eta: :eta",
+  clear = FALSE, total = 200, width = 60)
+f <- function() {
+  for (i in 1:100) {
+    pb$tick(tokens = list(what = "foo   "))
+    Sys.sleep(2 / 100)
+  }
+  for (i in 1:100) {
+    pb$tick(tokens = list(what = "foobar"))
+    Sys.sleep(2 / 100)
+  }
+}
+f()
 }
 }
 

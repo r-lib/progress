@@ -63,6 +63,29 @@ for (i in 1:100) {
   downloading [==========================------]  80% in  1s
 ```
 
+With custom tokens:
+
+```r
+pb <- progress_bar$new(
+  format = "  downloading :what [:bar] : percent eta: :eta",
+  clear = FALSE, total = 200, width = 60)
+f <- function() {
+  for (i in 1:100) {
+    pb$tick(tokens = list(what = "foo   "))
+    Sys.sleep(2 / 100)
+  }
+  for (i in 1:100) {
+    pb$tick(tokens = list(what = "foobar"))
+    Sys.sleep(2 / 100)
+  }
+}
+f()
+```
+
+```
+  downloading foo    [===----------------] : percent eta:  4s
+```
+
 See the manual for details and other options.
 
 ## License

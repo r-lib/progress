@@ -101,3 +101,7 @@ assert_function <- function(x) {
 assert_flag <- function(x) {
   stopifnot(is.logical(x), length(x) == 1, !is.na(x))
 }
+
+assert_named_or_empty_list <- function(x) {
+  stopifnot(length(x) == 0 || !is.null(names(x)))
+}
