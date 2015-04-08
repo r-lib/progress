@@ -90,7 +90,7 @@ for (i in 1:100) {
 
 ## Custom tokens
 pb <- progress_bar$new(
-  format = "  downloading :what [:bar] : percent eta: :eta",
+  format = "  downloading :what [:bar] :percent eta: :eta",
   clear = FALSE, total = 200, width = 60)
 f <- function() {
   for (i in 1:100) {

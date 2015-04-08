@@ -67,7 +67,7 @@ With custom tokens:
 
 ```r
 pb <- progress_bar$new(
-  format = "  downloading :what [:bar] : percent eta: :eta",
+  format = "  downloading :what [:bar] :percent eta: :eta",
   clear = FALSE, total = 200, width = 60)
 f <- function() {
   for (i in 1:100) {
@@ -83,7 +83,7 @@ f()
 ```
 
 ```
-  downloading foo    [===----------------] : percent eta:  4s
+  downloading foo    [======------------------]  27% eta:  4s
 ```
 
 See the manual for details and other options.
