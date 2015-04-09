@@ -120,7 +120,7 @@ progress_bar <- R6Class("progress_bar",
     },
     tick = function(len = 1, tokens = list()) {
       pb_tick(self, private, len, tokens) },
-    update = function(ratio, tokens) { pb_update(self, rivate, ratio, tokens) }
+    update = function(ratio, tokens) { pb_update(self, private, ratio, tokens) }
   ),
 
   private = list(
