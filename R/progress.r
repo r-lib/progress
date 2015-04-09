@@ -52,6 +52,10 @@ NULL
 #'   \item{:elapsed}{Elapsed time in seconds.}
 #'   \item{:eta}{Estimated completion time in seconds.}
 #'   \item{:percent}{Completion percentage.}
+#'   \item{:rate}{Download rate, bytes per second. See example below.}
+#'   \item{:bytes}{Shows :current, formatted as bytes. Useful
+#'      for downloads or file reads if you don't know the size of the
+#'      file in advance. See example below.}
 #' }
 #'
 #' Custom tokens are also supported, and you need to pass their
@@ -101,6 +105,20 @@ NULL
 #'     pb$tick(tokens = list(what = "foobar"))
 #'     Sys.sleep(2 / 100)
 #'   }
+#' }
+#' f()
+#'
+#' ## Download (or other) rates
+#' pb <- progress_bar$new(
+#'   format = "  downloading foobar at :rate, got :bytes in :elapsed",
+#'   clear = FALSE, total = 1e7, width = 60)
+#' f <- function() {
+#'   for (i in 1:100) {
+#'     pb$tick(sample(1:100 * 1000, 1))
+#'     Sys.sleep(2/100)
+#'   }
+#'   pb$tick(1e7)
+#'   invisible()
 #' }
 #' f()
 #' }
@@ -194,8 +212,8 @@ pb_tick <- function(self, private, len, tokens) {
   self
 }
 
-#' @importFrom magrittr subtract
-#' @importFrom prettyunits vague_dt
+#' @importFrom magrittr subtract divide_by
+#' @importFrom prettyunits vague_dt pretty_bytes
 #' @importFrom utils flush.console
 
 pb_render <- function(self, private, tokens) {
@@ -217,6 +235,14 @@ pb_render <- function(self, private, tokens) {
   eta <- eta_secs %>%
     as.difftime(units = "secs") %>%
     vague_dt(format = "terse")
+  rate <- private$current %>%
+    divide_by(as.double(elapsed_secs, units = "secs")) %>%
+    round() %>%
+    pretty_bytes() %>%
+    paste0("/s")
+  bytes <- private$current %>%
+    round() %>%
+    pretty_bytes()
 
   str <- private$format %>%
     sub(pattern = ":current", replacement = round(private$current)) %>%
@@ -224,7 +250,9 @@ pb_render <- function(self, private, tokens) {
     sub(pattern = ":elapsed", replacement = elapsed) %>%
     sub(pattern = ":eta", replacement = eta) %>%
     sub(pattern = ":percent", replacement =
-          paste0(format(round(percent), width = 3), "%"))
+          paste0(format(round(percent), width = 3), "%")) %>%
+    sub(pattern = ":rate", replacement = rate) %>%
+    sub(pattern = ":bytes", replacement = bytes)
 
   bar_width <- str %>%
     sub(pattern = ":bar", replacement = "") %>%

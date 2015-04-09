@@ -86,6 +86,27 @@ f()
   downloading foo    [======------------------]  27% eta:  4s
 ```
 
+It can show download rates for files with unknown sizes:
+
+```r
+pb <- progress_bar$new(
+  format = "  downloading foobar at :rate, got :bytes in :elapsed",
+  clear = FALSE, total = 1e7, width = 60)
+f <- function() {
+  for (i in 1:100) {
+    pb$tick(sample(1:100 * 1000, 1))
+    Sys.sleep(2/100)
+  }
+  pb$tick(1e7)
+  invisible()
+}
+f()
+```
+
+```
+  downloading foobar at 5.42 MB/s, got 15.45 MB in  3s
+```
+
 See the manual for details and other options.
 
 ## License

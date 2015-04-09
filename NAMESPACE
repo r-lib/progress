@@ -3,6 +3,8 @@
 export(progress_bar)
 importFrom(R6,R6Class)
 importFrom(magrittr,"%>%")
+importFrom(magrittr,divide_by)
 importFrom(magrittr,subtract)
+importFrom(prettyunits,pretty_bytes)
 importFrom(prettyunits,vague_dt)
 importFrom(utils,flush.console)

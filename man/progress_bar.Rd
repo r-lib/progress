@@ -55,6 +55,10 @@ progress bar.
   \item{:elapsed}{Elapsed time in seconds.}
   \item{:eta}{Estimated completion time in seconds.}
   \item{:percent}{Completion percentage.}
+  \item{:rate}{Download rate, bytes per second. See example below.}
+  \item{:bytes}{Shows :current, formatted as bytes. Useful
+     for downloads or file reads if you don't know the size of the
+     file in advance. See example below.}
 }
 
 Custom tokens are also supported, and you need to pass their
@@ -101,6 +105,20 @@ f <- function() {
     pb$tick(tokens = list(what = "foobar"))
     Sys.sleep(2 / 100)
   }
+}
+f()
+
+## Download (or other) rates
+pb <- progress_bar$new(
+  format = "  downloading foobar at :rate, got :bytes in :elapsed",
+  clear = FALSE, total = 1e7, width = 60)
+f <- function() {
+  for (i in 1:100) {
+    pb$tick(sample(1:100 * 1000, 1))
+    Sys.sleep(2/100)
+  }
+  pb$tick(1e7)
+  invisible()
 }
 f()
 }
