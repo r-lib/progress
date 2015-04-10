@@ -220,7 +220,7 @@ pb_render <- function(self, private, tokens) {
   ratio <- max(ratio, 0)
   ratio <- min(ratio, 1)
   percent <- ratio * 100
-  elapsed_secs <- subtract(Sys.time(), private$start)
+  elapsed_secs <- Sys.time() - private$start
   elapsed <- vague_dt(elapsed_secs, format = "terse")
   eta_secs <- if (isTRUE(all.equal(percent, 100))) {
     0
