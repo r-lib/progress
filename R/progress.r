@@ -146,6 +146,7 @@ progress_bar <- R6Class("progress_bar",
     render = function(tokens) { pb_render(self, private, tokens) },
     terminate = function() { pb_terminate(self, private) },
 
+    supported = NA,
     format = NULL,
     total = NULL,
     current = 0,
@@ -179,6 +180,7 @@ pb_init <- function(self, private, format, total, width, stream,
   assert_function(callback)
   assert_flag(clear)
 
+  private$supported <- is_supported(stream)
   private$format <- format
   private$total <- total
   private$width <- width
@@ -218,7 +220,7 @@ pb_tick <- function(self, private, len, tokens) {
 
 pb_render <- function(self, private, tokens) {
 
-  if (! is_supported(private$stream)) return(invisible())
+  if (! private$supported) return(invisible())
 
   ratio <- (private$current / private$total) %>%
     max(0) %>%
@@ -293,6 +295,7 @@ pb_update <- function(self, private, ratio, tokens) {
 }
 
 pb_terminate <- function(self, private) {
+  if (!private$supported) return(invisible())
   if (private$clear) {
     clear_line(private$stream, private$width)
     cursor_to_start(private$stream)

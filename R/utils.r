@@ -1,12 +1,10 @@
 
 clear_line <- function(tty, width) {
-  if (!is_supported(tty)) { return(invisible()) }
   str <- paste0(c("\r", rep(" ", width)), collapse = "")
   cat(str, file = tty)
 }
 
 cursor_to_start <- function(tty) {
-  if (!is_supported(tty)) { return(invisible()) }
   cat("\r", file = tty)
 }
 
