@@ -140,6 +140,7 @@ progress_bar <- R6Class("progress_bar",
 
     render = function(tokens) { pb_render(self, private, tokens) },
     terminate = function() { pb_terminate(self, private) },
+    ratio = function() { pb_ratio(self, private) },
 
     supported = NA,
     format = NULL,
@@ -156,10 +157,13 @@ progress_bar <- R6Class("progress_bar",
     last_draw = "",
 
     start = NULL,
-    complete = FALSE
+    complete = FALSE,
+
+    has_token = c(current = FALSE, total = FALSE, elapsed = FALSE,
+      eta = FALSE, percent = FALSE, rate = FALSE, bytes = FALSE,
+      bar = FALSE)
   )
 )
-
 
 pb_init <- function(self, private, format, total, width, stream,
                     complete, incomplete, callback, clear) {
@@ -185,7 +189,17 @@ pb_init <- function(self, private, format, total, width, stream,
   private$callback <- callback
   private$clear <- clear
 
+  private$has_token <- pb_update_has_token(private$has_token, format)
+
   self
+}
+
+pb_update_has_token <- function(tokens, format) {
+  for (n in names(tokens)) {
+    tokens[n] <- grepl(paste0(":", n), format, fixed = TRUE)
+  }
+
+  tokens
 }
 
 pb_tick <- function(self, private, len, tokens) {
@@ -212,48 +226,79 @@ pb_tick <- function(self, private, len, tokens) {
 #' @importFrom prettyunits vague_dt pretty_bytes
 #' @importFrom utils flush.console
 
+pb_ratio <- function(self, private) {
+  ratio <- (private$current / private$total)
+  ratio <- max(ratio, 0)
+  ratio <- min(ratio, 1)
+  ratio
+}
+
 pb_render <- function(self, private, tokens) {
 
   if (! private$supported) return(invisible())
 
-  ratio <- (private$current / private$total)
-  ratio <- max(ratio, 0)
-  ratio <- min(ratio, 1)
-  percent <- ratio * 100
-  elapsed_secs <- Sys.time() - private$start
-  elapsed <- vague_dt(elapsed_secs, format = "terse")
-  eta_secs <- if (isTRUE(all.equal(percent, 100))) {
-    0
-  } else {
-    elapsed_secs * (private$total / private$current - 1.0)
-  }
-  eta <- as.difftime(eta_secs, units = "secs")
-  eta <- vague_dt(eta, format = "terse")
-  rate <- private$current / as.double(elapsed_secs, units = "secs")
-  rate <- paste0(pretty_bytes(round(rate)), "/s")
-  bytes <- pretty_bytes(round(private$current))
-
   str <- private$format
-  str <- sub(str, pattern = ":current", replacement = round(private$current))
-  str <- sub(str, pattern = ":total", replacement = round(private$total))
-  str <- sub(str, pattern = ":elapsed", replacement = elapsed)
-  str <- sub(str, pattern = ":eta", replacement = eta)
-  str <- sub(str, pattern = ":percent", replacement =
-               paste0(format(round(percent), width = 3), "%"))
-  str <- sub(str, pattern = ":rate", replacement = rate)
-  str <- sub(str, pattern = ":bytes", replacement = bytes)
 
-  bar_width <- nchar(sub(str, pattern = ":bar", replacement = ""))
-  bar_width <- private$width - bar_width
-  bar_width <- max(0, bar_width)
+  if (private$has_token["percent"]) {
+    percent <- private$ratio() * 100
+    str <- sub(str, pattern = ":percent", replacement =
+                 paste0(format(round(percent), width = 3), "%"))
+  }
 
-  complete_len <- round(bar_width * ratio)
-  complete <- paste(rep("", complete_len + 1),
-                    collapse = private$chars$complete)
-  incomplete <- paste(rep("", bar_width - complete_len + 1),
-                      collapse = private$chars$incomplete)
+  if (private$has_token["elapsed"]) {
+    elapsed_secs <- Sys.time() - private$start
+    elapsed <- vague_dt(elapsed_secs, format = "terse")
+    str <- sub(str, pattern = ":elapsed", replacement = elapsed)
+  }
 
-  str <- sub(":bar", paste0(complete, incomplete), str)
+  if (private$has_token["eta"]) {
+    percent <- private$ratio() * 100
+    elapsed_secs <- Sys.time() - private$start
+    eta_secs <- if (isTRUE(all.equal(percent, 100))) {
+      0
+    } else {
+      elapsed_secs * (private$total / private$current - 1.0)
+    }
+    eta <- as.difftime(eta_secs, units = "secs")
+    eta <- vague_dt(eta, format = "terse")
+    str <- sub(str, pattern = ":eta", replacement = eta)
+  }
+
+  if (private$has_token["rate"]) {
+    elapsed_secs <- Sys.time() - private$start
+    rate <- private$current / as.double(elapsed_secs, units = "secs")
+    rate <- paste0(pretty_bytes(round(rate)), "/s")
+    str <- sub(str, pattern = ":rate", replacement = rate)
+  }
+
+  if (private$has_token["current"]) {
+    str <- sub(str, pattern = ":current",
+               replacement = round(private$current))
+  }
+
+  if (private$has_token["total"]) {
+    str <- sub(str, pattern = ":total", replacement = round(private$total))
+  }
+
+  if (private$has_token["bytes"]) {
+    bytes <- pretty_bytes(round(private$current))
+    str <- sub(str, pattern = ":bytes", replacement = bytes)
+  }
+
+  if (private$has_token["bar"]) {
+    bar_width <- nchar(sub(str, pattern = ":bar", replacement = ""))
+    bar_width <- private$width - bar_width
+    bar_width <- max(0, bar_width)
+
+    ratio <- private$ratio()
+    complete_len <- round(bar_width * ratio)
+    complete <- paste(rep("", complete_len + 1),
+                      collapse = private$chars$complete)
+    incomplete <- paste(rep("", bar_width - complete_len + 1),
+                        collapse = private$chars$incomplete)
+
+    str <- sub(":bar", paste0(complete, incomplete), str)
+  }
 
   for (t in names(tokens)) {
     str <- gsub(paste0(":", t), tokens[[t]], str, fixed = TRUE)
