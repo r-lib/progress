@@ -1,9 +1,4 @@
 
-#' @importFrom magrittr %>%
-NULL
-
-. <- "STFU"
-
 #' Progress bar in the terminal
 #'
 #' Progress bars are configurable, may include percentage, elapsed time,
@@ -222,51 +217,42 @@ pb_render <- function(self, private, tokens) {
 
   if (! private$supported) return(invisible())
 
-  ratio <- (private$current / private$total) %>%
-    max(0) %>%
-    min(1)
+  ratio <- (private$current / private$total)
+  ratio <- max(ratio, 0)
+  ratio <- min(ratio, 1)
   percent <- ratio * 100
-  elapsed_secs <- Sys.time() %>%
-    subtract(private$start)
+  elapsed_secs <- subtract(Sys.time(), private$start)
   elapsed <- vague_dt(elapsed_secs, format = "terse")
   eta_secs <- if (isTRUE(all.equal(percent, 100))) {
     0
   } else {
     elapsed_secs * (private$total / private$current - 1.0)
   }
-  eta <- eta_secs %>%
-    as.difftime(units = "secs") %>%
-    vague_dt(format = "terse")
-  rate <- private$current %>%
-    divide_by(as.double(elapsed_secs, units = "secs")) %>%
-    round() %>%
-    pretty_bytes() %>%
-    paste0("/s")
-  bytes <- private$current %>%
-    round() %>%
-    pretty_bytes()
+  eta <- as.difftime(eta_secs, units = "secs")
+  eta <- vague_dt(eta, format = "terse")
+  rate <- private$current / as.double(elapsed_secs, units = "secs")
+  rate <- paste0(pretty_bytes(round(rate)), "/s")
+  bytes <- pretty_bytes(round(private$current))
 
-  str <- private$format %>%
-    sub(pattern = ":current", replacement = round(private$current)) %>%
-    sub(pattern = ":total", replacement = round(private$total)) %>%
-    sub(pattern = ":elapsed", replacement = elapsed) %>%
-    sub(pattern = ":eta", replacement = eta) %>%
-    sub(pattern = ":percent", replacement =
-          paste0(format(round(percent), width = 3), "%")) %>%
-    sub(pattern = ":rate", replacement = rate) %>%
-    sub(pattern = ":bytes", replacement = bytes)
+  str <- private$format
+  str <- sub(str, pattern = ":current", replacement = round(private$current))
+  str <- sub(str, pattern = ":total", replacement = round(private$total))
+  str <- sub(str, pattern = ":elapsed", replacement = elapsed)
+  str <- sub(str, pattern = ":eta", replacement = eta)
+  str <- sub(str, pattern = ":percent", replacement =
+               paste0(format(round(percent), width = 3), "%"))
+  str <- sub(str, pattern = ":rate", replacement = rate)
+  str <- sub(str, pattern = ":bytes", replacement = bytes)
 
-  bar_width <- str %>%
-    sub(pattern = ":bar", replacement = "") %>%
-    nchar() %>%
-    subtract(private$width, .) %>%
-    max(0)
+  bar_width <- nchar(sub(str, pattern = ":bar", replacement = ""))
+  bar_width <- private$width - bar_width
+  bar_width <- max(0, bar_width)
 
   complete_len <- round(bar_width * ratio)
-  complete <- rep("", complete_len + 1) %>%
-    paste(collapse = private$chars$complete)
-  incomplete <- rep("", bar_width - complete_len + 1) %>%
-    paste(collapse = private$chars$incomplete)
+  complete <- paste(rep("", complete_len + 1),
+                    collapse = private$chars$complete)
+  incomplete <- paste(rep("", bar_width - complete_len + 1),
+                      collapse = private$chars$incomplete)
 
   str <- sub(":bar", paste0(complete, incomplete), str)
 

@@ -12,5 +12,4 @@ URL: https://github.com/gaborcsardi/progress
 BugReports: https://github.com/gaborcsardi/progress/issues
 Imports:
     prettyunits,
-    magrittr,
     R6
