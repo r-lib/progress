@@ -209,7 +209,6 @@ pb_tick <- function(self, private, len, tokens) {
   self
 }
 
-#' @importFrom magrittr subtract divide_by
 #' @importFrom prettyunits vague_dt pretty_bytes
 #' @importFrom utils flush.console
 
