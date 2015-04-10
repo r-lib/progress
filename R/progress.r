@@ -30,6 +30,10 @@
 #'     as the single parameter.}
 #'   \item{clear}{Whether to clear the progress bar on completion.
 #'     Defaults to \code{TRUE}.}
+#'   \item{show_after}{Amount of time in seconds, after which the progress
+#'     bar is shown on the screen. For very short processes,
+#'     it is probably not worth showing it at all. Defaults to two
+#'     tenth of a second.}
 #' }
 #'
 #' @section Using the progress bar:
@@ -127,9 +131,10 @@ progress_bar <- R6Class("progress_bar",
 
     initialize = function(format = "[:bar] :percent", total = 100,
       width = getOption("width") - 2, stream = NULL, complete = "=",
-      incomplete = "-", callback = function(self) {}, clear = TRUE) {
+      incomplete = "-", callback = function(self) {}, clear = TRUE,
+      show_after = 0.2) {
         pb_init(self, private, format, total, width, stream, complete,
-          incomplete, callback, clear)
+          incomplete, callback, clear, show_after)
     },
     tick = function(len = 1, tokens = list()) {
       pb_tick(self, private, len, tokens) },
@@ -154,9 +159,11 @@ progress_bar <- R6Class("progress_bar",
     ),
     callback = NULL,
     clear = NULL,
+    show_after = NULL,
     last_draw = "",
 
     start = NULL,
+    shown = FALSE,
     complete = FALSE,
 
     has_token = c(current = FALSE, total = FALSE, elapsed = FALSE,
@@ -166,7 +173,7 @@ progress_bar <- R6Class("progress_bar",
 )
 
 pb_init <- function(self, private, format, total, width, stream,
-                    complete, incomplete, callback, clear) {
+                    complete, incomplete, callback, clear, show_after) {
 
   stream <- default_stream(stream)
 
@@ -178,6 +185,7 @@ pb_init <- function(self, private, format, total, width, stream,
   assert_single_char(incomplete)
   assert_function(callback)
   assert_flag(clear)
+  assert_positive_scalar(show_after)
 
   private$supported <- is_supported(stream)
   private$format <- format
@@ -188,6 +196,7 @@ pb_init <- function(self, private, format, total, width, stream,
   private$chars$incomplete <- incomplete
   private$callback <- callback
   private$clear <- clear
+  private$show_after <- as.difftime(show_after, units = "secs")
 
   private$has_token <- pb_update_has_token(private$has_token, format)
 
@@ -207,11 +216,17 @@ pb_tick <- function(self, private, len, tokens) {
   assert_positive_scalar(len)
   assert_named_or_empty_list(tokens)
 
-  if (private$current == 0) private$start = Sys.time()
+  if (private$current == 0) private$start <- Sys.time()
 
   private$current <- private$current + len
 
-  private$render(tokens)
+  if (!private$shown) {
+    if (Sys.time() - private$start > private$show_after) {
+      private$shown <- TRUE
+    }
+  }
+
+if (private$shown) private$render(tokens)
 
   if (private$current > private$total ||
       isTRUE(all.equal(private$current, private$total))) {
@@ -326,10 +341,12 @@ pb_update <- function(self, private, ratio, tokens) {
 
 pb_terminate <- function(self, private) {
   if (!private$supported) return(invisible())
-  if (private$clear) {
-    clear_line(private$stream, private$width)
-    cursor_to_start(private$stream)
-  } else {
-    cat("\n")
+  if (private$shown) {
+    if (private$clear) {
+      clear_line(private$stream, private$width)
+      cursor_to_start(private$stream)
+    } else {
+      cat("\n")
+    }
   }
 }
