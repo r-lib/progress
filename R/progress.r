@@ -285,7 +285,11 @@ pb_render <- function(self, private, tokens) {
       elapsed_secs * (private$total / private$current - 1.0)
     }
     eta <- as.difftime(eta_secs, units = "secs")
-    eta <- vague_dt(eta, format = "terse")
+    if (eta == Inf) {
+      eta <- "?s"
+    } else {
+      eta <- vague_dt(eta, format = "terse")
+    }
     str <- sub(str, pattern = ":eta", replacement = eta)
   }
 
