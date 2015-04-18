@@ -236,8 +236,7 @@ pb_tick <- function(self, private, len, tokens) {
 
   if (private$first || private$shown) private$render(tokens)
 
-  if (private$current > private$total ||
-      isTRUE(all.equal(private$current, private$total))) {
+  if (private$current >= private$total) {
     private$complete <- TRUE
     private$terminate()
     private$callback(self)
@@ -279,7 +278,7 @@ pb_render <- function(self, private, tokens) {
   if (private$has_token["eta"]) {
     percent <- private$ratio() * 100
     elapsed_secs <- Sys.time() - private$start
-    eta_secs <- if (isTRUE(all.equal(percent, 100))) {
+    eta_secs <- if (percent == 100) {
       0
     } else {
       elapsed_secs * (private$total / private$current - 1.0)
