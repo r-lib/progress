@@ -31,6 +31,25 @@ for (i in 1:100) {
 [==========================================================-------------]  81%
 ```
 
+The progress bar is displayed after the first `tick` command.
+This might not be desirable for long computations, because
+nothing is shown before the first tick. It is good practice to
+call `tick(0)` at the beginning of the computation or download,
+which shows the progress bar immediately.
+
+```r
+pb <- progress_bar$new(total = 100)
+f <- function() {
+  pb$tick(0)
+  Sys.sleep(3)
+  for (i in 1:100) {
+    pb$tick()
+    Sys.sleep(1 / 100)
+  }
+}
+f()
+```
+
 Custom format, with estimated time of completion:
 
 ```r
@@ -107,6 +126,19 @@ f()
   downloading foobar at 5.42 MB/s, got 15.45 MB in  3s
 ```
 
+Progress bars can also digress, by supplying negative values to `tick()`:
+
+```r
+pb <- progress_bar$new()
+f <- function() {
+  pb$tick(50)  ; Sys.sleep(1)
+  pb$tick(-20) ; Sys.sleep(1)
+  pb$tick(50)  ; Sys.sleep(1)
+  pb$tick(-30) ; Sys.sleep(1)
+  pb$tick(100)
+}
+f()
+```
 See the manual for details and other options.
 
 ## License

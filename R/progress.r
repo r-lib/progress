@@ -41,6 +41,12 @@
 #' increases the number of ticks by one (or another specified value).
 #' \code{progress_bar$update()} sets a given ratio.
 #'
+#' The progress bar is displayed after the first `tick` command.
+#' This might not be desirable for long computations, because
+#' nothing is shown before the first tick. It is good practice to
+#' call `tick(0)` at the beginning of the computation or download,
+#' which shows the progress bar immediately.
+#'
 #' @section Tokens:
 #' They can be used in the \code{format} argument when creating the
 #' progress bar.
@@ -147,6 +153,7 @@ progress_bar <- R6Class("progress_bar",
     terminate = function() { pb_terminate(self, private) },
     ratio = function() { pb_ratio(self, private) },
 
+    first = TRUE,
     supported = NA,
     format = NULL,
     total = NULL,
@@ -187,6 +194,7 @@ pb_init <- function(self, private, format, total, width, stream,
   assert_flag(clear)
   assert_positive_scalar(show_after)
 
+  private$first <- TRUE
   private$supported <- is_supported(stream)
   private$format <- format
   private$total <- total
@@ -213,20 +221,20 @@ pb_update_has_token <- function(tokens, format) {
 
 pb_tick <- function(self, private, len, tokens) {
 
-  assert_positive_scalar(len)
+  assert_scalar(len)
   assert_named_or_empty_list(tokens)
 
-  if (private$current == 0) private$start <- Sys.time()
+  if (private$first) private$start <- Sys.time()
 
   private$current <- private$current + len
 
   if (!private$shown) {
-    if (Sys.time() - private$start > private$show_after) {
+    if (Sys.time() - private$start >= private$show_after) {
       private$shown <- TRUE
     }
   }
 
-if (private$shown) private$render(tokens)
+  if (private$first || private$shown) private$render(tokens)
 
   if (private$current > private$total ||
       isTRUE(all.equal(private$current, private$total))) {
@@ -234,6 +242,8 @@ if (private$shown) private$render(tokens)
     private$terminate()
     private$callback(self)
   }
+
+  private$first <- FALSE
 
   self
 }
