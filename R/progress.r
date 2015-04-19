@@ -170,7 +170,7 @@ progress_bar <- R6Class("progress_bar",
     last_draw = "",
 
     start = NULL,
-    shown = FALSE,
+    toupdate = FALSE,
     complete = FALSE,
 
     has_token = c(current = FALSE, total = FALSE, elapsed = FALSE,
@@ -228,16 +228,19 @@ pb_tick <- function(self, private, len, tokens) {
 
   private$current <- private$current + len
 
-  if (!private$shown) {
+  if (!private$toupdate) {
     if (Sys.time() - private$start >= private$show_after) {
-      private$shown <- TRUE
+      private$toupdate <- TRUE
     }
   }
 
-  if (private$first || private$shown) private$render(tokens)
+  if (private$current >= private$total) private$complete <- TRUE
 
-  if (private$current >= private$total) {
-    private$complete <- TRUE
+  if (private$first || private$toupdate || private$complete) {
+    private$render(tokens)
+  }
+
+  if (private$complete) {
     private$terminate()
     private$callback(self)
   }
@@ -354,12 +357,10 @@ pb_update <- function(self, private, ratio, tokens) {
 
 pb_terminate <- function(self, private) {
   if (!private$supported) return(invisible())
-  if (private$shown) {
-    if (private$clear) {
-      clear_line(private$stream, private$width)
-      cursor_to_start(private$stream)
-    } else {
-      cat("\n")
-    }
+  if (private$clear) {
+    clear_line(private$stream, private$width)
+    cursor_to_start(private$stream)
+  } else {
+    cat("\n")
   }
 }
