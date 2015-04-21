@@ -34,6 +34,10 @@ A progress bar is an R6 object, that can be created with
     as the single parameter.}
   \item{clear}{Whether to clear the progress bar on completion.
     Defaults to \code{TRUE}.}
+  \item{show_after}{Amount of time in seconds, after which the progress
+    bar is shown on the screen. For very short processes,
+    it is probably not worth showing it at all. Defaults to two
+    tenth of a second.}
 }
 }
 
@@ -42,6 +46,12 @@ A progress bar is an R6 object, that can be created with
 Two functions can update a progress bar. \code{progress_bar$tick()}
 increases the number of ticks by one (or another specified value).
 \code{progress_bar$update()} sets a given ratio.
+
+The progress bar is displayed after the first `tick` command.
+This might not be desirable for long computations, because
+nothing is shown before the first tick. It is good practice to
+call `tick(0)` at the beginning of the computation or download,
+which shows the progress bar immediately.
 }
 
 \section{Tokens}{

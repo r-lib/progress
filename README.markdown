@@ -1,7 +1,7 @@
 
 # progress
 
-[![Linux Build Status](https://travis-ci.org/gaborcsardi/progress.png?branch=master)](https://travis-ci.org/gaborcsardi/rcorpora)
+[![Linux Build Status](https://travis-ci.org/gaborcsardi/progress.png?branch=master)](https://travis-ci.org/gaborcsardi/progress)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/v7g1703b9f90ymvy)](https://ci.appveyor.com/project/gaborcsardi/progress)
 
 > Progress bar in your R terminal
