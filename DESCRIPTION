@@ -5,7 +5,8 @@ Authors@R: person("Gabor", "Csardi", , "csardi.gabort@gmail.com", role = c("aut"
 Description: Terminal progress bars. They are
     configurable, may include percentage, elapsed time, and/or
     the estimated completion time. They work in the command line,
-    in Emacs, R Studio, Windows Rgui and Mac OSX R.app.
+    in Emacs, R Studio, Windows Rgui and Mac OSX R.app. The package
+    also provides a C++ API, that works with or without Rcpp.
 License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/gaborcsardi/progress

@@ -139,7 +139,37 @@ f <- function() {
 }
 f()
 ```
+
 See the manual for details and other options.
+
+## C++ API
+
+The package also provides a C++ API, that can be used with or
+without Rcpp. See [the example package](inst/progresstest/src/test.cpp) that
+is included within `progress`. Here is a short excerpt that shows how it works:
+
+```CPP
+
+#include <RProgress.h>
+
+...
+
+RProgress::RProgress pb("Downloading [:bar] ETA: %eta");
+
+  pb.tick(0);
+  for (int i = 0; i < 100; i++) {
+    usleep(2.0 / 100 * 1000000);
+    pb.tick();
+  }
+
+...
+
+```
+
+The C++ API has almost the same functionality as the R API, except that it
+does not currently support custom tokens, custom streams, and callback functions.
+
+Note that the C++ and the R APIs are independent.
 
 ## License
 
