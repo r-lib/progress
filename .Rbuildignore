@@ -2,3 +2,5 @@
 ^appveyor\.yml$
 ^README\.markdown$
 ^tags$
+^inst/progresstest/src/.*\.o$
+^inst/progresstest/src/.*\.so$
