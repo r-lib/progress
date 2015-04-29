@@ -134,7 +134,7 @@ class RProgress {
     // eta
     double percent = std::round(ratio_now * 100);
     double eta_secs = percent == 100 ? 0 :
-      elapsed_secs * total / current - 1.0;
+      elapsed_secs * (total / current - 1.0);
     std::string eta = std::isinf(eta_secs) ? "?s" : vague_dt(eta_secs);
     replace_all(str, ":eta", eta);
 
