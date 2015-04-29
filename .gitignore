@@ -1,1 +1,3 @@
 /tags
+/src/*.o
+/src/progress.so
