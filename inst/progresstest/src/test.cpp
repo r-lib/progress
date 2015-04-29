@@ -4,10 +4,12 @@
 #include <unistd.h>
 
 // [[Rcpp::export]]
-Rcpp::CharacterVector test_progress() {
+Rcpp::CharacterVector test_progress(Rcpp::CharacterVector formatSEXP =
+				    "[:bar] :percent ") {
   BEGIN_RCPP
 
-  RProgress::RProgress pb;
+  const char *format = formatSEXP[0];
+  RProgress::RProgress pb(format);
 
   pb.tick(0);
   for (int i = 0; i < 100; i++) {

@@ -6,12 +6,13 @@
 using namespace Rcpp;
 
 // test_progress
-Rcpp::CharacterVector test_progress();
-RcppExport SEXP progresstest_test_progress() {
+Rcpp::CharacterVector test_progress(Rcpp::CharacterVector formatSEXP);
+RcppExport SEXP progresstest_test_progress(SEXP formatSEXPSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
-    __result = Rcpp::wrap(test_progress());
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type formatSEXP(formatSEXPSEXP);
+    __result = Rcpp::wrap(test_progress(formatSEXP));
     return __result;
 END_RCPP
 }
