@@ -146,7 +146,8 @@ See the manual for details and other options.
 
 The package also provides a C++ API, that can be used with or
 without Rcpp. See [the example package](inst/progresstest/src/test.cpp) that
-is included within `progress`. Here is a short excerpt that shows how it works:
+is [included](inst/progresstest) within `progress`. Here is a short excerpt
+that shows how it works:
 
 ```CPP
 
