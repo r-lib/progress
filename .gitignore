@@ -1,1 +1,8 @@
 /tags
+/src/*.o
+/src/progress.so
+/inst/progresstest/src/*.o
+/inst/progresstest/src/progresstest.so
+.Rproj.user
+.Rhistory
+.RData
