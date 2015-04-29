@@ -2,6 +2,7 @@
 
 export(progress_bar)
 importFrom(R6,R6Class)
+importFrom(Rcpp,loadRcppModules)
 importFrom(prettyunits,pretty_bytes)
 importFrom(prettyunits,vague_dt)
 importFrom(utils,flush.console)

@@ -13,4 +13,3 @@ BugReports: https://github.com/gaborcsardi/progress/issues
 Imports:
     prettyunits,
     R6
-LinkingTo: Rcpp
