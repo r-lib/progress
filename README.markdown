@@ -3,6 +3,7 @@
 
 [![Linux Build Status](https://travis-ci.org/gaborcsardi/progress.svg?branch=master)](https://travis-ci.org/gaborcsardi/progress)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/github/gaborcsardi/progress?svg=true)](https://ci.appveyor.com/project/gaborcsardi/progress)
+[![](http://www.r-pkg.org/badges/version/progress)](http://cran.rstudio.com/web/packages/progress/index.html)
 
 > Progress bar in your R terminal
 
