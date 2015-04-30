@@ -170,7 +170,8 @@ RProgress::RProgress pb("Downloading [:bar] ETA: %eta");
 The C++ API has almost the same functionality as the R API, except that it
 does not currently support custom tokens, custom streams, and callback functions.
 
-Note that the C++ and the R APIs are independent.
+Note that the C++ and the R APIs are independent and for a
+single progress bar you need to use either one exclusively.
 
 ## License
 
