@@ -155,7 +155,7 @@ that shows how it works:
 
 ...
 
-RProgress::RProgress pb("Downloading [:bar] ETA: %eta");
+RProgress::RProgress pb("Downloading [:bar] ETA: :eta");
 
   pb.tick(0);
   for (int i = 0; i < 100; i++) {
