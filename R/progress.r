@@ -291,7 +291,7 @@ pb_render <- function(self, private, tokens) {
     }
     eta <- as.difftime(eta_secs, units = "secs")
     if (eta == Inf) {
-      eta <- "?s"
+      eta <- " ?s"
     } else {
       eta <- vague_dt(eta, format = "terse")
     }
