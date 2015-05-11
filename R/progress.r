@@ -364,6 +364,6 @@ pb_terminate <- function(self, private) {
     clear_line(private$stream, private$width)
     cursor_to_start(private$stream)
   } else {
-    cat("\n")
+    cat("\n", file = private$stream)
   }
 }
