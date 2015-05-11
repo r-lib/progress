@@ -75,3 +75,63 @@ test_that("Digress", {
 
   expect_equal(out, sout)
 })
+
+test_that("No :bar item", {
+
+  ## TODO
+
+})
+
+test_that(":current and :total tokens", {
+
+  ## TODO
+
+})
+
+test_that(":elapsed token", {
+
+  ## TODO
+
+})
+
+test_that(":eta token", {
+
+  ## TODO
+
+})
+
+test_that(":rate and :bytes tokens", {
+
+  ## TODO
+
+})
+
+test_that("complete and incomplete chars", {
+
+  ## TODO
+
+})
+
+test_that("callback function", {
+
+  ## TODO
+
+})
+
+test_that("clearing and not clearing", {
+
+  ## TODO
+
+})
+
+test_that("show_after argument", {
+
+  ## TODO
+
+})
+
+test_that("custom tokens", {
+
+  ## TODO
+
+})
