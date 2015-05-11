@@ -1,5 +1,5 @@
 
-get_output <- function(..., stream = stderr()) {
+get_output <- function(..., stream = stdout()) {
 
   if (identical(stream, stdout())) {
     type <- "output"
@@ -11,8 +11,7 @@ get_output <- function(..., stream = stderr()) {
   on.exit(unlink(tmp), add = TRUE)
   on.exit(sink(NULL, type = type), add = TRUE)
 
-  tmpcon <- file(tmp, open = "w")
-  sink(tmpcon, type = type)
+  sink(tmp, type = type)
   force(...)
   sink(NULL, type = type)
 

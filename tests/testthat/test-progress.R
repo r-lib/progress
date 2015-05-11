@@ -4,7 +4,7 @@ context("Progress bar")
 test_that("Vanilla progress bar works", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stderr(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), force = TRUE,
                            show_after = 0, width = 20)
     for (i in 1:5) {
       pb$tick(20)
@@ -28,7 +28,7 @@ test_that("Vanilla progress bar works", {
 test_that("Calling tick(0)", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stderr(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), force = TRUE,
                            show_after = 0, width = 20)
     pb$tick(0)
     for (i in 1:5) {
@@ -54,7 +54,7 @@ test_that("Calling tick(0)", {
 test_that("Digress", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stderr(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), force = TRUE,
                            show_after = 0, width = 20)
     f <- function() {
       pb$tick(50)
