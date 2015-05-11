@@ -1,5 +1,5 @@
 
-get_output <- function(..., stream = default_stream(NULL)) {
+get_output <- function(..., stream = stderr()) {
 
   if (identical(stream, stdout())) {
     type <- "output"
