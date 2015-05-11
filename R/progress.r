@@ -34,6 +34,8 @@
 #'     bar is shown on the screen. For very short processes,
 #'     it is probably not worth showing it at all. Defaults to two
 #'     tenth of a second.}
+#'   \item{force}{Whether to force showing the progress bar,
+#'     even if the given (or default) stream does not seem support it.}
 #' }
 #'
 #' @section Using the progress bar:
@@ -138,9 +140,9 @@ progress_bar <- R6Class("progress_bar",
     initialize = function(format = "[:bar] :percent", total = 100,
       width = getOption("width") - 2, stream = NULL, complete = "=",
       incomplete = "-", callback = function(self) {}, clear = TRUE,
-      show_after = 0.2) {
+      show_after = 0.2, force = FALSE) {
         pb_init(self, private, format, total, width, stream, complete,
-          incomplete, callback, clear, show_after)
+          incomplete, callback, clear, show_after, force)
     },
     tick = function(len = 1, tokens = list()) {
       pb_tick(self, private, len, tokens) },
@@ -180,7 +182,8 @@ progress_bar <- R6Class("progress_bar",
 )
 
 pb_init <- function(self, private, format, total, width, stream,
-                    complete, incomplete, callback, clear, show_after) {
+                    complete, incomplete, callback, clear, show_after,
+                    force) {
 
   stream <- default_stream(stream)
 
@@ -195,7 +198,7 @@ pb_init <- function(self, private, format, total, width, stream,
   assert_nonnegative_scalar(show_after)
 
   private$first <- TRUE
-  private$supported <- is_supported(stream)
+  private$supported <- force || is_supported(stream)
   private$format <- format
   private$total <- total
   private$width <- width
