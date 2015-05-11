@@ -192,7 +192,7 @@ pb_init <- function(self, private, format, total, width, stream,
   assert_single_char(incomplete)
   assert_function(callback)
   assert_flag(clear)
-  assert_positive_scalar(show_after)
+  assert_nonnegative_scalar(show_after)
 
   private$first <- TRUE
   private$supported <- is_supported(stream)
