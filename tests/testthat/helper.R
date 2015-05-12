@@ -13,7 +13,6 @@ get_output <- function(..., stream = stdout()) {
 
   sink(tmp, type = type)
   force(...)
-  sink(NULL, type = type)
 
   rawToChar(readBin(tmp, raw(0), n = file.info(tmp)$size))
 }
