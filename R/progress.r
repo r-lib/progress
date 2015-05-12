@@ -245,7 +245,7 @@ pb_tick <- function(self, private, len, tokens) {
 
   if (private$complete) {
     private$terminate()
-    private$callback(self)
+    private$callback()
   }
 
   private$first <- FALSE
