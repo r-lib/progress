@@ -7,12 +7,25 @@ get_output <- function(..., stream = stdout()) {
     type <- "message"
   }
 
+  cleanup <- function() {
+    unlink(tmp)
+    sink(NULL, type = type)
+  }
+
   tmp <- tempfile()
-  on.exit(unlink(tmp), add = TRUE)
-  on.exit(sink(NULL, type = type), add = TRUE)
+  on.exit(cleanup())
 
   sink(tmp, type = type)
   force(...)
 
-  rawToChar(readBin(tmp, raw(0), n = file.info(tmp)$size))
+  ## Windows has some strange readBin and sink interplay,
+  ## so we need to remove the sink before reading the file
+  sink(NULL, type = type)
+  x <- readBin(tmp, raw(0), n = file.info(tmp)$size)
+  unlink(tmp)
+
+  ## No cleanup is needed any more
+  on.exit(force(1))
+
+  rawToChar(x)
 }
