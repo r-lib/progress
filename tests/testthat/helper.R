@@ -29,3 +29,11 @@ get_output <- function(..., stream = stdout()) {
 
   rawToChar(x)
 }
+
+win_newline <- function(..., collapse = NULL) {
+  x <- paste0(...)
+  if (.Platform$OS.type == "windows") {
+    x <- gsub("\n", "\r\n", x, fixed = TRUE)
+  }
+  x
+}
