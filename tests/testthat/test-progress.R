@@ -310,15 +310,15 @@ test_that(":rate and :bytes tokens", {
   ## Next output line might be shorter, so 'progress_bar$render'
   ## might to erase it first
   soutm <- win_newline(
-    "^\r\\[0 B/s 0 B\\]",
-    "\r?[ ]*",
-    "\r\\[1\\.?[0-9]+ kB/s 1\\.?[0-9]+ kB\\]",
-    "\r?[ ]*",
-    "\r\\[1\\.?[0-9]+ kB/s 2\\.?[0-9]+ kB\\]",
-    "\r?[ ]*",
-    "\r\\[2\\.?[0-9]+ kB/s 4\\.?[0-9]+ kB\\]",
-    "\r[ ]*",
-    "\r$"
+    "^\\r\\[0 B/s 0 B\\]",
+    "\\r?[ ]*",
+    "\\r\\[1\\.?[0-9]* kB/s 1\\.?[0-9]+ kB\\]",
+    "\\r?[ ]*",
+    "\\r\\[1\\.?[0-9]* kB/s 2\\.?[0-9]+ kB\\]",
+    "\\r?[ ]*",
+    "\\r\\[2\\.?[0-9]* kB/s 4\\.?[0-9]+ kB\\]",
+    "\\r[ ]*",
+    "\\r$"
   )
 
   expect_match(out, soutm)
