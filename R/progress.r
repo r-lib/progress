@@ -301,6 +301,7 @@ pb_render <- function(self, private, tokens) {
   if (private$has_token["rate"]) {
     elapsed_secs <- Sys.time() - private$start
     rate <- private$current / as.double(elapsed_secs, units = "secs")
+    if (is.nan(rate)) rate <- 0
     rate <- paste0(pretty_bytes(round(rate)), "/s")
     str <- sub(str, pattern = ":rate", replacement = rate)
   }
