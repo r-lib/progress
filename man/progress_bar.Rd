@@ -78,7 +78,6 @@ values to \code{progress_bar$tick()} or \code{progress_bar$update()},
 in a named list. See example below.
 }
 \examples{
-\donttest{
 ## Basic
 pb <- progress_bar$new(total = 100)
 for (i in 1:100) {
@@ -133,6 +132,5 @@ f <- function() {
   invisible()
 }
 f()
-}
 }
 

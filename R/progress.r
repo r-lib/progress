@@ -73,7 +73,6 @@
 #'
 #' @export
 #' @examples
-#' \donttest{
 #' ## Basic
 #' pb <- progress_bar$new(total = 100)
 #' for (i in 1:100) {
@@ -128,7 +127,6 @@
 #'   invisible()
 #' }
 #' f()
-#' }
 #'
 #' @name progress_bar
 NULL
