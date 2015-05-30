@@ -1,7 +1,8 @@
 Package: progress
 Title: Terminal Progress Bars
 Version: 1.0.0
-Authors@R: person("Gabor", "Csardi", , "csardi.gabort@gmail.com", role = c("aut", "cre"))
+Author: Gabor Csardi [aut, cre]
+Maintainer: Gabor Csardi <csardi.gabor@gmail.com>
 Description: Terminal progress bars. They are
     configurable, may include percentage, elapsed time, and/or
     the estimated completion time. They work in the command line,
