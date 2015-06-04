@@ -3,6 +3,8 @@ context("C++ API")
 
 test_that("C++ API works", {
 
+  skip_on_cran()
+
   Sys.setenv("R_TESTS" = "")
 
   ## Need to "link to" the current package
