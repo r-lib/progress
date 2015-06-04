@@ -1,0 +1,1 @@
+inst/NEWS.md

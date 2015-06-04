@@ -1,6 +1,7 @@
 ^\.travis\.yml$
 ^appveyor\.yml$
-^README\.markdown$
+^README\.md$
+^NEWS\.md$
 ^tags$
 ^inst/progresstest/src/.*\.o$
 ^inst/progresstest/src/.*\.so$
