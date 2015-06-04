@@ -9,13 +9,13 @@ test_that("C++ API works", {
 
   ## OK, we could install it
   R <- file.path(R.home("bin"), "R")
-  install.packages(test_pkg_dir, repos = NULL, lib = .libPaths()[1],
+  install.packages(test_pkg_dir, repos = NULL,
                    type = "source", quiet = TRUE)
   expect_true(TRUE)
 
   ## OK, we could load it
   on.exit(try(silent = TRUE, unloadNamespace("progresstest")), add = TRUE)
-  library("progresstest", character.only = TRUE, lib.loc = .libPaths()[1])
+  library(progresstest)
   expect_true(TRUE)
 
 })
