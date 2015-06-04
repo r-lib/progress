@@ -52,7 +52,7 @@ class RProgress {
     complete(false) {
 
     supported = is_supported();
-    stderr = default_stderr();
+    use_stderr = default_stderr();
   }
 
   ~RProgress() { }
@@ -101,7 +101,7 @@ class RProgress {
   double total;			// Total number of ticks
   double current;		// Current number of ticks
   int width;			// Width of progress bar
-  bool stderr;			// Whether to print to stderr
+  bool use_stderr;		// Whether to print to stderr
   char complete_char;		// Character for completed ticks
   char incomplete_char;		// Character for incomplete ticks
   bool clear;			// Should we clear the line at the end?
@@ -173,9 +173,9 @@ class RProgress {
     replace_all(str, ":bar", bar);
 
     if (last_draw != str) {
-      if (last_draw.length() > str.length()) { clear_line(stderr, width); }
-      cursor_to_start(stderr);
-      if (stderr) {
+      if (last_draw.length() > str.length()) { clear_line(use_stderr, width); }
+      cursor_to_start(use_stderr);
+      if (use_stderr) {
 	REprintf(str.c_str());
       } else {
 	Rprintf(str.c_str());
@@ -187,10 +187,10 @@ class RProgress {
   void terminate() {
     if (! supported) return;
     if (clear) {
-      clear_line(stderr, width);
-      cursor_to_start(stderr);
+      clear_line(use_stderr, width);
+      cursor_to_start(use_stderr);
     } else {
-      if (stderr) {
+      if (use_stderr) {
 	REprintf("\n");
       } else {
 	Rprintf("\n");
@@ -205,23 +205,23 @@ class RProgress {
     return ratio;
   }
 
-  void clear_line(bool stderr, int width) {
+  void clear_line(bool use_stderr, int width) {
 
     char spaces[width + 2];
     for (int i = 1; i <= width; i++) spaces[i] = ' ';
     spaces[0] = '\r';
     spaces[width + 1] = '\0';
 
-    if (stderr) {
+    if (use_stderr) {
       REprintf(spaces);
     } else {
       Rprintf(spaces);
     }
   }
 
-  void cursor_to_start(bool stderr) {
+  void cursor_to_start(bool use_stderr) {
 
-    if (stderr) {
+    if (use_stderr) {
       REprintf("\r");
     } else {
       Rprintf("\r");
