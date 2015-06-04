@@ -3,11 +3,10 @@ Title: Terminal Progress Bars
 Version: 1.0.2
 Author: Gabor Csardi [aut, cre]
 Maintainer: Gabor Csardi <csardi.gabor@gmail.com>
-Description: Terminal progress bars. They are
-    configurable, may include percentage, elapsed time, and/or
-    the estimated completion time. They work in the command line,
-    in Emacs, R Studio, Windows Rgui and Mac OSX R.app. The package
-    also provides a C++ API, that works with or without Rcpp.
+Description: Progress bars are configurable, may include percentage, elapsed time, and/or
+    the estimated completion time. They work in terminals, in 'Emacs' 'ESS', 
+    'R Studio', 'Windows' 'Rgui' and 'Mac' 'OSX' 'R.app'. The 'progress' package also provides 
+    a 'C++' 'API', that works with or without 'Rcpp'.
 License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/gaborcsardi/progress
