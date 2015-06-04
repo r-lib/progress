@@ -1,6 +1,6 @@
 Package: progress
 Title: Terminal Progress Bars
-Version: 1.0.1
+Version: 1.0.2
 Author: Gabor Csardi [aut, cre]
 Maintainer: Gabor Csardi <csardi.gabor@gmail.com>
 Description: Terminal progress bars. They are
