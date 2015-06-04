@@ -2,4 +2,8 @@
 #' @importFrom progress progress_bar
 #' @importFrom Rcpp loadRcppModules
 #' @useDynLib progresstest
-NULL
+#' @export
+
+my_test_progress <- function(format = "[:bar] :percent ") {
+  test_progress(format)
+}
