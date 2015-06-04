@@ -28,14 +28,21 @@ test_that("C++ API works", {
   expect_true(TRUE)
 
   ## OK, we can even use it
-  on.exit(sink(NULL, type = "message"), add = TRUE)
+  stream <- if (is_r_studio()) "output" else "message"
+  clean <- TRUE
+  on.exit(if (clean) sink(NULL, type = stream), add = TRUE)
+
   on.exit(if (con) { close(con) }, add = TRUE)
   con <- FALSE
   out_file <- tempfile()
   con <- file(out_file, open = "w")
-  sink(con, type = "message")
+  sink(con, type = stream)
+
   progresstest::my_test_progress()
   out <- readChar(out_file, nchars = file.info(out_file)$size)
+  sink(NULL, type = stream)
+  clean <- FALSE
+
   expect_true(grepl("----", out))
   expect_true(grepl("====", out))
 
