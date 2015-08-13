@@ -2,7 +2,7 @@
 <h1 align="center">
     <br>
     <br>
-    <img width="400" src="./inst/logo.svg" alt="progress">
+    <img width="400" src="./inst/logo.png" alt="progress">
     <br>
     <br>
     <br>
