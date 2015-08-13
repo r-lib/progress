@@ -1,5 +1,12 @@
 
-# progress
+<h1 align="center">
+    <br>
+    <br>
+    <img width="400" src="./inst/logo.svg" alt="progress">
+    <br>
+    <br>
+    <br>
+</h1>
 
 [![Linux Build Status](https://travis-ci.org/gaborcsardi/progress.svg?branch=master)](https://travis-ci.org/gaborcsardi/progress)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/github/gaborcsardi/progress?svg=true)](https://ci.appveyor.com/project/gaborcsardi/progress)
