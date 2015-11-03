@@ -284,10 +284,31 @@ test_that("custom tokens", {
   })
 
   sout <- win_newline(
-    "\rfoo    [==-----]  25%",
-    "\rfoo    [====---]  50%",
-    "\rfoobar [=====--]  75%",
-    "\rfoobar [=======] 100%",
+    "\rfoo    [==----]  25%",
+    "\rfoo    [===---]  50%",
+    "\rfoobar [====--]  75%",
+    "\rfoobar [======] 100%",
+    "\n"
+  )
+
+  expect_equal(out, sout)
+})
+
+test_that("bar adepts to width of custom tokens", {
+  out <- get_output({
+    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+                           show_after = 0, width = 20,
+                           format = ":what [:bar] :percent",
+                           clear = FALSE, total = 200)
+    pb$tick(50, tokens = list(what = "text"))
+    pb$tick(50, tokens = list(what = "long text"))
+    pb$tick(100, tokens = list(what = "text"))
+  })
+
+  sout <- win_newline(
+    "\rtext [==------]  25%",
+    "\rlong text [==-]  50%",
+    "\rtext [========] 100%",
     "\n"
   )
 
