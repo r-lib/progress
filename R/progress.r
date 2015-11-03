@@ -144,7 +144,8 @@ progress_bar <- R6Class("progress_bar",
     },
     tick = function(len = 1, tokens = list()) {
       pb_tick(self, private, len, tokens) },
-    update = function(ratio, tokens) { pb_update(self, private, ratio, tokens) }
+    update = function(ratio, tokens = list()) { 
+      pb_update(self, private, ratio, tokens) }
   ),
 
   private = list(
@@ -354,7 +355,7 @@ pb_render <- function(self, private, tokens) {
 pb_update <- function(self, private, ratio, tokens) {
   assert_ratio(ratio)
   goal <- floor(ratio * private$total)
-  private$tick(goal - private$current, tokens)
+  self$tick(goal - private$current, tokens)
 }
 
 pb_terminate <- function(self, private) {
