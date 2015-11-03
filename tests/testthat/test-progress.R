@@ -25,6 +25,31 @@ test_that("Vanilla progress bar works", {
 
 })
 
+test_that("Update method works", {
+
+  out <- get_output({
+    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+                           show_after = 0, width = 20)
+    updates = c(20, 40, 20, 80, 100) / 100
+    for (i in 1:5) {
+      pb$update(updates[i])
+    }
+  })
+
+  sout <- win_newline(
+    "\r[===----------]  20%",
+    "\r[=====--------]  40%",
+    "\r[===----------]  20%",
+    "\r[==========---]  80%",
+    "\r[=============] 100%",
+    "\r                    ",
+    "\r"
+  )
+
+  expect_equal(out, sout)
+
+})
+
 test_that("Calling tick(0)", {
 
   out <- get_output({
