@@ -319,6 +319,10 @@ pb_render <- function(self, private, tokens) {
     str <- sub(str, pattern = ":bytes", replacement = bytes)
   }
 
+  for (t in names(tokens)) {
+    str <- gsub(paste0(":", t), tokens[[t]], str, fixed = TRUE)
+  }
+
   if (private$has_token["bar"]) {
     bar_width <- nchar(sub(str, pattern = ":bar", replacement = ""))
     bar_width <- private$width - bar_width
@@ -332,10 +336,6 @@ pb_render <- function(self, private, tokens) {
                         collapse = private$chars$incomplete)
 
     str <- sub(":bar", paste0(complete, incomplete), str)
-  }
-
-  for (t in names(tokens)) {
-    str <- gsub(paste0(":", t), tokens[[t]], str, fixed = TRUE)
   }
 
   if (private$last_draw != str) {
