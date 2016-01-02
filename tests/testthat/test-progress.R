@@ -369,3 +369,22 @@ test_that(":rate and :bytes tokens", {
 
   expect_match(out, soutm)
 })
+
+test_that("very quick loops, only the result is shown", {
+
+  out <- get_output({
+    pb <- progress_bar$new(total = 100, stream = stdout(), force = TRUE,
+                           width = 20)
+    for (i in 1:100) pb$tick()
+  })
+
+  sout <- win_newline(
+    "\r[-------------]   1%",
+    "\r[=============] 100%",
+    "\r                    ",
+    "\r"
+  )
+
+  expect_equal(out, sout)
+
+})
