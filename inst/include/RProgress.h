@@ -74,6 +74,7 @@ class RProgress {
     if (first) { start = time_now(); }
 
     current += len;
+    count++;
 
     // We only update after show_after secs
     toupdate = toupdate || time_now() - start > show_after;
@@ -100,6 +101,7 @@ class RProgress {
   std::string format;		// Format template
   double total;			// Total number of ticks
   double current;		// Current number of ticks
+  int count;                    // Total number of calls
   int width;			// Width of progress bar
   bool use_stderr;		// Whether to print to stderr
   char complete_char;		// Character for completed ticks
@@ -157,6 +159,9 @@ class RProgress {
     // bytes
     replace_all(str, ":bytes", pretty_bytes(round(current)));
 
+    // spin
+    replace_all(str, ":spin", spin_symbol());
+
     // bar
     std::string str_no_bar = str;
     replace_all(str_no_bar, ":bar", "");
@@ -203,6 +208,11 @@ class RProgress {
     if (ratio < 0) ratio = 0;
     if (ratio > 1) ratio = 1;
     return ratio;
+  }
+
+  std::string spin_symbol() {
+    const char symbols[4] = {'-', '\\', '|', '/'};
+    return std::string(1, symbols[(count - 1) % 4]);
   }
 
   void clear_line(bool use_stderr, int width) {
