@@ -240,7 +240,10 @@ pb_tick <- function(self, private, len, tokens) {
   assert_scalar(len)
   assert_named_or_empty_list(tokens)
 
-  if (private$first) private$start <- Sys.time()
+  if (private$first) {
+    private$first <- FALSE
+    private$start <- Sys.time()
+  }
 
   private$current <- private$current + len
 
@@ -252,16 +255,12 @@ pb_tick <- function(self, private, len, tokens) {
 
   if (private$current >= private$total) private$complete <- TRUE
 
-  if (private$first || private$toupdate || private$complete) {
-    private$render(tokens)
-  }
+  if (private$toupdate) private$render(tokens)
 
   if (private$complete) {
     private$terminate()
     private$callback()
   }
-
-  private$first <- FALSE
 
   self
 }
@@ -380,7 +379,7 @@ pb_update <- function(self, private, ratio, tokens) {
 }
 
 pb_terminate <- function(self, private) {
-  if (!private$supported) return(invisible())
+  if (!private$supported || !private$toupdate) return(invisible())
   if (private$clear) {
     clear_line(private$stream, private$width)
     cursor_to_start(private$stream)
