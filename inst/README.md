@@ -175,8 +175,8 @@ You can try it with
 ```r
 plyr::l_ply(
   1:100,
-  .fun=function(...) Sys.sleep(0.01),
-  .progress='progress'
+  .fun = function(...) Sys.sleep(0.01),
+  .progress = 'progress'
 )
 ```
 
