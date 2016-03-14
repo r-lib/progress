@@ -150,6 +150,36 @@ f()
 
 See the manual for details and other options.
 
+## Creating a plyr compatible progress bar
+
+It is easy to create progress bars for
+[plyr](https://github.com/hadley/plyr):
+
+```r
+progress_progress <- function(...) {
+  pb <- NULL
+  list(
+    init = function(x, ...) {
+      pb <<- progress_bar$new(total = x, ...)
+    },
+	step = function() {
+      pb$tick()
+    },
+	term = function() NULL
+  )
+}
+```
+
+You can try it with
+
+```r
+plyr::l_ply(
+  1:100,
+  .fun=function(...) Sys.sleep(0.01),
+  .progress='progress'
+)
+```
+
 ## C++ API
 
 The package also provides a C++ API, that can be used with or
