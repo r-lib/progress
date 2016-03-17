@@ -72,6 +72,7 @@
 #' in a named list. See example below.
 #'
 #' @importFrom R6 R6Class
+#' @useDynLib progress
 #'
 #' @export
 #' @examples
@@ -148,28 +149,33 @@ progress_bar <- R6Class("progress_bar",
 
     initialize = function(format = "[:bar] :percent", total = 100,
       width = getOption("width") - 2, stream = NULL, complete = "=",
-      incomplete = "-", callback = function(self) {}, clear = TRUE,
+      incomplete = "-", callback = NULL, clear = TRUE,
       show_after = 0.2, force = FALSE) {
         pb_init(self, private, format, total, width, stream, complete,
           incomplete, callback, clear, show_after, force)
     },
     tick = function(len = 1, tokens = list()) {
-      pb_tick(self, private, len, tokens) },
+      .Call("progress_tick", self, private, len, tokens,
+        PACKAGE = "progress") },
     update = function(ratio, tokens = list()) { 
       pb_update(self, private, ratio, tokens) }
   ),
 
   private = list(
 
-    render = function(tokens) { pb_render(self, private, tokens) },
-    terminate = function() { pb_terminate(self, private) },
+    render = function(tokens) {
+      .Call("progress_render", self, private, tokens,
+        PACKAGE = "progress") },
+    terminate = function() {
+      .Call("progress_terminate", self, private,
+        PACKAGE = "progress") },
     ratio = function() { pb_ratio(self, private) },
 
     first = TRUE,
     supported = NA,
     format = NULL,
     total = NULL,
-    current = 0,
+    current = 0L,
     width = NULL,
     stream = NULL,
     chars = list(
@@ -187,6 +193,7 @@ progress_bar <- R6Class("progress_bar",
 
     spin = NULL,
 
+    ## Order is important here, the C code uses this exact order!
     has_token = c(current = FALSE, total = FALSE, elapsed = FALSE,
       eta = FALSE, percent = FALSE, rate = FALSE, bytes = FALSE,
       bar = FALSE, spin = FALSE)
@@ -205,7 +212,7 @@ pb_init <- function(self, private, format, total, width, stream,
   assert_connection(stream)
   assert_single_char(complete)
   assert_single_char(incomplete)
-  assert_function(callback)
+  assert_function_or_null(callback)
   assert_flag(clear)
   assert_nonnegative_scalar(show_after)
 
@@ -221,46 +228,6 @@ pb_init <- function(self, private, format, total, width, stream,
   private$clear <- clear
   private$show_after <- as.difftime(show_after, units = "secs")
   private$spin <- spin_symbols()
-
-  private$has_token <- pb_update_has_token(private$has_token, format)
-
-  self
-}
-
-pb_update_has_token <- function(tokens, format) {
-  for (n in names(tokens)) {
-    tokens[n] <- grepl(paste0(":", n), format, fixed = TRUE)
-  }
-
-  tokens
-}
-
-pb_tick <- function(self, private, len, tokens) {
-
-  assert_scalar(len)
-  assert_named_or_empty_list(tokens)
-
-  if (private$first) {
-    private$first <- FALSE
-    private$start <- Sys.time()
-  }
-
-  private$current <- private$current + len
-
-  if (!private$toupdate) {
-    if (Sys.time() - private$start >= private$show_after) {
-      private$toupdate <- TRUE
-    }
-  }
-
-  if (private$current >= private$total) private$complete <- TRUE
-
-  if (private$toupdate) private$render(tokens)
-
-  if (private$complete) {
-    private$terminate()
-    private$callback()
-  }
 
   self
 }
