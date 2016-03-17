@@ -190,8 +190,9 @@ progress_bar <- R6Class("progress_bar",
     start = NULL,
     toupdate = FALSE,
     complete = FALSE,
+    spin = 1L,
 
-    spin = NULL,
+    spin_symbols = c("-", "\\", "|", "/"),
 
     ## Order is important here, the C code uses this exact order!
     has_token = c(current = FALSE, total = FALSE, elapsed = FALSE,
@@ -227,7 +228,7 @@ pb_init <- function(self, private, format, total, width, stream,
   private$callback <- callback
   private$clear <- clear
   private$show_after <- as.difftime(show_after, units = "secs")
-  private$spin <- spin_symbols()
+  private$spin <- 1L
 
   self
 }
@@ -303,7 +304,9 @@ pb_render <- function(self, private, tokens) {
     ## NOTE: fixed = TRUE is needed here or "\\" causes trouble with
     ## the replacement (I think it's interpreted as an invalid
     ## backreference).
-    str <- sub(str, pattern = ":spin", replacement = private$spin(), fixed = TRUE)
+    str <- sub(str, pattern = ":spin", replacement = spin_symbols[private$spin], fixed = TRUE)
+    private$spin <- private$spin + 1L
+    if (private$spin > length(private$spin)) private$spin <- 1L
   }
 
   for (t in names(tokens)) {
@@ -352,14 +355,5 @@ pb_terminate <- function(self, private) {
     cursor_to_start(private$stream)
   } else {
     cat("\n", file = private$stream)
-  }
-}
-
-spin_symbols <- function() {
-  sym <- c("-", "\\", "|", "/")
-  i <- 0L
-  n <- length(sym)
-  function() {
-    sym[[i <<- if (i >= n) 1L else i + 1L]]
   }
 }

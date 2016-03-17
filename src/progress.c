@@ -254,8 +254,16 @@ int progress_token_bytes(SEXP private, char *bufptr, char *bufend) {
 }
 
 int progress_token_spin(SEXP private, char *bufptr, char *bufend) {
-  /* TODO */
-  return 0;
+  int *spin = INTEGER(findVar(install("spin"), private));
+  SEXP symbols = findVar(install("spin_symbols"), private);
+
+  int ret = snprintf(bufptr, bufend - bufptr, "%s",
+		     CHAR(STRING_ELT(symbols, *spin)));
+  *spin += 1;
+
+  if (*spin >= LENGTH(symbols)) *spin = 0;
+
+  return ret;
 }
 
 void progress_refresh_line(SEXP private, ...) {
