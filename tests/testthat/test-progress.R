@@ -80,7 +80,7 @@ test_that("Digress", {
 
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
-                           show_after = 0, width = 20)
+                           show_after = 0, width = 17)
     f <- function() {
       pb$tick(50)
       pb$tick(-20)
@@ -92,12 +92,12 @@ test_that("Digress", {
   })
 
   sout <- win_newline(
-    "\r[======-------]  50%",
-    "\r[====---------]  30%",
-    "\r[==========---]  80%",
-    "\r[======-------]  50%",
-    "\r[=============] 100%",
-    "\r                    ",
+    "\r[=====-----]  50%",
+    "\r[===-------]  30%",
+    "\r[========--]  80%",
+    "\r[=====-----]  50%",
+    "\r[==========] 100%",
+    "\r                 ",
     "\r"
   )
 
@@ -211,17 +211,17 @@ test_that("clearing and not clearing", {
 
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
-                           show_after = 0, width = 20, clear = TRUE)
+                           show_after = 0, width = 19, clear = TRUE)
     pb$tick(0)
     pb$tick(50)
     pb$tick(50)
   })
 
   sout <- win_newline(
-    "\r[-------------]   0%",
-    "\r[======-------]  50%",
-    "\r[=============] 100%",
-    "\r                    ",
+    "\r[------------]   0%",
+    "\r[======------]  50%",
+    "\r[============] 100%",
+    "\r                   ",
     "\r"
   )
 
@@ -229,16 +229,16 @@ test_that("clearing and not clearing", {
 
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
-                           show_after = 0, width = 20, clear = FALSE)
+                           show_after = 0, width = 19, clear = FALSE)
     pb$tick(0)
     pb$tick(50)
     pb$tick(50)
   })
 
   sout <- win_newline(
-    "\r[-------------]   0%",
-    "\r[======-------]  50%",
-    "\r[=============] 100%",
+    "\r[------------]   0%",
+    "\r[======------]  50%",
+    "\r[============] 100%",
     "\n"
   )
 
@@ -319,7 +319,7 @@ test_that("custom streams", {
   str <- file(tmp <- tempfile(), open = "w")
   on.exit(unlink(tmp), add = TRUE)
   pb <- progress_bar$new(stream = str, force = TRUE,
-                         show_after = 0, width = 20)
+                         show_after = 0, width = 19)
   pb$tick(0)
   pb$tick(50)
   pb$tick(50)
@@ -328,10 +328,10 @@ test_that("custom streams", {
   out <- rawToChar(readBin(tmp, raw(0), n = file.info(tmp)$size))
 
   sout <- win_newline(
-    "\r[-------------]   0%",
-    "\r[======-------]  50%",
-    "\r[=============] 100%",
-    "\r                    ",
+    "\r[------------]   0%",
+    "\r[======------]  50%",
+    "\r[============] 100%",
+    "\r                   ",
     "\r"
   )
 
