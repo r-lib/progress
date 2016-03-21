@@ -14,6 +14,7 @@ SEXP progress_render(SEXP self, SEXP private, SEXP tokens);
 void progress_refresh_line(SEXP private, ...);
 double progress_ratio(SEXP private);
 SEXP progress_now();
+double progress_elapsed_since(SEXP start);
 
 /* Tokens */
 int progress_token_bar(SEXP private, char *buffer, char *bufend,
@@ -50,15 +51,15 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
 
   if (!toupdate) {
     double show_after = asReal(findVar(install("show_after"), private));
-    SEXP start, now;
+    SEXP start;
+    double secs;
     PROTECT(start = findVar(install("start"), private));
-    PROTECT(now = progress_now());
-    if (REAL(now)[0] - REAL(start)[0] +
-	(REAL(now)[1] - REAL(start)[1]) / 1000000.0 > show_after) {
+    secs = progress_elapsed_since(start);
+    if (secs > show_after) {
       toupdate = 1;
       setVar(install("toupdate"), ScalarLogical(1), private);
     }
-    UNPROTECT(2);
+    UNPROTECT(1);
   }
 
   if (current >= total) {
@@ -226,14 +227,9 @@ int progress_token_total(SEXP private, char *bufptr, char *bufend) {
 /* TODO: smart time printing */
 
 int progress_token_elapsed(SEXP private, char *bufptr, char *bufend) {
-  double *start = REAL(findVar(install("start"), private));
-  SEXP now;
-  double secs;
-  int ret;
-  PROTECT(now = progress_now());
-  secs = REAL(now)[0] - start[0] + (REAL(now)[1] - start[1]) / 1000000.0;
-  ret = snprintf(bufptr, bufend - bufptr, "%is", (int) round(secs));
-  UNPROTECT(1);
+  SEXP start = findVar(install("start"), private);
+  double secs = progress_elapsed_since(start);
+  int ret = snprintf(bufptr, bufend - bufptr, "%is", (int) round(secs));
   return ret;
 }
 
@@ -293,11 +289,18 @@ double progress_ratio(SEXP private) {
 
 SEXP progress_now() {
   struct timeval now;
-  SEXP start;
-  PROTECT(start = allocVector(REALSXP, 2));
+  SEXP snow;
+  PROTECT(snow = allocVector(REALSXP, 2));
   gettimeofday(&now, NULL);
-  REAL(start)[0] = now.tv_sec;
-  REAL(start)[1] = now.tv_usec;
+  REAL(snow)[0] = now.tv_sec;
+  REAL(snow)[1] = now.tv_usec;
   UNPROTECT(1);
-  return start;
+  return snow;
+}
+
+double progress_elapsed_since(SEXP start) {
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  return now.tv_sec - REAL(start)[0] +
+    (now.tv_usec - REAL(start)[1]) / 1000000.0;
 }
