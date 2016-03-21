@@ -12,6 +12,7 @@ SEXP progress_terminate(SEXP self, SEXP private);
 SEXP progress_render(SEXP self, SEXP private, SEXP tokens);
 
 void progress_refresh_line(SEXP private, ...);
+void progress_clear_line(SEXP private);
 double progress_ratio(SEXP private);
 
 SEXP progress_now();
@@ -90,17 +91,17 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
 }
 
 SEXP progress_terminate(SEXP self, SEXP private) {
+  int supported = asLogical(findVar(install("supported"), private));
+  int toupdate = asLogical(findVar(install("toupdate"), private));
+  int clear = asLogical(findVar(install("clear"), private));
 
-  /* TODO */
-
-  SEXP pkg;
-
-  PROTECT(pkg = eval(lang2(install("getNamespace"),
-			   ScalarString(mkChar("pkg"))),
-		     R_GlobalEnv));
-  eval(lang3(install("pb_terminate"), self, private), pkg);
-
-  UNPROTECT(1);
+  if (!supported || !toupdate) {
+    /* do nothing */
+  } else if (clear) {
+    progress_clear_line(private);
+  } else {
+    progress_refresh_line(private, "\n");
+  }
 
   return self;
 }
@@ -293,6 +294,16 @@ void progress_refresh_line(SEXP private, ...) {
   va_start(ap, private);
   con->vfprintf(con, "%s", ap);
   va_end(ap);
+}
+
+void progress_clear_line(SEXP private) {
+  int width = asInteger(findVar(install("width"), private));
+  char *buffer = (char*) malloc(width + 3);
+  memset(buffer, ' ', width + 1);
+  buffer[0] = '\r';
+  buffer[width + 1] = '\r';
+  buffer[width + 2] = '\0';
+  progress_refresh_line(private, buffer);
 }
 
 double progress_ratio(SEXP private) {
