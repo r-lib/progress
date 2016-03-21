@@ -233,9 +233,27 @@ int progress_token_elapsed(SEXP private, char *bufptr, char *bufend) {
   return ret;
 }
 
+/* TODO: smart time printing */
+
 int progress_token_eta(SEXP private, char *bufptr, char *bufend) {
-  /* TODO */
-  return 0;
+  double percent = progress_ratio(private) * 100.0;
+  double total = asReal(findVar(install("total"), private));
+  double current = asReal(findVar(install("current"), private));
+  SEXP start = findVar(install("start"), private);
+  double elapsed_secs = progress_elapsed_since(start);
+  double eta_secs = 0.0;
+  int ret;
+  if (percent < 100.0) {
+    eta_secs = elapsed_secs * (total / current - 1.0);
+  }
+
+  if (! R_FINITE(eta_secs)) {
+    ret = snprintf(bufptr, bufend - bufptr, "%ss", " ?");
+  } else {
+    ret = snprintf(bufptr, bufend - bufptr, "%is", (int) eta_secs);
+  }
+
+  return ret;
 }
 
 int progress_token_percent(SEXP private, char *bufptr, char *bufend) {
