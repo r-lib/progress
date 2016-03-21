@@ -13,6 +13,7 @@ SEXP progress_render(SEXP self, SEXP private, SEXP tokens);
 
 void progress_refresh_line(SEXP private, ...);
 double progress_ratio(SEXP private);
+SEXP progress_now();
 
 /* Tokens */
 int progress_token_bar(SEXP private, char *buffer, char *bufend,
@@ -37,12 +38,8 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
   int complete = 0;
 
   if (first) {
-    struct timeval now;
     SEXP start;
-    PROTECT(start = allocVector(REALSXP, 2));
-    gettimeofday(&now, NULL);
-    REAL(start)[0] = now.tv_sec;
-    REAL(start)[1] = now.tv_usec;
+    PROTECT(start = progress_now());
     setVar(install("first"), ScalarLogical(0), private);
     setVar(install("start"), start, private);
     UNPROTECT(1);
@@ -53,16 +50,15 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
 
   if (!toupdate) {
     double show_after = asReal(findVar(install("show_after"), private));
-    struct timeval now;
-    SEXP start;
+    SEXP start, now;
     PROTECT(start = findVar(install("start"), private));
-    gettimeofday(&now, NULL);
-    if (now.tv_sec - REAL(start)[0] +
-	(now.tv_usec - REAL(start)[1]) / 1000.0 > show_after) {
+    PROTECT(now = progress_now());
+    if (REAL(now)[0] - REAL(start)[0] +
+	(REAL(now)[1] - REAL(start)[1]) / 1000000.0 > show_after) {
       toupdate = 1;
       setVar(install("toupdate"), ScalarLogical(1), private);
     }
-    UNPROTECT(1);
+    UNPROTECT(2);
   }
 
   if (current >= total) {
@@ -227,9 +223,18 @@ int progress_token_total(SEXP private, char *bufptr, char *bufend) {
   return snprintf(bufptr, bufend - bufptr, "%i", (int) total);
 }
 
+/* TODO: smart time printing */
+
 int progress_token_elapsed(SEXP private, char *bufptr, char *bufend) {
-  /* TODO */
-  return 0;
+  double *start = REAL(findVar(install("start"), private));
+  SEXP now;
+  double secs;
+  int ret;
+  PROTECT(now = progress_now());
+  secs = REAL(now)[0] - start[0] + (REAL(now)[1] - start[1]) / 1000000.0;
+  ret = snprintf(bufptr, bufend - bufptr, "%is", (int) round(secs));
+  UNPROTECT(1);
+  return ret;
 }
 
 int progress_token_eta(SEXP private, char *bufptr, char *bufend) {
@@ -284,4 +289,15 @@ double progress_ratio(SEXP private) {
   if (ratio < 0) ratio = 0;
   if (ratio > 1) ratio = 1;
   return ratio;
+}
+
+SEXP progress_now() {
+  struct timeval now;
+  SEXP start;
+  PROTECT(start = allocVector(REALSXP, 2));
+  gettimeofday(&now, NULL);
+  REAL(start)[0] = now.tv_sec;
+  REAL(start)[1] = now.tv_usec;
+  UNPROTECT(1);
+  return start;
 }
