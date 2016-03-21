@@ -17,6 +17,8 @@ double progress_ratio(SEXP private);
 SEXP progress_now();
 double progress_elapsed_since(SEXP start);
 int progress_pretty_time(double dt, char *buffer, int n);
+int progress_pretty_bytes(double bytes, char *buffer, int n,
+			  const char *suffix);
 
 /* Tokens */
 int progress_token_bar(SEXP private, char *buffer, char *bufend,
@@ -257,13 +259,16 @@ int progress_token_percent(SEXP private, char *bufptr, char *bufend) {
 }
 
 int progress_token_rate(SEXP private, char *bufptr, char *bufend) {
-  /* TODO */
-  return 0;
+  SEXP start = findVar(install("start"), private);
+  double secs = progress_elapsed_since(start);
+  double current = asReal(findVar(install("current"), private));
+  double rate = secs == 0.0 ? 0.0 : current / secs;
+  return progress_pretty_bytes(rate, bufptr, bufend - bufptr, "/s");
 }
 
 int progress_token_bytes(SEXP private, char *bufptr, char *bufend) {
-  /* TODO */
-  return 0;
+  double current = asReal(findVar(install("current"), private));
+  return progress_pretty_bytes(current, bufptr, bufend - bufptr, "");
 }
 
 int progress_token_spin(SEXP private, char *bufptr, char *bufend) {
@@ -351,4 +356,31 @@ int progress_pretty_time(double dt, char *buffer, int n) {
   /* years */
   dt = dt * 30.0 / 365.25;
   return snprintf(buffer, n, "%2dy", (int) round(dt));
+}
+
+int progress_pretty_bytes(double bytes, char *buffer, int n,
+			  const char *suffix) {
+
+  const int no_units = 9;
+  const char *units[] = { "B", "kB", "MB", "GB", "TB", "PB", "EB",
+			  "ZB", "YB" };
+
+  if (bytes == 0) {
+    return snprintf(buffer, n, "0 B%s", suffix);
+
+  } else {
+    int exponent = floor(log(bytes) / log(1000.0));
+    if (exponent >= no_units - 1) exponent = no_units - 1;
+    double res = round(bytes / pow(1000.0, exponent) * 100.0) / 100.0;
+    return snprintf(buffer, n, "%.1f %s%s", res, units[exponent], suffix);
+  }
+}
+
+/* To test from R */
+
+SEXP s_progress_pretty_bytes(SEXP bytes) {
+  char buffer[100];
+  int ret = progress_pretty_bytes(asReal(bytes), buffer, 100 - 1, "");
+  buffer[ret] = '\0';
+  return mkString(buffer);
 }
