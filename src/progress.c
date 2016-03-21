@@ -13,8 +13,10 @@ SEXP progress_render(SEXP self, SEXP private, SEXP tokens);
 
 void progress_refresh_line(SEXP private, ...);
 double progress_ratio(SEXP private);
+
 SEXP progress_now();
 double progress_elapsed_since(SEXP start);
+int progress_pretty_time(double dt, char *buffer, int n);
 
 /* Tokens */
 int progress_token_bar(SEXP private, char *buffer, char *bufend,
@@ -224,16 +226,11 @@ int progress_token_total(SEXP private, char *bufptr, char *bufend) {
   return snprintf(bufptr, bufend - bufptr, "%i", (int) total);
 }
 
-/* TODO: smart time printing */
-
 int progress_token_elapsed(SEXP private, char *bufptr, char *bufend) {
   SEXP start = findVar(install("start"), private);
   double secs = progress_elapsed_since(start);
-  int ret = snprintf(bufptr, bufend - bufptr, "%is", (int) round(secs));
-  return ret;
+  return progress_pretty_time(secs, bufptr, bufend - bufptr);
 }
-
-/* TODO: smart time printing */
 
 int progress_token_eta(SEXP private, char *bufptr, char *bufend) {
   double percent = progress_ratio(private) * 100.0;
@@ -242,18 +239,15 @@ int progress_token_eta(SEXP private, char *bufptr, char *bufend) {
   SEXP start = findVar(install("start"), private);
   double elapsed_secs = progress_elapsed_since(start);
   double eta_secs = 0.0;
-  int ret;
   if (percent < 100.0) {
     eta_secs = elapsed_secs * (total / current - 1.0);
   }
 
   if (! R_FINITE(eta_secs)) {
-    ret = snprintf(bufptr, bufend - bufptr, "%ss", " ?");
+    return snprintf(bufptr, bufend - bufptr, " ?s");
   } else {
-    ret = snprintf(bufptr, bufend - bufptr, "%is", (int) eta_secs);
+    return progress_pretty_time(eta_secs, bufptr, bufend - bufptr);
   }
-
-  return ret;
 }
 
 int progress_token_percent(SEXP private, char *bufptr, char *bufend) {
@@ -321,4 +315,40 @@ double progress_elapsed_since(SEXP start) {
   gettimeofday(&now, NULL);
   return now.tv_sec - REAL(start)[0] +
     (now.tv_usec - REAL(start)[1]) / 1000000.0;
+}
+
+int progress_pretty_time(double dt, char *buffer, int n) {
+
+  /* dt is in seconds now */
+  if (dt < 50.0) {
+    return snprintf(buffer, n, "%2ds", (int) round(dt));
+  }
+
+  /* minutes */
+  dt /= 60.0;
+  if (dt < 50.0) {
+    return snprintf(buffer, n, "%2dm", (int) round(dt));
+  }
+
+  /* hours */
+  dt /= 60.0;
+  if (dt < 18.0) {
+    return snprintf(buffer, n, "%2dh", (int) round(dt));
+  }
+
+  /* days */
+  dt /= 24.0;
+  if (dt < 30.0) {
+    return snprintf(buffer, n, "%2dd", (int) round(dt));
+  }
+
+  /* months */
+  dt /= 30.0;
+  if (dt < 11.0) {
+    return snprintf(buffer, n, "%2dM", (int) round(dt));
+  }
+
+  /* years */
+  dt = dt * 30.0 / 365.25;
+  return snprintf(buffer, n, "%2dy", (int) round(dt));
 }
