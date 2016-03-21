@@ -237,13 +237,3 @@ pb_update <- function(self, private, ratio, tokens) {
   goal <- floor(ratio * private$total)
   self$tick(goal - private$current, tokens)
 }
-
-pb_terminate <- function(self, private) {
-  if (!private$supported || !private$toupdate) return(invisible())
-  if (private$clear) {
-    clear_line(private$stream, private$width)
-    cursor_to_start(private$stream)
-  } else {
-    cat("\n", file = private$stream)
-  }
-}
