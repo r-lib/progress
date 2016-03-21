@@ -180,6 +180,11 @@ SEXP progress_render(SEXP self, SEXP private, SEXP tokens) {
       bufptr += progress_token_spin(private, bufptr, bufend);
       format += 5;
 
+    } else if (bufptr != bufend && *format) {
+      /* Ignore */
+      *bufptr = ':';
+      bufptr++;
+      format++;
     }
   }
 
