@@ -203,7 +203,7 @@ int progress_token_bar(SEXP private, char *buffer, char *bufend,
 		       int bar_pos) {
 
   int width = asInteger(findVar(install("width"), private));
-  int bar_width = width - strlen(buffer);
+  int bar_width = width - strlen(buffer) + 1;
   double ratio = progress_ratio(private);
   int complete_len = (int) round(bar_width * ratio);
   int incomplete_len = bar_width - complete_len;
