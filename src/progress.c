@@ -8,6 +8,7 @@
 Rconnection getConnection(int n);
 
 SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens);
+SEXP progress_update(SEXP self, SEXP private, SEXP ratio, SEXP tokens);
 SEXP progress_terminate(SEXP self, SEXP private);
 SEXP progress_render(SEXP self, SEXP private, SEXP tokens);
 
@@ -88,6 +89,13 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
   }
 
   return self;
+}
+
+SEXP progress_update(SEXP self, SEXP private, SEXP ratio, SEXP tokens) {
+  double total = asReal(findVar(install("total"), private));
+  double current = asReal(findVar(install("current"), private));
+  double goal = asReal(ratio) * total;
+  return progress_tick(self, private, ScalarReal(goal - current), tokens);
 }
 
 SEXP progress_terminate(SEXP self, SEXP private) {
