@@ -213,8 +213,9 @@ SEXP progress_render(SEXP self, SEXP private, SEXP tokens) {
 int progress_token_bar(SEXP private, char *buffer, char *bufend,
 		       int bar_pos) {
 
+  int buflen = strlen(buffer);
   int width = asInteger(findVar(install("width"), private));
-  int bar_width = width - strlen(buffer) + 1;
+  int bar_width = width - buflen + 1; /* +1 for initial \r */
   double ratio = progress_ratio(private);
   int complete_len = (int) round(bar_width * ratio);
   int incomplete_len = bar_width - complete_len;
@@ -222,7 +223,7 @@ int progress_token_bar(SEXP private, char *buffer, char *bufend,
   const char *complete_char = CHAR(asChar(VECTOR_ELT(chars, 0)));
   const char *incomplete_char = CHAR(asChar(VECTOR_ELT(chars, 1)));
 
-  memcpy(buffer + bar_pos + bar_width, buffer + bar_pos, bar_width);
+  memmove(buffer + bar_pos + bar_width, buffer + bar_pos, buflen - bar_pos);
   for (buffer += bar_pos; complete_len > 0; complete_len--) {
     *buffer = *complete_char; buffer++;
   }
