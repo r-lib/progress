@@ -126,10 +126,15 @@ SEXP progress_terminate(SEXP self, SEXP private) {
 
 SEXP progress_render(SEXP self, SEXP private, SEXP tokens) {
 
+  int width = asInteger(findVar(install("width"), private));
   int supported = asLogical(findVar(install("supported"), private));
-  char buffer[500], *bufptr = buffer, *bufend = buffer + 500;
+  char buffer[1001], *bufptr = buffer, *bufend = buffer + width;
   int bar_pos = -1;
   const char *format;
+
+  if (width > 1000) error("Maximum width is 1000");
+
+  memset(buffer, 0, 1001);
 
   if (!supported) return self;
 
@@ -195,8 +200,6 @@ SEXP progress_render(SEXP self, SEXP private, SEXP tokens) {
       format++;
     }
   }
-
-  *bufptr = 0;
 
   if (bar_pos != -1) {
     progress_token_bar(private, buffer, bufend, bar_pos);
