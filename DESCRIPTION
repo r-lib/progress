@@ -13,7 +13,6 @@ LazyData: true
 URL: https://github.com/gaborcsardi/progress
 BugReports: https://github.com/gaborcsardi/progress/issues
 Imports:
-    prettyunits,
     R6
 Suggests:
     testthat,
