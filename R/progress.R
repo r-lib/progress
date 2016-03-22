@@ -192,12 +192,7 @@ progress_bar <- R6Class("progress_bar",
     complete = FALSE,
     spin = 1L,
 
-    spin_symbols = c("-", "\\", "|", "/"),
-
-    ## Order is important here, the C code uses this exact order!
-    has_token = c(current = FALSE, total = FALSE, elapsed = FALSE,
-      eta = FALSE, percent = FALSE, rate = FALSE, bytes = FALSE,
-      bar = FALSE, spin = FALSE)
+    spin_symbols = c("-", "\\", "|", "/")
   )
 )
 
