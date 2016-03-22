@@ -178,7 +178,7 @@ test_that("complete and incomplete chars", {
 test_that("callback function", {
 
   x <- ""
-  cb <- function() {
+  cb <- function(pb) {
     x <<- "done"
   }
 

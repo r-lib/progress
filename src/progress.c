@@ -83,12 +83,7 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
     progress_terminate(self, private);
     SEXP callback = findVar(install("callback"), private);
     if (! isNull(callback)) {
-      SEXP pkg;
-      PROTECT(pkg = eval(lang2(install("getNamespace"),
-			       ScalarString(mkChar("pkg"))),
-			 R_GlobalEnv));
-      eval(lang1(callback), pkg);
-      UNPROTECT(1);
+      eval(lang2(callback, self), R_GlobalEnv);
     }
   }
 
