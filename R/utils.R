@@ -96,6 +96,10 @@ assert_function <- function(x) {
   stopifnot(is.function(x))
 }
 
+assert_function_or_null <- function(x) {
+  stopifnot(is.null(x) || is.function(x))
+}
+
 assert_flag <- function(x) {
   stopifnot(is.logical(x), length(x) == 1, !is.na(x))
 }
