@@ -4,6 +4,7 @@
 #include <R_ext/Connections.h>
 
 #include <sys/time.h>
+#include <ctype.h>
 
 Rconnection getConnection(int n);
 
@@ -15,6 +16,9 @@ SEXP progress_render(SEXP self, SEXP private, SEXP tokens);
 void progress_refresh_line(SEXP private, ...);
 void progress_clear_line(SEXP private);
 double progress_ratio(SEXP private);
+int progress_add_custom_tokens(SEXP tokens, char * bufptr, char *bufend,
+			       const char **format);
+SEXP progress_list_elem(SEXP list, const char *str, int len);
 
 SEXP progress_now();
 double progress_elapsed_since(SEXP start);
@@ -144,8 +148,6 @@ SEXP progress_render(SEXP self, SEXP private, SEXP tokens) {
   *bufptr = '\r';
   bufptr++;
 
-  /* TODO: custom tokens */
-
   while (bufptr != bufend && *format) {
 
     /* Copy over normal text */
@@ -194,10 +196,8 @@ SEXP progress_render(SEXP self, SEXP private, SEXP tokens) {
       format += 5;
 
     } else if (bufptr != bufend && *format) {
-      /* Ignore */
-      *bufptr = ':';
-      bufptr++;
-      format++;
+      /* Unknown : token, try custom tokens, new api */
+      bufptr += progress_add_custom_tokens(tokens, bufptr, bufend, &format);
     }
   }
 
@@ -411,4 +411,42 @@ SEXP s_progress_pretty_bytes(SEXP bytes) {
   int ret = progress_pretty_bytes(asReal(bytes), buffer, 100 - 1, "");
   buffer[ret] = '\0';
   return mkString(buffer);
+}
+
+int progress_add_custom_tokens(SEXP tokens, char *bufptr, char *bufend,
+			       const char **format) {
+
+  /* Parse the input, until the first non-alphanumeric character.
+     This will be the token. (This is somewhat different from the
+     previous version, but maybe makes more sense. */
+
+  /* start of token, skip the : */
+  const char *token = ++(*format);
+
+  /* find the end of the possible token, this also
+     stops at the end of string */
+  while (isalnum(**format)) (*format)++;
+
+  /* check if it is in 'tokens', linear search */
+  SEXP needle = progress_list_elem(tokens, token, *format - token);
+  if (*format - token > 0 && !isNull(needle)) {
+    /* found it */
+    return snprintf(bufptr, bufend - bufptr, "%s", CHAR(asChar(needle)));
+
+  } else {
+    /* Did not find it, rewind, but skip the : */
+    *format = token;
+    *bufptr = ':';
+    return 1;
+  }
+}
+
+SEXP progress_list_elem(SEXP list, const char *str, int len) {
+  SEXP names = getAttrib(list, R_NamesSymbol);
+
+  for (int i = 0; i < length(list); i++)
+    if(! strncmp(CHAR(STRING_ELT(names, i)), str, len)) {
+      return VECTOR_ELT(list, i);
+    }
+  return R_NilValue;
 }

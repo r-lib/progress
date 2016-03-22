@@ -273,7 +273,7 @@ test_that("custom tokens", {
 
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
-                           show_after = 0, width = 20,
+                           show_after = 0, width = 22,
                            format = ":what [:bar] :percent",
                            clear = FALSE, total = 200)
     pb$tick(50, tokens = list(what = "foo   "))
@@ -283,10 +283,10 @@ test_that("custom tokens", {
   })
 
   sout <- win_newline(
-    "\rfoo    [==----]  25%",
-    "\rfoo    [===---]  50%",
-    "\rfoobar [====--]  75%",
-    "\rfoobar [======] 100%",
+    "\rfoo    [==------]  25%",
+    "\rfoo    [====----]  50%",
+    "\rfoobar [======--]  75%",
+    "\rfoobar [========] 100%",
     "\n"
   )
 
