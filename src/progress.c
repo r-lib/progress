@@ -6,7 +6,7 @@
 #include <sys/time.h>
 #include <ctype.h>
 
-Rconnection getConnection(int n);
+Rconnection getConnection_no_err(int n);
 
 SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens);
 SEXP progress_update(SEXP self, SEXP private, SEXP ratio, SEXP tokens);
@@ -305,7 +305,7 @@ int progress_token_spin(SEXP private, char *bufptr, char *bufend) {
 void progress_refresh_line(SEXP private, ...) {
 
   int con_num = asInteger(findVar(install("stream"), private));
-  Rconnection con = getConnection(con_num);
+  Rconnection con = getConnection_no_err(con_num);
 
   va_list ap;
   va_start(ap, private);
