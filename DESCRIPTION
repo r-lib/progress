@@ -1,6 +1,6 @@
 Package: progress
 Title: Terminal Progress Bars
-Version: 1.1.0
+Version: 2.0.0
 Author: Gabor Csardi [aut, cre], Rich FitzJohn [aut]
 Maintainer: Gabor Csardi <csardi.gabor@gmail.com>
 Description: Progress bars are configurable, may include percentage,
