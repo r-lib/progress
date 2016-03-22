@@ -80,7 +80,7 @@
 #' pb <- progress_bar$new(total = 100)
 #' for (i in 1:100) {
 #'   pb$tick()
-#'   Sys.sleep(1 / 100)
+#'   Sys.sleep(.1 / 100)
 #' }
 #'
 #' ## ETA
@@ -98,7 +98,7 @@
 #'   total = 100, clear = FALSE, width= 60)
 #' for (i in 1:100) {
 #'   pb$tick()
-#'   Sys.sleep(1 / 100)
+#'   Sys.sleep(.1 / 100)
 #' }
 #'
 #' ## Spinner
@@ -117,11 +117,11 @@
 #' f <- function() {
 #'   for (i in 1:100) {
 #'     pb$tick(tokens = list(what = "foo   "))
-#'     Sys.sleep(2 / 100)
+#'     Sys.sleep(0.5 / 100)
 #'   }
 #'   for (i in 1:100) {
 #'     pb$tick(tokens = list(what = "foobar"))
-#'     Sys.sleep(2 / 100)
+#'     Sys.sleep(0.5 / 100)
 #'   }
 #' }
 #' f()
@@ -133,7 +133,7 @@
 #' f <- function() {
 #'   for (i in 1:100) {
 #'     pb$tick(sample(1:100 * 1000, 1))
-#'     Sys.sleep(2/100)
+#'     Sys.sleep(.1/100)
 #'   }
 #'   pb$tick(1e7)
 #'   invisible()
