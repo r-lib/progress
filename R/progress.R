@@ -230,5 +230,19 @@ pb_init <- function(self, private, format, total, width, stream,
   private$show_after <- as.difftime(show_after, units = "secs")
   private$spin <- 1L
 
+  ## Temporary workaround because lack of a connection API
+  ## Cannot call is_stdout() and is_stderr() here, because that
+  ## detects sinks, and we might be in sinks when force = TRUE
+  if (identical(stream, stdout())) {
+    private$stream <- 1L
+  } else if (identical(stream, stderr())) {
+    private$stream <- 2L
+  } else {
+    stop("Unsupported stream: ", stream, ". Only stdout(): ", stdout(),
+         " and stderr(): ", stderr(), " are ",
+         "supported now, because R lacks a C-level API to ",
+         "connections")
+  }
+
   self
 }

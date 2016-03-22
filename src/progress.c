@@ -13,7 +13,7 @@ SEXP progress_update(SEXP self, SEXP private, SEXP ratio, SEXP tokens);
 SEXP progress_terminate(SEXP self, SEXP private);
 SEXP progress_render(SEXP self, SEXP private, SEXP tokens);
 
-void progress_refresh_line(SEXP private, ...);
+void progress_refresh_line(SEXP private, const char *str);
 void progress_clear_line(SEXP private);
 double progress_ratio(SEXP private);
 int progress_add_custom_tokens(SEXP tokens, char * bufptr, char *bufend,
@@ -297,15 +297,23 @@ int progress_token_spin(SEXP private, char *bufptr, char *bufend) {
   return ret;
 }
 
-void progress_refresh_line(SEXP private, ...) {
+void progress_refresh_line(SEXP private, const char *str) {
 
   int con_num = asInteger(findVar(install("stream"), private));
-  Rconnection con = getConnection_no_err(con_num);
 
-  va_list ap;
-  va_start(ap, private);
-  con->vfprintf(con, "%s", ap);
-  va_end(ap);
+  /* Only stdout and stderr is supported for now */
+  if (con_num != 1 && con_num != 2) {
+    error("Unsupported stream. Only stdout() and stderr() are "
+	  "supported now, because R lacks a C-level API to "
+	  "connections");
+  }
+
+  if (con_num == 1) {
+    Rprintf("%s", str);
+
+  } else {
+    REprintf("%s", str);
+  }
 }
 
 void progress_clear_line(SEXP private) {

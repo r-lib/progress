@@ -192,19 +192,6 @@ test_that("callback function", {
 
   expect_equal(x, "done")
 
-  x <- ""
-
-  str <- file(tmp <- tempfile(), open = "w")
-  on.exit(unlink(tmp), add = TRUE)
-  pb <- progress_bar$new(stream = str,
-                         show_after = 0, width = 20, callback = cb)
-  pb$tick(0)
-  pb$tick(50)
-  pb$tick(50)
-  close(str)
-
-  expect_equal(x, "done")
-
 })
 
 test_that("clearing and not clearing", {
@@ -315,6 +302,8 @@ test_that("bar adepts to width of custom tokens", {
 })
 
 test_that("custom streams", {
+
+  skip("Not supported by R currently")
 
   str <- file(tmp <- tempfile(), open = "w")
   on.exit(unlink(tmp), add = TRUE)
