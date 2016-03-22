@@ -39,6 +39,27 @@ overhead <- function() {
   oprint(
     "Short (10), slow",
     overhead_short_slow())
+
+  oprint(
+    "Non-interactive, lapply, short, fast",
+    overhead_noninteractive_lapply_short_fast())
+  oprint(
+    "Non-interactive, lapply, long, fast",
+    overhead_noninteractive_lapply_long_fast())
+  oprint(
+    "Non-interactive, lapply, short, slow",
+    overhead_noninteractive_lapply_short_slow())
+
+  oprint(
+    "lapply, short, fast",
+    overhead_lapply_short_fast())
+  oprint(
+    "lapply, long, fast",
+    overhead_lapply_long_fast())
+  oprint(
+    "lapply, short, slow",
+    overhead_lapply_short_slow())
+
 }
 
 overhead_noninteractive_create_short_fast <- function() {
@@ -177,6 +198,105 @@ overhead_short_slow <- function() {
       pb <- progress_bar$new(total = 10, stream = stdout(), width = 80)
       for (i in 1:10) { Sys.sleep(0.01); pb$tick() }
     }
+  )
+
+  oh
+}
+
+overhead_lapply_short_fast <- function() {
+
+  sink(tmp <- tempfile())
+  on.exit(unlink(tmp), add = TRUE)
+  on.exit(sink(NULL), add = TRUE)
+
+  oh <- microbenchmark::microbenchmark(
+    times = 10,
+    without = { lapply(1:10, function(x) { }) },
+    with = {
+      progress %~~% lapply(1:10, function(x) { })
+    }
+  )
+
+  oh
+}
+
+overhead_lapply_long_fast <- function() {
+
+  sink(tmp <- tempfile())
+  on.exit(unlink(tmp), add = TRUE)
+  on.exit(sink(NULL), add = TRUE)
+
+  oh <- microbenchmark::microbenchmark(
+    times = 10,
+    without = { lapply(1:10000, function(x) { }) },
+    with = {
+      progress %~~% lapply(1:10000, function(x) { })
+    }
+  )
+
+  oh
+}
+
+overhead_lapply_short_slow <- function() {
+
+  sink(tmp <- tempfile())
+  on.exit(unlink(tmp), add = TRUE)
+  on.exit(sink(NULL), add = TRUE)
+
+  oh <- microbenchmark::microbenchmark(
+    times = 10,
+    without = { lapply(1:10, function(x) { Sys.sleep(0.01) }) },
+    with = {
+      progress %~~% lapply(1:10, function(x) { Sys.sleep(0.01) })
+    }
+  )
+
+  oh
+}
+
+overhead_noninteractive_lapply_short_fast <- function() {
+
+  testthat::with_mock(
+    `progress::is_supported` = function(...) FALSE,
+    oh <- microbenchmark::microbenchmark(
+      times = 10,
+      without = { lapply(1:10, function(x) { }) },
+      with = {
+        progress %~~% lapply(1:10, function(x) { })
+      }
+    )
+  )
+
+  oh
+}
+
+overhead_noninteractive_lapply_long_fast <- function() {
+
+  testthat::with_mock(
+    `progress::is_supported` = function(...) FALSE,
+    oh <- microbenchmark::microbenchmark(
+      times = 10,
+      without = { lapply(1:10000, function(x) { }) },
+      with = {
+        progress %~~% lapply(1:10000, function(x) { })
+      }
+    )
+  )
+
+  oh
+}
+
+overhead_noninteractive_lapply_short_slow <- function() {
+
+  testthat::with_mock(
+    `progress::is_supported` = function(...) FALSE,
+    oh <- microbenchmark::microbenchmark(
+      times = 10,
+      without = { lapply(1:10, function(x) { Sys.sleep(0.01) }) },
+      with = {
+        progress %~~% lapply(1:10, function(x) { Sys.sleep(0.01) })
+      }
+    )
   )
 
   oh
