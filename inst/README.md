@@ -23,7 +23,36 @@ the https://github.com/tj/node-progress JavaScript project.
 devtools::install_github("gaborcsardi/progress")
 ```
 
-## Usage
+## Usage (this is work in progress!) TODO
+
+Starting from version 2.0.0, `progress` can be used two ways: the
+traditional way requires manual `tick()` calls to update a progress
+bar within a loop or `lapply`-like construct. The new API uses
+a decorator on a `lapply` call, or on a `for` loop.
+
+### Decorator API
+
+With the decorator API, you directly apply the `progress` decorator
+to a `lapply`-like function, and will automatically get a progress bar:
+
+```r
+res <- progress %~~%
+lapply(1:100, function(x) { 3 * Sys.sleep(interactive() / 100) })
+```
+
+```
+[=================================--------------------------------------]  47%
+```
+
+This API has two important advantages. The first one is that it is much
+simpler to use, as the additional code needed for a progress bar is
+minimal.
+
+The second is that the overhead of the progress bar is extremely small
+when the code is run non-interactively (when a progress bar is not needed
+and). See more about this in the [Performance](#performance) Section below.
+
+### Tick API
 
 Use the `progress_bar` R6 class:
 
@@ -179,6 +208,10 @@ plyr::l_ply(
   .progress = 'progress'
 )
 ```
+
+## Performance
+
+TODO
 
 ## C++ API
 
