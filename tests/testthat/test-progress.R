@@ -4,7 +4,7 @@ context("Progress bar")
 test_that("Vanilla progress bar works", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 20)
     for (i in 1:5) {
       pb$tick(20)
@@ -28,7 +28,7 @@ test_that("Vanilla progress bar works", {
 test_that("Update method works", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 20)
     updates = c(20, 40, 20, 80, 100) / 100
     for (i in 1:5) {
@@ -53,7 +53,7 @@ test_that("Update method works", {
 test_that("Calling tick(0)", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 20)
     pb$tick(0)
     for (i in 1:5) {
@@ -79,7 +79,7 @@ test_that("Calling tick(0)", {
 test_that("Digress", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 17)
     f <- function() {
       pb$tick(50)
@@ -107,7 +107,7 @@ test_that("Digress", {
 test_that("No :bar item, :current and :total tokens", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 20, total = 10,
                            clear = FALSE, format = ":current/:total")
     pb$tick(2)
@@ -130,7 +130,7 @@ test_that("No :bar item, :current and :total tokens", {
 test_that(":eta and :elapsed tokens", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 20, total = 4,
                            format = "[:eta :elapsed]")
     pb$tick(0)
@@ -156,7 +156,7 @@ test_that(":eta and :elapsed tokens", {
 test_that("complete and incomplete chars", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 20, total = 5,
                            complete = "#", incomplete = " ",
                            clear = FALSE)
@@ -183,7 +183,7 @@ test_that("callback function", {
   }
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 20, callback = cb)
     pb$tick(0)
     pb$tick(50)
@@ -197,7 +197,7 @@ test_that("callback function", {
 test_that("clearing and not clearing", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 19, clear = TRUE)
     pb$tick(0)
     pb$tick(50)
@@ -215,7 +215,7 @@ test_that("clearing and not clearing", {
   expect_equal(out, sout)
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 19, clear = FALSE)
     pb$tick(0)
     pb$tick(50)
@@ -235,7 +235,7 @@ test_that("clearing and not clearing", {
 test_that("show_after argument", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = .1, width = 20, clear = TRUE)
     pb$tick(0)
     pb$tick(25)
@@ -259,7 +259,7 @@ test_that("show_after argument", {
 test_that("custom tokens", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 22,
                            format = ":what [:bar] :percent",
                            clear = FALSE, total = 200)
@@ -282,7 +282,7 @@ test_that("custom tokens", {
 
 test_that("bar adepts to width of custom tokens", {
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 20,
                            format = ":what [:bar] :percent",
                            clear = FALSE, total = 200)
@@ -307,7 +307,7 @@ test_that("custom streams", {
 
   str <- file(tmp <- tempfile(), open = "w")
   on.exit(unlink(tmp), add = TRUE)
-  pb <- progress_bar$new(stream = str, force = TRUE,
+  pb <- progress_bar$new(stream = str, throttle = 0.0, force = TRUE,
                          show_after = 0, width = 19)
   pb$tick(0)
   pb$tick(50)
@@ -330,7 +330,7 @@ test_that("custom streams", {
 test_that(":rate and :bytes tokens", {
 
   out <- get_output({
-    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+    pb <- progress_bar$new(stream = stdout(), throttle = 0.0, force = TRUE,
                            show_after = 0, width = 20, total = 4 * 1024,
                            format = "[:rate :bytes]")
     pb$tick(0)
@@ -362,7 +362,7 @@ test_that("very quick loops, only the nothing is shown", {
 
   out <- get_output({
     pb <- progress_bar$new(total = 100, stream = stdout(), force = TRUE,
-                           width = 20)
+                           throttle = 0.0, width = 20)
     for (i in 1:100) pb$tick()
   })
 

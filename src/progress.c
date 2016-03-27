@@ -46,14 +46,18 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
   double current = asReal(findVar(install("current"), private));
   double total = asReal(findVar(install("total"), private));
   int toupdate = asLogical(findVar(install("toupdate"), private));
+  double throttle = asReal(findVar(install("throttle"), private));
+  SEXP start = findVar(install("start"), private);
   int complete = 0;
 
   if (first) {
-    SEXP start;
+    SEXP lastupdate;
     PROTECT(start = progress_now());
+    PROTECT(lastupdate = duplicate(start));
     setVar(install("first"), ScalarLogical(0), private);
     setVar(install("start"), start, private);
-    UNPROTECT(1);
+    setVar(install("lastupdate"), lastupdate, private);
+    UNPROTECT(2);
   }
 
   current += asInteger(len);
@@ -61,15 +65,12 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
 
   if (!toupdate) {
     double show_after = asReal(findVar(install("show_after"), private));
-    SEXP start;
     double secs;
-    PROTECT(start = findVar(install("start"), private));
     secs = progress_elapsed_since(start);
     if (secs > show_after) {
       toupdate = 1;
       setVar(install("toupdate"), ScalarLogical(1), private);
     }
-    UNPROTECT(1);
   }
 
   if (current >= total) {
@@ -77,7 +78,20 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
     setVar(install("complete"), ScalarLogical(1), private);
   }
 
-  if (toupdate) progress_render(self, private, tokens);
+  if (toupdate) {
+    if (throttle != 0) {
+      SEXP now = PROTECT(progress_now());
+      if (REAL(now)[0] - REAL(start)[0] +
+	  (REAL(now)[1] - REAL(start)[1]) / 1000000.0 >= throttle) {
+	progress_render(self, private, tokens);
+      }
+      setVar(install("lastupdate"), now, private);
+      UNPROTECT(1);
+
+    } else {
+      progress_render(self, private, tokens);
+    }
+  }
 
   if (complete) {
     progress_terminate(self, private);
