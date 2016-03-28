@@ -107,3 +107,5 @@ assert_flag <- function(x) {
 assert_named_or_empty_list <- function(x) {
   stopifnot(length(x) == 0 || !is.null(names(x)))
 }
+
+`%|NA|%` <- function(l, r) ifelse(is.na(l), r, l)

@@ -157,14 +157,17 @@ progress_bar <- R6Class("progress_bar",
           incomplete, callback, clear, show_after, throttle, force)
     },
     tick = function(len = 1, tokens = list()) {
-      .Call("progress_tick", self, private, len, tokens,
+      .Call(private$tick_method, self, private, len, tokens,
         PACKAGE = "progress") },
     update = function(ratio, tokens = list()) { 
-      .Call("progress_update", self, private, ratio, tokens,
+      .Call(private$update_method, self, private, ratio, tokens,
         PACKAGE = "progress") }
   ),
 
   private = list(
+
+    tick_method = "progress_tick",
+    update_method = "progress_update",
 
     first = TRUE,
     supported = NA,
@@ -184,7 +187,7 @@ progress_bar <- R6Class("progress_bar",
     last_draw = "",
 
     start = NULL,
-    lastupdate = NULL,
+    lastupdate = c(0, 0),
     toupdate = FALSE,
     complete = FALSE,
     spin = 1L,
@@ -224,6 +227,9 @@ pb_init <- function(self, private, format, total, width, stream,
   private$throttle <- throttle
   private$spin <- 1L
 
+  private$tick_method <- tick_methods[format] %|NA|% "progress_tick"
+  private$update_method <- update_methods[format] %|NA|% "progress_update"
+
   ## Temporary workaround because lack of a connection API
   ## Cannot call is_stdout() and is_stderr() here, because that
   ## detects sinks, and we might be in sinks when force = TRUE
@@ -240,3 +246,7 @@ pb_init <- function(self, private, format, total, width, stream,
 
   self
 }
+
+tick_methods <- c(":spinnerbar" = "progress_tick_spinner")
+
+update_methods <- c(":spinnerbar" = "progress_tick_spinner")
