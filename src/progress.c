@@ -76,7 +76,7 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
     setVar(install("complete"), ScalarLogical(1), private);
   }
 
-  if (complete) {
+  if (complete && toupdate) {
     progress_render(self, private, tokens);
   } else if (toupdate) {
     if (throttle != 0) {
