@@ -166,13 +166,6 @@ progress_bar <- R6Class("progress_bar",
 
   private = list(
 
-    render = function(tokens) {
-      .Call("progress_render", self, private, tokens,
-        PACKAGE = "progress") },
-    terminate = function() {
-      .Call("progress_terminate", self, private,
-        PACKAGE = "progress") },
-
     first = TRUE,
     supported = NA,
     format = NULL,
