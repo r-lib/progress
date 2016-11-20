@@ -39,7 +39,3 @@ artifacts:
 
   - path: '\*_*.zip'
     name: Bits
-
-environment:
-  matrix:
-  - R_VERSION: stable

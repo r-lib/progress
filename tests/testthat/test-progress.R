@@ -80,7 +80,7 @@ test_that("Digress", {
 
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
-                           show_after = 0, width = 17)
+                           show_after = 0, width = 20)
     f <- function() {
       pb$tick(50)
       pb$tick(-20)
@@ -92,12 +92,12 @@ test_that("Digress", {
   })
 
   sout <- win_newline(
-    "\r[=====-----]  50%",
-    "\r[===-------]  30%",
-    "\r[========--]  80%",
-    "\r[=====-----]  50%",
-    "\r[==========] 100%",
-    "\r                 ",
+    "\r[======-------]  50%",
+    "\r[====---------]  30%",
+    "\r[==========---]  80%",
+    "\r[======-------]  50%",
+    "\r[=============] 100%",
+    "\r                    ",
     "\r"
   )
 
@@ -178,7 +178,7 @@ test_that("complete and incomplete chars", {
 test_that("callback function", {
 
   x <- ""
-  cb <- function(pb) {
+  cb <- function() {
     x <<- "done"
   }
 
@@ -192,23 +192,36 @@ test_that("callback function", {
 
   expect_equal(x, "done")
 
+  x <- ""
+
+  str <- file(tmp <- tempfile(), open = "w")
+  on.exit(unlink(tmp), add = TRUE)
+  pb <- progress_bar$new(stream = str,
+                         show_after = 0, width = 20, callback = cb)
+  pb$tick(0)
+  pb$tick(50)
+  pb$tick(50)
+  close(str)
+
+  expect_equal(x, "done")
+
 })
 
 test_that("clearing and not clearing", {
 
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
-                           show_after = 0, width = 19, clear = TRUE)
+                           show_after = 0, width = 20, clear = TRUE)
     pb$tick(0)
     pb$tick(50)
     pb$tick(50)
   })
 
   sout <- win_newline(
-    "\r[------------]   0%",
-    "\r[======------]  50%",
-    "\r[============] 100%",
-    "\r                   ",
+    "\r[-------------]   0%",
+    "\r[======-------]  50%",
+    "\r[=============] 100%",
+    "\r                    ",
     "\r"
   )
 
@@ -216,16 +229,16 @@ test_that("clearing and not clearing", {
 
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
-                           show_after = 0, width = 19, clear = FALSE)
+                           show_after = 0, width = 20, clear = FALSE)
     pb$tick(0)
     pb$tick(50)
     pb$tick(50)
   })
 
   sout <- win_newline(
-    "\r[------------]   0%",
-    "\r[======------]  50%",
-    "\r[============] 100%",
+    "\r[-------------]   0%",
+    "\r[======-------]  50%",
+    "\r[=============] 100%",
     "\n"
   )
 
@@ -260,7 +273,7 @@ test_that("custom tokens", {
 
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
-                           show_after = 0, width = 22,
+                           show_after = 0, width = 20,
                            format = ":what [:bar] :percent",
                            clear = FALSE, total = 200)
     pb$tick(50, tokens = list(what = "foo   "))
@@ -270,10 +283,10 @@ test_that("custom tokens", {
   })
 
   sout <- win_newline(
-    "\rfoo    [==------]  25%",
-    "\rfoo    [====----]  50%",
-    "\rfoobar [======--]  75%",
-    "\rfoobar [========] 100%",
+    "\rfoo    [==----]  25%",
+    "\rfoo    [===---]  50%",
+    "\rfoobar [====--]  75%",
+    "\rfoobar [======] 100%",
     "\n"
   )
 
@@ -303,12 +316,10 @@ test_that("bar adepts to width of custom tokens", {
 
 test_that("custom streams", {
 
-  skip("Not supported by R currently")
-
   str <- file(tmp <- tempfile(), open = "w")
   on.exit(unlink(tmp), add = TRUE)
   pb <- progress_bar$new(stream = str, force = TRUE,
-                         show_after = 0, width = 19)
+                         show_after = 0, width = 20)
   pb$tick(0)
   pb$tick(50)
   pb$tick(50)
@@ -317,10 +328,10 @@ test_that("custom streams", {
   out <- rawToChar(readBin(tmp, raw(0), n = file.info(tmp)$size))
 
   sout <- win_newline(
-    "\r[------------]   0%",
-    "\r[======------]  50%",
-    "\r[============] 100%",
-    "\r                   ",
+    "\r[-------------]   0%",
+    "\r[======-------]  50%",
+    "\r[=============] 100%",
+    "\r                    ",
     "\r"
   )
 

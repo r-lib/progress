@@ -1,6 +1,6 @@
 Package: progress
 Title: Terminal Progress Bars
-Version: 2.0.0
+Version: 1.1.0
 Author: Gabor Csardi [aut, cre], Rich FitzJohn [aut]
 Maintainer: Gabor Csardi <csardi.gabor@gmail.com>
 Description: Progress bars are configurable, may include percentage,
@@ -13,6 +13,7 @@ LazyData: true
 URL: https://github.com/gaborcsardi/progress
 BugReports: https://github.com/gaborcsardi/progress/issues
 Imports:
+    prettyunits,
     R6
 Suggests:
     testthat,
