@@ -76,14 +76,11 @@ SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens) {
     setVar(install("complete"), ScalarLogical(1), private);
   }
 
-  if (complete) {
-    progress_render(self, private, tokens);
-  } else if (toupdate) {
+  if (toupdate) {
     if (throttle != 0) {
       SEXP now = PROTECT(progress_now());
-      SEXP lastupdate = findVar(install("lastupdate"), private);
-      if (REAL(now)[0] - REAL(lastupdate)[0] +
-	  (REAL(now)[1] - REAL(lastupdate)[1]) / 1000000.0 >= throttle) {
+      if (REAL(now)[0] - REAL(start)[0] +
+	  (REAL(now)[1] - REAL(start)[1]) / 1000000.0 >= throttle) {
 	progress_render(self, private, tokens);
       }
       setVar(install("lastupdate"), now, private);
