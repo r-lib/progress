@@ -84,7 +84,7 @@ in a named list. See example below.
 pb <- progress_bar$new(total = 100)
 for (i in 1:100) {
   pb$tick()
-  Sys.sleep(interactive() / 100)
+  Sys.sleep(.1 / 100)
 }
 
 ## ETA
@@ -93,7 +93,7 @@ pb <- progress_bar$new(
   total = 100, clear = FALSE, width= 60)
 for (i in 1:100) {
   pb$tick()
-  Sys.sleep(interactive() / 100)
+  Sys.sleep(1 / 100)
 }
 
 ## Elapsed time
@@ -102,7 +102,7 @@ pb <- progress_bar$new(
   total = 100, clear = FALSE, width= 60)
 for (i in 1:100) {
   pb$tick()
-  Sys.sleep(ineractive() / 100)
+  Sys.sleep(.1 / 100)
 }
 
 ## Spinner
@@ -111,7 +111,7 @@ pb <- progress_bar$new(
   total = 30, clear = FALSE, width = 60)
 for (i in 1:30) {
   pb$tick()
-  Sys.sleep(3 * interactive() / 100)
+  Sys.sleep(3 / 100)
 }
 
 ## Custom tokens
@@ -121,11 +121,11 @@ pb <- progress_bar$new(
 f <- function() {
   for (i in 1:100) {
     pb$tick(tokens = list(what = "foo   "))
-    Sys.sleep(interactive() / 100)
+    Sys.sleep(0.5 / 100)
   }
   for (i in 1:100) {
     pb$tick(tokens = list(what = "foobar"))
-    Sys.sleep(interactive() / 100)
+    Sys.sleep(0.5 / 100)
   }
 }
 f()
@@ -137,7 +137,7 @@ pb <- progress_bar$new(
 f <- function() {
   for (i in 1:100) {
     pb$tick(sample(1:100 * 1000, 1))
-    Sys.sleep(interactive()/100)
+    Sys.sleep(.1/100)
   }
   pb$tick(1e7)
   invisible()
