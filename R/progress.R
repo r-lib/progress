@@ -34,8 +34,6 @@
 #'     bar is shown on the screen. For very short processes,
 #'     it is probably not worth showing it at all. Defaults to two
 #'     tenth of a second.}
-#'   \item{throttle}{The minimum amount of time between progress bar updates,
-#'     in seconds.}
 #'   \item{force}{Whether to force showing the progress bar,
 #'     even if the given (or default) stream does not seem support it.}
 #' }
@@ -152,9 +150,9 @@ progress_bar <- R6Class("progress_bar",
     initialize = function(format = "[:bar] :percent", total = 100,
       width = getOption("width") - 2, stream = NULL, complete = "=",
       incomplete = "-", callback = NULL, clear = TRUE,
-      show_after = 0.2, throttle = 0.05, force = FALSE) {
+      show_after = 0.2, force = FALSE) {
         pb_init(self, private, format, total, width, stream, complete,
-          incomplete, callback, clear, show_after, throttle, force)
+          incomplete, callback, clear, show_after, force)
     },
     tick = function(len = 1, tokens = list()) {
       .Call("progress_tick", self, private, len, tokens,
@@ -187,11 +185,9 @@ progress_bar <- R6Class("progress_bar",
     callback = NULL,
     clear = NULL,
     show_after = NULL,
-    throttle = NULL,
     last_draw = "",
 
     start = NULL,
-    lastupdate = NULL,
     toupdate = FALSE,
     complete = FALSE,
     spin = 1L,
@@ -202,7 +198,7 @@ progress_bar <- R6Class("progress_bar",
 
 pb_init <- function(self, private, format, total, width, stream,
                     complete, incomplete, callback, clear, show_after,
-                    throttle, force) {
+                    force) {
 
   stream <- default_stream(stream)
 
@@ -215,7 +211,6 @@ pb_init <- function(self, private, format, total, width, stream,
   assert_function_or_null(callback)
   assert_flag(clear)
   assert_nonnegative_scalar(show_after)
-  assert_nonnegative_scalar(throttle)
 
   private$first <- TRUE
   private$supported <- force || is_supported(stream)
@@ -228,7 +223,6 @@ pb_init <- function(self, private, format, total, width, stream,
   private$callback <- callback
   private$clear <- clear
   private$show_after <- as.difftime(show_after, units = "secs")
-  private$throttle <- throttle
   private$spin <- 1L
 
   ## Temporary workaround because lack of a connection API

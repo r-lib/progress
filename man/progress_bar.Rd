@@ -38,8 +38,6 @@ A progress bar is an R6 object, that can be created with
     bar is shown on the screen. For very short processes,
     it is probably not worth showing it at all. Defaults to two
     tenth of a second.}
-  \item{throttle}{The minimum amount of time between progress bar updates,
-    in seconds.}
   \item{force}{Whether to force showing the progress bar,
     even if the given (or default) stream does not seem support it.}
 }
