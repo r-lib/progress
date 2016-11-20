@@ -103,7 +103,7 @@ overhead_noninteractive_long_fast <- function() {
       times = 10,
       without = { for (i in 1:10000) { } },
       with = {
-        pb <- progress_bar$new(total = 10000, stream = stdout(), width = 80)
+        pb <- progress_bar$new(total = 10, stream = stdout(), width = 80)
         for (i in 1:10000) pb$tick()
       }
     )
@@ -177,7 +177,7 @@ overhead_long_fast <- function() {
     times = 10,
     without = { for (i in 1:10000) { } },
     with = {
-      pb <- progress_bar$new(total = 10000, stream = stdout(), width = 80)
+      pb <- progress_bar$new(total = 10, stream = stdout(), width = 80)
       for (i in 1:10000) pb$tick()
     }
   )
