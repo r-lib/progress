@@ -6,6 +6,8 @@
 #include <sys/time.h>
 #include <ctype.h>
 
+Rconnection getConnection_no_err(int n);
+
 SEXP progress_tick(SEXP self, SEXP private, SEXP len, SEXP tokens);
 SEXP progress_update(SEXP self, SEXP private, SEXP ratio, SEXP tokens);
 SEXP progress_terminate(SEXP self, SEXP private);
