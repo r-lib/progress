@@ -28,6 +28,7 @@ devtools::install_github("gaborcsardi/progress")
 Use the `progress_bar` R6 class:
 
 ```r
+library(progress)
 pb <- progress_bar$new(total = 100)
 for (i in 1:100) {
   pb$tick()
