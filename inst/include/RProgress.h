@@ -260,7 +260,7 @@ class RProgress {
     return !is_r_studio();
   }
 
-  // If stdout is a terminal, or R Studio or OSX R.app
+  // If stdout is a terminal, or R Studio or macOS R.app
   // On windows, stdout is a terminal, apparently
 
   bool is_supported() {
