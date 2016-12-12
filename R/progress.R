@@ -75,6 +75,12 @@
 #'
 #' @export
 #' @examples
+#'
+#' ## We don't run the examples on CRAN, because they takes >10s
+#' ## altogether. Unfortunately it is hard to create a set of
+#' ## meaningful progress bar examples that also run quickly.
+#' \dontrun{
+#' 
 #' ## Basic
 #' pb <- progress_bar$new(total = 100)
 #' for (i in 1:100) {
@@ -138,6 +144,8 @@
 #'   invisible()
 #' }
 #' f()
+#'
+#' }
 #'
 #' @name progress_bar
 NULL
