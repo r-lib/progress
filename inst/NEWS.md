@@ -1,6 +1,7 @@
 # 1.1.0
 
-* Support for the `:spin` token which adds a simple ASCII spinner.
+* Support for the `:spin` token which adds a simple ASCII spinner, @richfitz
+* Respect custom token width for calculation of the bar width, @mllg
 
 # 1.0.2
 
