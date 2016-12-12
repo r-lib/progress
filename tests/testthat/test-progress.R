@@ -129,6 +129,8 @@ test_that("No :bar item, :current and :total tokens", {
 
 test_that(":eta and :elapsed tokens", {
 
+  skip_on_cran()
+
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
                            show_after = 0, width = 20, total = 4,
@@ -247,6 +249,8 @@ test_that("clearing and not clearing", {
 
 test_that("show_after argument", {
 
+  skip_on_cran()
+
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,
                            show_after = .1, width = 20, clear = TRUE)
@@ -339,6 +343,8 @@ test_that("custom streams", {
 })
 
 test_that(":rate and :bytes tokens", {
+
+  skip_on_cran()
 
   out <- get_output({
     pb <- progress_bar$new(stream = stdout(), force = TRUE,

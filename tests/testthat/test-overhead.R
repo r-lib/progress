@@ -5,6 +5,8 @@ library(microbenchmark)
 
 test_that("overhead for short and fast loop", {
 
+  skip_on_cran()
+
   sink(tempfile())
 
   oh <- microbenchmark(
@@ -26,6 +28,8 @@ test_that("overhead for short and fast loop", {
 
 test_that("overhead for long and fast loop", {
 
+  skip_on_cran()
+
   sink(tempfile())
 
   oh <- microbenchmark(
@@ -46,6 +50,8 @@ test_that("overhead for long and fast loop", {
 })
 
 test_that("overhead for short and slow(er) loop", {
+
+  skip_on_cran()
 
   sink(tempfile())
 
