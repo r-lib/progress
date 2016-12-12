@@ -1,13 +1,13 @@
 Package: progress
 Title: Terminal Progress Bars
 Version: 1.1.0
-Author: Gabor Csardi [aut, cre], Rich FitzJohn [aut]
-Maintainer: Gabor Csardi <csardi.gabor@gmail.com>
-Description: Progress bars are configurable, may include percentage,
+Author: Gábor Csárdi [aut, cre], Rich FitzJohn [aut]
+Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
+Description: Configurable Progress bars, they may include percentage,
     elapsed time, and/or the estimated completion time. They work in
-    terminals, in 'Emacs' 'ESS', 'R Studio', 'Windows' 'Rgui' and 'macOS'
-    'R.app'. The 'progress' package also provides a 'C++' 'API',
-    that works with or without 'Rcpp'.
+    terminals, in 'Emacs' 'ESS', 'RStudio', 'Windows' 'Rgui' and the
+    'macOS' 'R.app'. The package also provides a 'C++' 'API', that works
+    with or without 'Rcpp'.
 License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/gaborcsardi/progress
@@ -19,3 +19,4 @@ Suggests:
     testthat,
     microbenchmark
 RoxygenNote: 5.0.1.9000
+Encoding: UTF-8
