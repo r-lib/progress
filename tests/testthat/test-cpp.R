@@ -13,7 +13,7 @@ test_that("C++ API works", {
   f <- file(tempfile(), open = "w")
   sink(f)
   sink(f, type = "message")
-  install.packages("Rcpp", repos = c(CRAN = "http://cran.rstudio.com"),
+  install.packages("Rcpp", repos = c(CRAN = "https://cran.rstudio.com"),
                    quiet = TRUE)
   sink(NULL, type = "message")
   sink(NULL)

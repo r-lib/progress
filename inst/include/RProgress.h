@@ -269,7 +269,7 @@ class RProgress {
   }
 
   // gettimeofday for windows, from
-  // http://stackoverflow.com/questions/10905892
+  // https://stackoverflow.com/questions/10905892
 
 #ifdef Win32
 
