@@ -1,1 +1,1 @@
-inst/README.md
+inst/README.metacran

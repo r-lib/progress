@@ -1,3 +1,8 @@
+
+# 1.1.1
+
+* Move README.md, so that it is not parsed on CRAN
+
 # 1.1.0
 
 * Support for the `:spin` token which adds a simple ASCII spinner, @richfitz
