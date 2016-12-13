@@ -2,6 +2,7 @@
 # 1.1.1
 
 * Move README.md, so that it is not parsed on CRAN
+* Use https URLs instead of http, whenever possible
 
 # 1.1.0
 
