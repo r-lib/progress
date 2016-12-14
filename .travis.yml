@@ -23,8 +23,9 @@ notifications:
     on_failure: change
 
 env:
+  global:
+  - NOT_CRAN: true
   matrix:
     - RVERSION=oldrel
     - RVERSION=release
     - RVERSION=devel
-
