@@ -1,15 +1,13 @@
 
 context("Overhead")
 
-library(microbenchmark)
-
 test_that("overhead for short and fast loop", {
 
   skip_on_cran()
 
   sink(tempfile())
 
-  oh <- microbenchmark(
+  oh <- microbenchmark::microbenchmark(
     without = { for (i in 1:100) { x <- sqrt(5) } },
     with = {
       pb <- progress_bar$new(total = 100, stream = stdout(),
@@ -32,7 +30,7 @@ test_that("overhead for long and fast loop", {
 
   sink(tempfile())
 
-  oh <- microbenchmark(
+  oh <- microbenchmark::microbenchmark(
     without = { for (i in 1:10000) { x <- sqrt(5) } },
     with = {
       pb <- progress_bar$new(total = 100, stream = stdout(),
@@ -55,7 +53,7 @@ test_that("overhead for short and slow(er) loop", {
 
   sink(tempfile())
 
-  oh <- microbenchmark(
+  oh <- microbenchmark::microbenchmark(
     times = 10,
     without = { for (i in 1:100) { Sys.sleep(0.001) } },
     with = {
