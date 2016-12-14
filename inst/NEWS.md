@@ -1,4 +1,8 @@
 
+# 1.1.2
+
+* Do not run tests on CRAN, Solaris does not have microbenchmark
+
 # 1.1.1
 
 * Move README.md, so that it is not parsed on CRAN
