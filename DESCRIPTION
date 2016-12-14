@@ -16,7 +16,6 @@ Imports:
     prettyunits,
     R6
 Suggests:
-    testthat,
-    microbenchmark
+    testthat
 RoxygenNote: 5.0.1.9000
 Encoding: UTF-8
