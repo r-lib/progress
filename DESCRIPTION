@@ -13,9 +13,10 @@ LazyData: true
 URL: https://github.com/gaborcsardi/progress#readme
 BugReports: https://github.com/gaborcsardi/progress/issues
 Imports:
+    hms,
     prettyunits,
     R6
 Suggests:
     testthat
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 6.0.1.9000
 Encoding: UTF-8

@@ -57,6 +57,7 @@
 #'   \item{:current}{Current tick number.}
 #'   \item{:total}{Total ticks.}
 #'   \item{:elapsed}{Elapsed time in seconds.}
+#'   \item{:elapsedfull}{Elapsed time in hh:mm:ss format.}
 #'   \item{:eta}{Estimated completion time in seconds.}
 #'   \item{:percent}{Completion percentage.}
 #'   \item{:rate}{Download rate, bytes per second. See example below.}
@@ -195,9 +196,9 @@ progress_bar <- R6Class("progress_bar",
 
     spin = NULL,
 
-    has_token = c(current = FALSE, total = FALSE, elapsed = FALSE,
-      eta = FALSE, percent = FALSE, rate = FALSE, bytes = FALSE,
-      bar = FALSE, spin = FALSE)
+    has_token = c(current = FALSE, total = FALSE, elapsedfull = FALSE,
+      elapsed = FALSE, eta = FALSE, percent = FALSE, rate = FALSE,
+      bytes = FALSE, bar = FALSE, spin = FALSE)
   )
 )
 
@@ -283,6 +284,8 @@ pb_ratio <- function(self, private) {
   ratio
 }
 
+#' @importFrom hms as.hms
+
 pb_render <- function(self, private, tokens) {
 
   if (! private$supported) return(invisible())
@@ -293,6 +296,12 @@ pb_render <- function(self, private, tokens) {
     percent <- private$ratio() * 100
     str <- sub(str, pattern = ":percent", replacement =
                  paste0(format(round(percent), width = 3), "%"))
+  }
+
+  if (private$has_token["elapsedfull"]) {
+    elapsed_secs <- Sys.time() - private$start
+    elapsedfull <- format(as.hms(as.integer(elapsed_secs)))
+    str <- sub(str, pattern = ":elapsedfull", replacement = elapsedfull)
   }
 
   if (private$has_token["elapsed"]) {

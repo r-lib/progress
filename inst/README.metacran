@@ -91,6 +91,20 @@ for (i in 1:100) {
   downloading [==========================------]  80% in  1s
 ```
 
+```r
+pb <- progress_bar$new(
+  format = "  downloading [:bar] :elapsedfull",
+  total = 1000, clear = FALSE, width= 60)
+for (i in 1:1000) {
+  pb$tick()
+  Sys.sleep(1 / 100)
+}
+```
+
+```
+  downloading [=====================--------------] 00:00:08
+```
+
 With custom tokens:
 
 ```r

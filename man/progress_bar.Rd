@@ -65,6 +65,7 @@ progress bar.
   \item{:current}{Current tick number.}
   \item{:total}{Total ticks.}
   \item{:elapsed}{Elapsed time in seconds.}
+  \item{:elapsedfull}{Elapsed time in hh:mm:ss format.}
   \item{:eta}{Estimated completion time in seconds.}
   \item{:percent}{Completion percentage.}
   \item{:rate}{Download rate, bytes per second. See example below.}
@@ -79,6 +80,7 @@ Custom tokens are also supported, and you need to pass their
 values to \code{progress_bar$tick()} or \code{progress_bar$update()},
 in a named list. See example below.
 }
+
 \examples{
 
 ## We don't run the examples on CRAN, because they takes >10s
@@ -153,4 +155,3 @@ f()
 }
 
 }
-
