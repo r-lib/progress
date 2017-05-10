@@ -299,8 +299,9 @@ pb_render <- function(self, private, tokens) {
   }
 
   if (private$has_token["elapsedfull"]) {
-    elapsed_secs <- Sys.time() - private$start
-    elapsedfull <- format(as.hms(as.integer(elapsed_secs)))
+    elapsed <- Sys.time() - private$start
+    units(elapsed) <- "secs"
+    elapsedfull <- format(as.hms(as.integer(elapsed)))
     str <- sub(str, pattern = ":elapsedfull", replacement = elapsedfull)
   }
 
