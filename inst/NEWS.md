@@ -1,4 +1,8 @@
 
+# 1.1.2.9000
+
+* :elapsedfull token: elapsed time in hh:mm:ss format.
+
 # 1.1.2
 
 * Do not run tests on CRAN, Solaris does not have microbenchmark
