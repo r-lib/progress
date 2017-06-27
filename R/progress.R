@@ -358,7 +358,8 @@ pb_render <- function(self, private, tokens) {
   }
 
   for (t in names(tokens)) {
-    str <- gsub(paste0(":", t), tokens[[t]], str, fixed = TRUE)
+    txt <- tryCatch(as.character(tokens[[t]])[[1]], error = function(e) "???")
+    str <- gsub(paste0(":", t), txt, str, fixed = TRUE)
   }
 
   if (private$has_token["bar"]) {
