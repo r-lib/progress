@@ -10,8 +10,8 @@ Description: Configurable Progress bars, they may include percentage,
     with or without 'Rcpp'.
 License: MIT + file LICENSE
 LazyData: true
-URL: https://github.com/gaborcsardi/progress#readme
-BugReports: https://github.com/gaborcsardi/progress/issues
+URL: https://github.com/r-lib/progress#readme
+BugReports: https://github.com/r-lib/progress/issues
 Imports:
     hms,
     prettyunits,
