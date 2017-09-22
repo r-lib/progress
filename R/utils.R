@@ -49,6 +49,10 @@ default_stream <- function(stream) {
   }
 }
 
+assert_character <- function(x) {
+  stopifnot(is.character(x),
+            length(x) > 0)
+}
 assert_character_scalar <- function(x) {
   stopifnot(is.character(x),
             length(x) == 1,

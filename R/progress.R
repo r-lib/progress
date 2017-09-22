@@ -251,6 +251,7 @@ pb_tick <- function(self, private, len, tokens) {
 
   assert_scalar(len)
   assert_named_or_empty_list(tokens)
+  stopifnot(!private$finished)
 
   if (private$first) {
     private$first <- FALSE
@@ -396,11 +397,16 @@ pb_render <- function(self, private, tokens) {
 
 pb_update <- function(self, private, ratio, tokens) {
   assert_ratio(ratio)
+  stopifnot(!private$finished)
+
   goal <- floor(ratio * private$total)
   self$tick(goal - private$current, tokens)
 }
 
 pb_message <- function(self, private, msg) {
+  assert_character(msg)
+  stopifnot(!private$finished)
+
   if (!private$supported) {
     cat(msg, sep = "\n", file = private$stream)
   } else {
