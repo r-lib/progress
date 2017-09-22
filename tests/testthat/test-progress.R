@@ -387,3 +387,36 @@ test_that("very quick loops, only the nothing is shown", {
   expect_equal(out, sout)
 
 })
+
+
+test_that("message works", {
+
+  out <- get_output({
+    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+                           show_after = 0, width = 20)
+    for (i in 1:4) {
+      if (i %% 2 == 0) {
+        pb$message(as.character(i))
+      }
+      pb$tick(25)
+    }
+  })
+
+  sout <- win_newline(
+    "\r[===----------]  25%",
+    "\r                    ",
+    "\r2\n",
+    "[===----------]  25%",
+    "\r[======-------]  50%",
+    "\r[==========---]  75%",
+    "\r                    ",
+    "\r4\n",
+    "[==========---]  75%",
+    "\r[=============] 100%",
+    "\r                    ",
+    "\r"
+  )
+
+  expect_equal(out, sout)
+
+})
