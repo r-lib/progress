@@ -12,10 +12,11 @@ License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/r-lib/progress#readme
 BugReports: https://github.com/r-lib/progress/issues
-Imports:
+Imports: 
     hms,
     prettyunits,
-    R6
+    R6,
+    crayon
 Suggests:
     testthat
 RoxygenNote: 6.0.1.9000

@@ -289,6 +289,7 @@ pb_ratio <- function(self, private) {
 }
 
 #' @importFrom hms as.hms
+#' @importFrom crayon col_nchar col_substr
 
 pb_render <- function(self, private, tokens) {
 
@@ -367,7 +368,7 @@ pb_render <- function(self, private, tokens) {
   }
 
   if (private$has_token["bar"]) {
-    bar_width <- nchar(sub(str, pattern = ":bar", replacement = ""))
+    bar_width <- col_nchar(sub(str, pattern = ":bar", replacement = ""))
     bar_width <- private$width - bar_width
     bar_width <- max(0, bar_width)
 
@@ -381,8 +382,12 @@ pb_render <- function(self, private, tokens) {
     str <- sub(":bar", paste0(complete, incomplete), str)
   }
 
+  if (col_nchar(str) > private$width) {
+    str <- paste0(col_substr(str, 1, private$width - 3), "...")
+  }
+
   if (private$last_draw != str) {
-    if (nchar(private$last_draw) > nchar(str)) {
+    if (col_nchar(private$last_draw) > col_nchar(str)) {
       clear_line(private$stream, private$width)
     }
     cursor_to_start(private$stream)
@@ -406,6 +411,10 @@ pb_update <- function(self, private, ratio, tokens) {
 pb_message <- function(self, private, msg) {
   assert_character(msg)
   stopifnot(!private$finished)
+
+  if (col_nchar(msg) > private$width) {
+    msg <- paste0(col_substr(msg, 1, private$width - 3), "...")
+  }
 
   if (!private$supported) {
     cat(msg, sep = "\n", file = private$stream)
