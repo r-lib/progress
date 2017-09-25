@@ -412,8 +412,9 @@ pb_message <- function(self, private, msg) {
   assert_character(msg)
   stopifnot(!private$finished)
 
-  if (col_nchar(msg) > private$width) {
-    msg <- paste0(col_substr(msg, 1, private$width - 3), "...")
+  too_long <- col_nchar(msg) > private$width
+  if (any(too_long)) {
+    msg[too_long] <- paste0(col_substr(msg[too_long], 1, private$width - 3), "...")
   }
 
   if (!private$supported) {
