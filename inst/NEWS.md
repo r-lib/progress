@@ -1,6 +1,8 @@
 
 # 1.1.2.9000
 
+* Outputs greater than the bar width are automatically trimmed, @jimhester.
+
 * Add a `message()` method to print a message line(s) above the progress bar,
   @jimhester.
 
