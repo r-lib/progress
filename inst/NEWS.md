@@ -1,6 +1,9 @@
 
 # 1.1.2.9000
 
+* Add a `message()` method to print a message line(s) above the progress bar,
+  @jimhester.
+
 * :elapsedfull token: elapsed time in hh:mm:ss format.
 
 # 1.1.2
