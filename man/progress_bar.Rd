@@ -49,6 +49,8 @@ Three functions can update a progress bar. \code{progress_bar$tick()}
 increases the number of ticks by one (or another specified value).
 \code{progress_bar$update()} sets a given ratio and
 \code{progress_bar$terminate()} removes the progress bar.
+\code{progress_bar$finished} can be used to see if the progress bar has
+finished.
 
 The progress bar is displayed after the first `tick` command.
 This might not be desirable for long computations, because
