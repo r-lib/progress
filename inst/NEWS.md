@@ -1,6 +1,9 @@
 
 # 1.1.2.9000
 
+* Add `finished` variable, which can be queried to see if a progress bar is
+  finished. @jimhester.
+
 * Add a `terminate()` method, which can be called to explicitly remove the
   progress bar, @jimhester.
 

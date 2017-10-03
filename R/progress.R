@@ -43,6 +43,8 @@
 #' increases the number of ticks by one (or another specified value).
 #' \code{progress_bar$update()} sets a given ratio and
 #' \code{progress_bar$terminate()} removes the progress bar.
+#' \code{progress_bar$finished} can be used to see if the progress bar has
+#' finished.
 #'
 #' The progress bar is displayed after the first `tick` command.
 #' This might not be desirable for long computations, because
@@ -169,7 +171,8 @@ progress_bar <- R6Class("progress_bar",
       pb_update(self, private, ratio, tokens) },
     message = function(msg) {
       pb_message(self, private, msg) },
-    terminate = function() { pb_terminate(self, private) }
+    terminate = function() { pb_terminate(self, private) },
+    finished = FALSE
   ),
 
   private = list(
@@ -190,7 +193,6 @@ progress_bar <- R6Class("progress_bar",
     ),
     callback = NULL,
     clear = NULL,
-    finished = FALSE,
     show_after = NULL,
     last_draw = "",
 
@@ -252,7 +254,7 @@ pb_tick <- function(self, private, len, tokens) {
 
   assert_scalar(len)
   assert_named_or_empty_list(tokens)
-  stopifnot(!private$finished)
+  stopifnot(!self$finished)
 
   if (private$first) {
     private$first <- FALSE
@@ -403,7 +405,7 @@ pb_render <- function(self, private, tokens) {
 
 pb_update <- function(self, private, ratio, tokens) {
   assert_ratio(ratio)
-  stopifnot(!private$finished)
+  stopifnot(!self$finished)
 
   goal <- floor(ratio * private$total)
   self$tick(goal - private$current, tokens)
@@ -411,7 +413,7 @@ pb_update <- function(self, private, ratio, tokens) {
 
 pb_message <- function(self, private, msg) {
   assert_character(msg)
-  stopifnot(!private$finished)
+  stopifnot(!self$finished)
 
   too_long <- col_nchar(msg) > private$width
   if (any(too_long)) {
@@ -424,14 +426,14 @@ pb_message <- function(self, private, msg) {
     clear_line(private$stream, private$width)
     cursor_to_start(private$stream)
     cat(msg, sep = "\n", file = private$stream)
-    if (!private$finished) {
+    if (!self$finished) {
       cat(private$last_draw, file = private$stream)
     }
   }
 }
 
 pb_terminate <- function(self, private) {
-  private$finished <- TRUE
+  self$finished <- TRUE
   if (!private$supported || !private$toupdate) return(invisible())
   if (private$clear) {
     clear_line(private$stream, private$width)
