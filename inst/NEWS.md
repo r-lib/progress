@@ -1,6 +1,9 @@
 
 # 1.1.2.9000
 
+* Add a `terminate()` method, which can be called to explicitly remove the
+  progress bar, @jimhester.
+
 * Outputs greater than the bar width are automatically trimmed, @jimhester.
 
 * Add a `message()` method to print a message line(s) above the progress bar,

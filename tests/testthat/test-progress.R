@@ -420,3 +420,28 @@ test_that("message works", {
   expect_equal(out, sout)
 
 })
+
+test_that("terminate works", {
+
+  out <- get_output({
+    pb <- progress_bar$new(stream = stdout(), force = TRUE,
+                           show_after = 0, width = 20)
+    for (i in 1:4) {
+      if (i == 3) {
+        pb$terminate()
+        break
+      }
+      pb$tick(25)
+    }
+  })
+
+  sout <- win_newline(
+    "\r[===----------]  25%",
+    "\r[======-------]  50%",
+    "\r                    ",
+    "\r"
+  )
+
+  expect_equal(out, sout)
+
+})

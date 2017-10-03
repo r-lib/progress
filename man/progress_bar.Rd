@@ -45,9 +45,10 @@ A progress bar is an R6 object, that can be created with
 
 \section{Using the progress bar}{
 
-Two functions can update a progress bar. \code{progress_bar$tick()}
+Three functions can update a progress bar. \code{progress_bar$tick()}
 increases the number of ticks by one (or another specified value).
-\code{progress_bar$update()} sets a given ratio.
+\code{progress_bar$update()} sets a given ratio and
+\code{progress_bar$terminate()} removes the progress bar.
 
 The progress bar is displayed after the first `tick` command.
 This might not be desirable for long computations, because

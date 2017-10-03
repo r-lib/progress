@@ -39,9 +39,10 @@
 #' }
 #'
 #' @section Using the progress bar:
-#' Two functions can update a progress bar. \code{progress_bar$tick()}
+#' Three functions can update a progress bar. \code{progress_bar$tick()}
 #' increases the number of ticks by one (or another specified value).
-#' \code{progress_bar$update()} sets a given ratio.
+#' \code{progress_bar$update()} sets a given ratio and
+#' \code{progress_bar$terminate()} removes the progress bar.
 #'
 #' The progress bar is displayed after the first `tick` command.
 #' This might not be desirable for long computations, because
@@ -167,13 +168,13 @@ progress_bar <- R6Class("progress_bar",
     update = function(ratio, tokens = list()) {
       pb_update(self, private, ratio, tokens) },
     message = function(msg) {
-      pb_message(self, private, msg) }
+      pb_message(self, private, msg) },
+    terminate = function() { pb_terminate(self, private) }
   ),
 
   private = list(
 
     render = function(tokens) { pb_render(self, private, tokens) },
-    terminate = function() { pb_terminate(self, private) },
     ratio = function() { pb_ratio(self, private) },
 
     first = TRUE,
@@ -271,7 +272,7 @@ pb_tick <- function(self, private, len, tokens) {
   if (private$toupdate) private$render(tokens)
 
   if (private$complete) {
-    private$terminate()
+    self$terminate()
     private$callback()
   }
 
