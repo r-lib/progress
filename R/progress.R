@@ -46,11 +46,9 @@
 #' \code{progress_bar$finished} can be used to see if the progress bar has
 #' finished.
 #'
-#' The progress bar is displayed after the first `tick` command.
-#' This might not be desirable for long computations, because
-#' nothing is shown before the first tick. It is good practice to
-#' call `tick(0)` at the beginning of the computation or download,
-#' which shows the progress bar immediately.
+#' Note that the progress bar is not shown immediately, but only after
+#' \code{show_after} seconds. (Set this to zero, and call `tick(0)` to
+#' force showing the progress bar.)
 #'
 #' @section Tokens:
 #' They can be used in the \code{format} argument when creating the
