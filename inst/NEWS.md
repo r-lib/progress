@@ -1,5 +1,8 @@
 
-# 1.1.2.9000
+# 1.1.2.9001
+
+* Total number of iterations can be zero, to support special
+  casese better
 
 * Add `finished` variable, which can be queried to see if a progress bar is
   finished. @jimhester.

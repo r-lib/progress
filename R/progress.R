@@ -213,7 +213,7 @@ pb_init <- function(self, private, format, total, width, stream,
   stream <- default_stream(stream)
 
   assert_character_scalar(format)
-  assert_positive_scalar(total)
+  assert_nonnegative_scalar(total)
   assert_nonzero_count(width)
   assert_connection(stream)
   assert_single_char(complete)
