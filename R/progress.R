@@ -50,6 +50,9 @@
 #' \code{show_after} seconds. (Set this to zero, and call `tick(0)` to
 #' force showing the progress bar.)
 #'
+#' \code{progress_bar$message()} prints a message above the progress bar.
+#' It fails if the progress bar has already finished.
+#'
 #' @section Tokens:
 #' They can be used in the \code{format} argument when creating the
 #' progress bar.
@@ -82,7 +85,7 @@
 #' ## altogether. Unfortunately it is hard to create a set of
 #' ## meaningful progress bar examples that also run quickly.
 #' \dontrun{
-#' 
+#'
 #' ## Basic
 #' pb <- progress_bar$new(total = 100)
 #' for (i in 1:100) {
@@ -167,8 +170,8 @@ progress_bar <- R6Class("progress_bar",
       pb_tick(self, private, len, tokens) },
     update = function(ratio, tokens = list()) {
       pb_update(self, private, ratio, tokens) },
-    message = function(msg) {
-      pb_message(self, private, msg) },
+    message = function(msg, set_width = TRUE) {
+      pb_message(self, private, msg, set_width) },
     terminate = function() { pb_terminate(self, private) },
     finished = FALSE
   ),
@@ -409,13 +412,16 @@ pb_update <- function(self, private, ratio, tokens) {
   self$tick(goal - private$current, tokens)
 }
 
-pb_message <- function(self, private, msg) {
+pb_message <- function(self, private, msg, set_width) {
   assert_character(msg)
   stopifnot(!self$finished)
 
-  too_long <- col_nchar(msg) > private$width
-  if (any(too_long)) {
-    msg[too_long] <- paste0(col_substr(msg[too_long], 1, private$width - 3), "...")
+  if (set_width) {
+    too_long <- col_nchar(msg) > private$width
+    if (any(too_long)) {
+      msg[too_long] <-
+        paste0(col_substr(msg[too_long], 1, private$width - 3), "...")
+    }
   }
 
   if (!private$supported) {

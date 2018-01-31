@@ -55,6 +55,9 @@ finished.
 Note that the progress bar is not shown immediately, but only after
 \code{show_after} seconds. (Set this to zero, and call `tick(0)` to
 force showing the progress bar.)
+
+\code{progress_bar$message()} prints a message above the progress bar.
+It fails if the progress bar has already finished.
 }
 
 \section{Tokens}{
