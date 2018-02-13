@@ -228,4 +228,5 @@ single progress bar you need to use either one exclusively.
 
 ## License
 
-MIT
+MIT @ [Gábor Csárdi](https://github.com/gaborcsardi),
+      [RStudio Inc](https://github.com/rstudio)
