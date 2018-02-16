@@ -35,7 +35,7 @@
 #'     it is probably not worth showing it at all. Defaults to two
 #'     tenth of a second.}
 #'   \item{force}{Whether to force showing the progress bar,
-#'     even if the given (or default) stream does not seem support it.}
+#'     even if the given (or default) stream does not seem to support it.}
 #' }
 #'
 #' @section Using the progress bar:
