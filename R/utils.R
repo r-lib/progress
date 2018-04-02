@@ -1,19 +1,11 @@
 
-clear_line <- function(tty, width) {
+clear_line <- function(width) {
   str <- paste0(c("\r", rep(" ", width)), collapse = "")
-  cat(str, file = tty)
+  message(str, appendLF = FALSE)
 }
 
-cursor_to_start <- function(tty) {
-  cat("\r", file = tty)
-}
-
-is_stdout <- function(stream) {
-  identical(stream, stdout()) && sink.number() == 0
-}
-
-is_stderr <- function(stream) {
-  identical(stream, stderr())
+cursor_to_start <- function() {
+  message("\r", appendLF = FALSE)
 }
 
 is_r_studio <- function() {

@@ -11,7 +11,7 @@ test_that("Vanilla progress bar works", {
     }
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[===----------]  20%",
     "\r[=====--------]  40%",
     "\r[========-----]  60%",
@@ -36,7 +36,7 @@ test_that("Update method works", {
     }
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[===----------]  20%",
     "\r[=====--------]  40%",
     "\r[===----------]  20%",
@@ -61,7 +61,7 @@ test_that("Calling tick(0)", {
     }
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[-------------]   0%",
     "\r[===----------]  20%",
     "\r[=====--------]  40%",
@@ -91,7 +91,7 @@ test_that("Digress", {
     f()
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[======-------]  50%",
     "\r[====---------]  30%",
     "\r[==========---]  80%",
@@ -115,7 +115,7 @@ test_that("No :bar item, :current and :total tokens", {
     pb$tick(3)
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r2/10",
     "\r7/10",
     "\r10/10\n"
@@ -143,7 +143,7 @@ test_that(":eta and :elapsed tokens", {
     pb$tick(2)
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[ ?s  0s]",
     "\r[ 3s  1s]",
     "\r[ 2s  2s]",
@@ -165,7 +165,7 @@ test_that("complete and incomplete chars", {
     for (i in 1:5) pb$tick(1)
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[###          ]  20%",
     "\r[#####        ]  40%",
     "\r[########     ]  60%",
@@ -219,7 +219,7 @@ test_that("clearing and not clearing", {
     pb$tick(50)
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[-------------]   0%",
     "\r[======-------]  50%",
     "\r[=============] 100%",
@@ -237,7 +237,7 @@ test_that("clearing and not clearing", {
     pb$tick(50)
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[-------------]   0%",
     "\r[======-------]  50%",
     "\r[=============] 100%",
@@ -262,7 +262,7 @@ test_that("show_after argument", {
     pb$tick(25)
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[==========---]  75%",
     "\r[=============] 100%",
     "\r                    ",
@@ -286,7 +286,7 @@ test_that("custom tokens", {
     pb$tick(50, tokens = list(what = "foobar"))
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\rfoo    [==----]  25%",
     "\rfoo    [===---]  50%",
     "\rfoobar [====--]  75%",
@@ -308,35 +308,11 @@ test_that("bar adepts to width of custom tokens", {
     pb$tick(100, tokens = list(what = "text"))
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\rtext [==------]  25%",
     "\rlong text [==-]  50%",
     "\rtext [========] 100%",
     "\n"
-  )
-
-  expect_equal(out, sout)
-})
-
-test_that("custom streams", {
-
-  str <- file(tmp <- tempfile(), open = "w")
-  on.exit(unlink(tmp), add = TRUE)
-  pb <- progress_bar$new(stream = str, force = TRUE,
-                         show_after = 0, width = 20)
-  pb$tick(0)
-  pb$tick(50)
-  pb$tick(50)
-  close(str)
-
-  out <- rawToChar(readBin(tmp, raw(0), n = file.info(tmp)$size))
-
-  sout <- win_newline(
-    "\r[-------------]   0%",
-    "\r[======-------]  50%",
-    "\r[=============] 100%",
-    "\r                    ",
-    "\r"
   )
 
   expect_equal(out, sout)
@@ -360,7 +336,7 @@ test_that(":rate and :bytes tokens", {
 
   ## Next output line might be shorter, so 'progress_bar$render'
   ## might to erase it first
-  soutm <- win_newline(
+  soutm <- paste0(
     "^\\r\\[0 B/s 0 B\\]",
     "\\r?[ ]*",
     "\\r\\[[0-9\\.]+ k?B/s [0-9\\.]+ k?B\\]",
@@ -383,7 +359,7 @@ test_that("very quick loops, only the nothing is shown", {
     for (i in 1:100) pb$tick()
   })
 
-  sout <- win_newline("")
+  sout <- paste0("")
   expect_equal(out, sout)
 
 })
@@ -402,7 +378,7 @@ test_that("message works", {
     }
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[===----------]  25%",
     "\r                    ",
     "\r2\n",
@@ -435,7 +411,7 @@ test_that("terminate works", {
     }
   })
 
-  sout <- win_newline(
+  sout <- paste0(
     "\r[===----------]  25%",
     "\r[======-------]  50%",
     "\r                    ",
