@@ -1,8 +1,11 @@
 
-# 1.1.2.9001
+# 1.1.2.9003
+
+* The `stream` argument is deprecated and the progress bar is always
+  printed with `message()` calls.
 
 * Total number of iterations can be zero, to support special
-  casese better
+  cases better.
 
 * Add `finished` variable, which can be queried to see if a progress bar is
   finished. @jimhester.

@@ -22,11 +22,8 @@ A progress bar is an R6 object, that can be created with
   \item{total}{Total number of ticks to complete. Defaults to 100.}
   \item{width}{Width of the progress bar. Default is the current
     terminal width (see \code{options()} and \code{width}) minus two.}
-  \item{stream}{The output stream to put the progress bar on.
-    It defaults to \code{stderr()}, except in R Studio that has
-    a bug when printing on the standard error, so there we use
-    \code{stdout}. If the output stream is not a terminal and
-    we are not in R Studio, then no progress bar is printed.}
+  \item{stream}{This argument is deprecated, and \code{message()} is
+    used to print the progress bar.}
   \item{complete}{Completion character, defaults to \code{=}.}
   \item{incomplete}{Incomplete character, defaults to \code{-}.}
   \item{callback}{Callback function to call when the progress
@@ -39,7 +36,7 @@ A progress bar is an R6 object, that can be created with
     it is probably not worth showing it at all. Defaults to two
     tenth of a second.}
   \item{force}{Whether to force showing the progress bar,
-    even if the given (or default) stream does not seem support it.}
+    even if the given (or default) stream does not seem to support it.}
 }
 }
 

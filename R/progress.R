@@ -18,11 +18,8 @@
 #'   \item{total}{Total number of ticks to complete. Defaults to 100.}
 #'   \item{width}{Width of the progress bar. Default is the current
 #'     terminal width (see \code{options()} and \code{width}) minus two.}
-#'   \item{stream}{The output stream to put the progress bar on.
-#'     It defaults to \code{stderr()}, except in R Studio that has
-#'     a bug when printing on the standard error, so there we use
-#'     \code{stdout}. If the output stream is not a terminal and
-#'     we are not in R Studio, then no progress bar is printed.}
+#'   \item{stream}{This argument is deprecated, and \code{message()} is
+#'     used to print the progress bar.}
 #'   \item{complete}{Completion character, defaults to \code{=}.}
 #'   \item{incomplete}{Incomplete character, defaults to \code{-}.}
 #'   \item{callback}{Callback function to call when the progress
@@ -187,7 +184,6 @@ progress_bar <- R6Class("progress_bar",
     total = NULL,
     current = 0,
     width = NULL,
-    stream = NULL,
     chars = list(
       complete = "=",
       incomplete = "-"
@@ -213,12 +209,9 @@ pb_init <- function(self, private, format, total, width, stream,
                     complete, incomplete, callback, clear, show_after,
                     force) {
 
-  stream <- default_stream(stream)
-
   assert_character_scalar(format)
   assert_nonnegative_scalar(total)
   assert_nonzero_count(width)
-  assert_connection(stream)
   assert_single_char(complete)
   assert_single_char(incomplete)
   assert_function(callback)
@@ -226,11 +219,10 @@ pb_init <- function(self, private, format, total, width, stream,
   assert_nonnegative_scalar(show_after)
 
   private$first <- TRUE
-  private$supported <- force || is_supported(stream)
+  private$supported <- force || is_supported(stderr())
   private$format <- format
   private$total <- total
   private$width <- width
-  private$stream <- stream
   private$chars$complete <- complete
   private$chars$incomplete <- incomplete
   private$callback <- callback
@@ -392,10 +384,10 @@ pb_render <- function(self, private, tokens) {
 
   if (private$last_draw != str) {
     if (col_nchar(private$last_draw) > col_nchar(str)) {
-      clear_line(private$stream, private$width)
+      clear_line(private$width)
     }
-    cursor_to_start(private$stream)
-    cat(str, file = private$stream)
+    cursor_to_start()
+    message(str, appendLF = FALSE)
     private$last_draw <- str
   }
 
@@ -425,13 +417,13 @@ pb_message <- function(self, private, msg, set_width) {
   }
 
   if (!private$supported) {
-    cat(msg, sep = "\n", file = private$stream)
+    message(paste0(msg, "\n"), appendLF = FALSE)
   } else {
-    clear_line(private$stream, private$width)
-    cursor_to_start(private$stream)
-    cat(msg, sep = "\n", file = private$stream)
+    clear_line(private$width)
+    cursor_to_start()
+    message(paste0(msg, "\n"), appendLF = FALSE)
     if (!self$finished) {
-      cat(private$last_draw, file = private$stream)
+      message(private$last_draw, appendLF = FALSE)
     }
   }
 }
@@ -440,10 +432,10 @@ pb_terminate <- function(self, private) {
   self$finished <- TRUE
   if (!private$supported || !private$toupdate) return(invisible())
   if (private$clear) {
-    clear_line(private$stream, private$width)
-    cursor_to_start(private$stream)
+    clear_line(private$width)
+    cursor_to_start()
   } else {
-    cat("\n", file = private$stream)
+    message("\n", appendLF = FALSE)
   }
 }
 
