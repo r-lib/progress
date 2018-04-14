@@ -15,8 +15,13 @@ is_r_studio <- function() {
 r_studio_stdout <- function(stream) {
   interactive() &&
     is_r_studio() &&
-    identical(stream, stdout()) &&
-    is_stdout(stream)
+    identical(stream, stdout())
+}
+
+r_studio_stderr <- function(stream) {
+  interactive() &&
+    is_r_studio() &&
+    identical(stream, stderr())
 }
 
 is_r_app <- function() {
@@ -30,7 +35,8 @@ r_app_stdx <- function(stream) {
 }
 
 is_supported <- function(stream) {
-  isatty(stream) || r_studio_stdout(stream) || r_app_stdx(stream)
+  isatty(stream) || r_studio_stdout(stream) || r_studio_stderr(stream) ||
+    r_app_stdx(stream)
 }
 
 default_stream <- function(stream) {
