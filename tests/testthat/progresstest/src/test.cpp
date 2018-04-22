@@ -13,7 +13,7 @@ Rcpp::CharacterVector test_progress(Rcpp::CharacterVector formatSEXP =
 
   pb.tick(0);
   for (int i = 0; i < 100; i++) {
-    usleep(2.0 / 100 * 1000000);
+    usleep( (useconds_t) (2.0 / 100 * 1000000));
     pb.tick();
   }
 

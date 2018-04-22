@@ -47,10 +47,10 @@ class RProgress {
 	    bool clear = true,
 	    double show_after = 0.2) :
 
-    first(true), format(format), total(total), current(0), width(width),
-    complete_char(complete_char), incomplete_char(incomplete_char),
-    clear(clear), show_after(show_after), last_draw(""), start(0),
-    toupdate(false), complete(false), count(1) {
+    first(true), format(format), total(total), current(0), count(0),
+    width(width), complete_char(complete_char),
+    incomplete_char(incomplete_char), clear(clear), show_after(show_after),
+    last_draw(""), start(0), toupdate(false), complete(false) {
 
     supported = is_supported();
     use_stderr = default_stderr();
@@ -143,7 +143,7 @@ class RProgress {
 
     // rate
     double rate_num = current / elapsed_secs;
-    buffer << pretty_bytes(round(rate_num)) << "/s";
+    buffer << pretty_bytes(lround(rate_num)) << "/s";
     replace_all(str, ":rate", buffer.str());
     buffer.str(""); buffer.clear();
 
@@ -158,7 +158,7 @@ class RProgress {
     buffer.str(""); buffer.clear();
 
     // bytes
-    replace_all(str, ":bytes", pretty_bytes(round(current)));
+    replace_all(str, ":bytes", pretty_bytes(lround(current)));
 
     // spin
     replace_all(str, ":spin", spin_symbol());
@@ -166,14 +166,14 @@ class RProgress {
     // bar
     std::string str_no_bar = str;
     replace_all(str_no_bar, ":bar", "");
-    int bar_width = width - str_no_bar.length();
+    long int bar_width = width - str_no_bar.length();
     if (bar_width < 0) bar_width = 0;
 
     double complete_len = round(bar_width * ratio_now);
     char *bar = (char*) calloc(bar_width + 1, sizeof(char));
     if (!bar) Rf_error("Progress bar: out of memory");
     for (int i = 0; i < complete_len; i++) { bar[i] = complete_char; }
-    for (int i = complete_len; i < bar_width; i++) {
+    for (long int i = lrint(complete_len); i < bar_width; i++) {
       bar[i] = incomplete_char;
     }
     bar[bar_width] = '\0';
@@ -355,7 +355,7 @@ public:
 
     std::string units[] = { "B", "kB", "MB", "GB", "TB", "PB", "EB",
 			    "ZB", "YB" };
-    int num_units = std::floor(sizeof(units) / sizeof(units[0]));
+    long int num_units = std::lrint(sizeof(units) / sizeof(units[0]));
     double idx = std::floor(std::log(bytes) / std::log(1000.0));
     if (idx >= num_units) { idx = num_units - 1; }
 
