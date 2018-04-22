@@ -71,6 +71,9 @@ progress bar.
   \item{:eta}{Estimated completion time in seconds.}
   \item{:percent}{Completion percentage.}
   \item{:rate}{Download rate, bytes per second. See example below.}
+  \item{:tick_rate}{Similar to \code{:rate}, but we don't assume that
+     the units are bytes, we just print the raw number of ticks per
+     second.}
   \item{:bytes}{Shows :current, formatted as bytes. Useful
      for downloads or file reads if you don't know the size of the
      file in advance. See example below.}
@@ -156,6 +159,19 @@ f <- function() {
     Sys.sleep(2/100)
   }
   pb$tick(1e7)
+  invisible()
+}
+f()
+
+pb <- progress_bar$new(
+  format = "  got :current rows at :tick_rate/sec",
+  clear = FALSE, total = NA, width = 60)
+f <- function() {
+  for (i in 1:100) {
+    pb$tick(sample(1:100, 1))
+    Sys.sleep(2/100)
+  }
+  pb$terminate()
   invisible()
 }
 f()

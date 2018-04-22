@@ -63,6 +63,9 @@
 #'   \item{:eta}{Estimated completion time in seconds.}
 #'   \item{:percent}{Completion percentage.}
 #'   \item{:rate}{Download rate, bytes per second. See example below.}
+#'   \item{:tick_rate}{Similar to \code{:rate}, but we don't assume that
+#'      the units are bytes, we just print the raw number of ticks per
+#'      second.}
 #'   \item{:bytes}{Shows :current, formatted as bytes. Useful
 #'      for downloads or file reads if you don't know the size of the
 #'      file in advance. See example below.}
@@ -152,6 +155,19 @@
 #' }
 #' f()
 #'
+#' pb <- progress_bar$new(
+#'   format = "  got :current rows at :tick_rate/sec",
+#'   clear = FALSE, total = NA, width = 60)
+#' f <- function() {
+#'   for (i in 1:100) {
+#'     pb$tick(sample(1:100, 1))
+#'     Sys.sleep(2/100)
+#'   }
+#'   pb$terminate()
+#'   invisible()
+#' }
+#' f()
+#'
 #' }
 #'
 #' @name progress_bar
@@ -206,7 +222,7 @@ progress_bar <- R6Class("progress_bar",
 
     has_token = c(current = FALSE, total = FALSE, elapsedfull = FALSE,
       elapsed = FALSE, eta = FALSE, percent = FALSE, rate = FALSE,
-      bytes = FALSE, bar = FALSE, spin = FALSE)
+      bytes = FALSE, bar = FALSE, spin = FALSE, tick_rate = FALSE)
   )
 )
 
@@ -320,18 +336,22 @@ pb_render <- function(self, private, tokens) {
   }
 
   if (private$has_token["eta"]) {
-    percent <- private$ratio() * 100
-    elapsed_secs <- Sys.time() - private$start
-    eta_secs <- if (percent == 100) {
-      0
+    if (is.na(private$total)) {
+      eta <- "?"
     } else {
-      elapsed_secs * (private$total / private$current - 1.0)
-    }
-    eta <- as.difftime(eta_secs, units = "secs")
-    if (is.nan(eta) || eta == Inf) {
-      eta <- " ?s"
-    } else {
-      eta <- vague_dt(eta, format = "terse")
+      percent <- private$ratio() * 100
+      elapsed_secs <- Sys.time() - private$start
+      eta_secs <- if (percent == 100) {
+        0
+      } else {
+        elapsed_secs * (private$total / private$current - 1.0)
+      }
+      eta <- as.difftime(eta_secs, units = "secs")
+      if (is.nan(eta) || eta == Inf) {
+        eta <- " ?s"
+      } else {
+        eta <- vague_dt(eta, format = "terse")
+      }
     }
     str <- sub(str, pattern = ":eta", replacement = eta)
   }
@@ -342,6 +362,14 @@ pb_render <- function(self, private, tokens) {
     if (is.nan(rate)) rate <- 0
     rate <- paste0(pretty_bytes(round(rate)), "/s")
     str <- sub(str, pattern = ":rate", replacement = rate)
+  }
+
+  if (private$has_token["tick_rate"]) {
+    elapsed_secs <- Sys.time() - private$start
+    tick_rate <- private$current / as.double(elapsed_secs, units = "secs")
+    if (is.nan(tick_rate)) tick_rate <- 0
+    tick_rate <- format(tick_rate, digits = 2)
+    str <- sub(str, pattern = ":tick_rate", replacement = tick_rate)
   }
 
   if (private$has_token["current"]) {
