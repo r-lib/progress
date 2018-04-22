@@ -23,6 +23,7 @@
 #'     used to print the progress bar.}
 #'   \item{complete}{Completion character, defaults to \code{=}.}
 #'   \item{incomplete}{Incomplete character, defaults to \code{-}.}
+#'   \item{current}{Current character, defaults to \code{>}.}
 #'   \item{callback}{Callback function to call when the progress
 #'     bar finishes. The progress bar object itself is passed to it
 #'     as the single parameter.}
@@ -179,10 +180,10 @@ progress_bar <- R6Class("progress_bar",
 
     initialize = function(format = "[:bar] :percent", total = 100,
       width = getOption("width") - 2, stream = NULL, complete = "=",
-      incomplete = "-", callback = function(self) {}, clear = TRUE,
-      show_after = 0.2, force = FALSE) {
+      incomplete = "-", current = ">", callback = function(self) {},
+      clear = TRUE, show_after = 0.2, force = FALSE) {
         pb_init(self, private, format, total, width, stream, complete,
-          incomplete, callback, clear, show_after, force)
+          incomplete, current, callback, clear, show_after, force)
     },
     tick = function(len = 1, tokens = list()) {
       pb_tick(self, private, len, tokens) },
@@ -207,7 +208,8 @@ progress_bar <- R6Class("progress_bar",
     width = NULL,
     chars = list(
       complete = "=",
-      incomplete = "-"
+      incomplete = "-",
+      current = ">"
     ),
     callback = NULL,
     clear = NULL,
@@ -227,14 +229,15 @@ progress_bar <- R6Class("progress_bar",
 )
 
 pb_init <- function(self, private, format, total, width, stream,
-                    complete, incomplete, callback, clear, show_after,
-                    force) {
+                    complete, incomplete, current, callback, clear,
+                    show_after, force) {
 
   assert_character_scalar(format)
   assert_nonnegative_scalar(total <- as.numeric(total), na = TRUE)
   assert_nonzero_count(width)
   assert_single_char(complete)
   assert_single_char(incomplete)
+  assert_single_char(current)
   assert_function(callback)
   assert_flag(clear)
   assert_nonnegative_scalar(show_after)
@@ -246,6 +249,7 @@ pb_init <- function(self, private, format, total, width, stream,
   private$width <- width
   private$chars$complete <- complete
   private$chars$incomplete <- incomplete
+  private$chars$current <- current
   private$callback <- callback
   private$clear <- clear
   private$show_after <- as.difftime(show_after, units = "secs")
@@ -405,12 +409,18 @@ pb_render <- function(self, private, tokens) {
 
     ratio <- private$ratio()
     complete_len <- round(bar_width * ratio)
-    complete <- paste(rep("", complete_len + 1),
+    complete <- paste(rep("", complete_len),
                       collapse = private$chars$complete)
+    current <- if (private$complete) {
+      private$chars$complete
+    } else if (complete_len >= 1) {
+      private$chars$current
+    }
     incomplete <- paste(rep("", bar_width - complete_len + 1),
                         collapse = private$chars$incomplete)
 
-    str <- sub(":bar", paste0(complete, incomplete), str)
+    str <- sub(
+      ":bar", paste0(complete, current, incomplete), str)
   }
 
   if (col_nchar(str) > private$width) {

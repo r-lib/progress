@@ -27,6 +27,7 @@ A progress bar is an R6 object, that can be created with
     used to print the progress bar.}
   \item{complete}{Completion character, defaults to \code{=}.}
   \item{incomplete}{Incomplete character, defaults to \code{-}.}
+  \item{current}{Current character, defaults to \code{>}.}
   \item{callback}{Callback function to call when the progress
     bar finishes. The progress bar object itself is passed to it
     as the single parameter.}
