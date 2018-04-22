@@ -13,10 +13,14 @@ test_that("C++ API works", {
   f <- file(tempfile(), open = "w")
   sink(f)
   sink(f, type = "message")
-  install.packages("Rcpp", repos = c(CRAN = "https://cran.rstudio.com"),
-                   quiet = TRUE)
-  sink(NULL, type = "message")
-  sink(NULL)
+  on.exit({ sink(NULL, type = "message"); sink(NULL)})
+  suppressWarnings(
+    install.packages("Rcpp", repos = c(CRAN = "https://cran.rstudio.com"),
+                     quiet = TRUE)
+  )
+
+  sink(NULL, type = "message"); sink(NULL)
+  on.exit(NULL)
   close(f)
   unlink(f)
 
@@ -26,12 +30,14 @@ test_that("C++ API works", {
                    quiet = TRUE)
 
   ## OK, we could load it
-  do.call("library", list("progresstest", character.only = TRUE))
+  expect_error(
+    do.call("library", list("progresstest", character.only = TRUE)), NA)
+  on.exit(unloadNamespace("progresstest"))
 
   f <- file(tempfile(), open = "w")
   sink(f)
   sink(f, type = "message")
-  my_test_progress()
+  expect_error(my_test_progress(), NA)
   sink(NULL, type = "message")
   sink(NULL)
   close(f)
