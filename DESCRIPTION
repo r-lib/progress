@@ -18,6 +18,8 @@ Imports:
     R6,
     crayon
 Suggests:
-    testthat
+    Rcpp,
+    testthat,
+    withr
 RoxygenNote: 6.0.1.9000
 Encoding: UTF-8
