@@ -20,11 +20,22 @@ is_r_studio <- function() {
   Sys.getenv("RSTUDIO") == 1
 }
 
+r_studio_stdx <- function(stream) {
+  r_studio_stdout(stream) || r_studio_stderr(stream)
+}
+
 r_studio_stdout <- function(stream) {
   interactive() &&
     is_r_studio() &&
     identical(stream, stdout()) &&
     is_stdout(stream)
+}
+
+r_studio_stderr <- function(stream) {
+  interactive() &&
+    is_r_studio() &&
+    identical(stream, stderr()) &&
+    is_stderr(stream)
 }
 
 is_r_app <- function() {
@@ -39,7 +50,7 @@ r_app_stdx <- function(stream) {
 
 is_supported <- function(stream) {
   is_option_enabled() &&
-    (isatty(stream) || r_studio_stdout(stream) || r_app_stdx(stream))
+    (isatty(stream) || r_studio_stdx(stream) || r_app_stdx(stream))
 }
 
 is_option_enabled <- function() {
