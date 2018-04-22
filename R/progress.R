@@ -15,7 +15,8 @@
 #'     \code{"[:bar] :percent"}, which means that the progress
 #'     bar is within brackets on the left, and the percentage
 #'     is printed on the right.}
-#'   \item{total}{Total number of ticks to complete. Defaults to 100.}
+#'   \item{total}{Total number of ticks to complete. If it is unknown,
+#'      use \code{NA} here. Defaults to 100.}
 #'   \item{width}{Width of the progress bar. Default is the current
 #'     terminal width (see \code{options()} and \code{width}) minus two.}
 #'   \item{stream}{This argument is deprecated, and \code{message()} is
@@ -140,7 +141,7 @@
 #' ## Download (or other) rates
 #' pb <- progress_bar$new(
 #'   format = "  downloading foobar at :rate, got :bytes in :elapsed",
-#'   clear = FALSE, total = 1e7, width = 60)
+#'   clear = FALSE, total = NA, width = 60)
 #' f <- function() {
 #'   for (i in 1:100) {
 #'     pb$tick(sample(1:100 * 1000, 1))
@@ -214,7 +215,7 @@ pb_init <- function(self, private, format, total, width, stream,
                     force) {
 
   assert_character_scalar(format)
-  assert_nonnegative_scalar(total)
+  assert_nonnegative_scalar(total <- as.numeric(total), na = TRUE)
   assert_nonzero_count(width)
   assert_single_char(complete)
   assert_single_char(incomplete)
@@ -266,7 +267,9 @@ pb_tick <- function(self, private, len, tokens) {
     }
   }
 
-  if (private$current >= private$total) private$complete <- TRUE
+  if (!is.na(private$total) && private$current >= private$total) {
+    private$complete <- TRUE
+  }
 
   if (private$toupdate) private$render(tokens)
 

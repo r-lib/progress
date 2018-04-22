@@ -19,7 +19,8 @@ A progress bar is an R6 object, that can be created with
     \code{"[:bar] :percent"}, which means that the progress
     bar is within brackets on the left, and the percentage
     is printed on the right.}
-  \item{total}{Total number of ticks to complete. Defaults to 100.}
+  \item{total}{Total number of ticks to complete. If it is unknown,
+     use \code{NA} here. Defaults to 100.}
   \item{width}{Width of the progress bar. Default is the current
     terminal width (see \code{options()} and \code{width}) minus two.}
   \item{stream}{This argument is deprecated, and \code{message()} is
@@ -148,7 +149,7 @@ f()
 ## Download (or other) rates
 pb <- progress_bar$new(
   format = "  downloading foobar at :rate, got :bytes in :elapsed",
-  clear = FALSE, total = 1e7, width = 60)
+  clear = FALSE, total = NA, width = 60)
 f <- function() {
   for (i in 1:100) {
     pb$tick(sample(1:100 * 1000, 1))
