@@ -17,6 +17,7 @@
 #include <cstring>
 #include <cstdlib>
 
+#include <R.h>
 #include <Rinternals.h>
 #include <R_ext/Print.h>
 
@@ -169,8 +170,8 @@ class RProgress {
     if (bar_width < 0) bar_width = 0;
 
     double complete_len = round(bar_width * ratio_now);
-    char *bar = (char*) calloc(bar_width + 1, sizeof char);
-    if (!bar) error("Progress bar: out of memory");
+    char *bar = (char*) calloc(bar_width + 1, sizeof(char));
+    if (!bar) Rf_error("Progress bar: out of memory");
     for (int i = 0; i < complete_len; i++) { bar[i] = complete_char; }
     for (int i = complete_len; i < bar_width; i++) {
       bar[i] = incomplete_char;
@@ -219,8 +220,8 @@ class RProgress {
 
   void clear_line(bool use_stderr, int width) {
 
-    char *spaces = calloc(width + 2, sizeof char);
-    if (!spaces) error("Progress bar: out of memory");
+    char *spaces = (char*) calloc(width + 2, sizeof(char));
+    if (!spaces) Rf_error("Progress bar: out of memory");
     for (int i = 1; i <= width; i++) spaces[i] = ' ';
     spaces[0] = '\r';
     spaces[width + 1] = '\0';

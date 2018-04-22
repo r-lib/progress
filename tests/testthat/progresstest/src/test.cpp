@@ -50,7 +50,7 @@ Rcpp::CharacterVector test_units() {
   result[16] = RProgress::RProgress::pretty_bytes(13333337);
   result[17] = RProgress::RProgress::pretty_bytes(133333337);
   result[18] = RProgress::RProgress::pretty_bytes(1333333337);
-  result[19] = RProgress::RProgress::pretty_bytes(13333333337);
+  result[19] = RProgress::RProgress::pretty_bytes(1333333337);
 
   return result;
 
