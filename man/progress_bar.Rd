@@ -82,6 +82,12 @@ values to \code{progress_bar$tick()} or \code{progress_bar$update()},
 in a named list. See example below.
 }
 
+\section{Options}{
+
+The `progress_enabled` option can be set to `FALSE` to turn off the
+progress bar. This works for the C++ progress bar as well.
+}
+
 \examples{
 
 ## We don't run the examples on CRAN, because they takes >10s

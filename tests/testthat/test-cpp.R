@@ -18,4 +18,10 @@ test_that("C++ API works", {
       expect_error(progresstest::my_test_progress(), NA)
     )
   })
+
+  withr::with_libpaths(lib, action = "prefix", {
+    withr::with_options(list(progress_enabled = FALSE),
+      expect_false(progresstest::my_is_option_enabled())
+    )
+  })
 })

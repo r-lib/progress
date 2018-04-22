@@ -16,6 +16,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// test_is_option_enabled
+Rcpp::LogicalVector test_is_option_enabled();
+RcppExport SEXP _progresstest_test_is_option_enabled() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(test_is_option_enabled());
+    return rcpp_result_gen;
+END_RCPP
+}
 // test_units
 Rcpp::CharacterVector test_units();
 RcppExport SEXP _progresstest_test_units() {
@@ -29,6 +39,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_progresstest_test_progress", (DL_FUNC) &_progresstest_test_progress, 1},
+    {"_progresstest_test_is_option_enabled", (DL_FUNC) &_progresstest_test_is_option_enabled, 0},
     {"_progresstest_test_units", (DL_FUNC) &_progresstest_test_units, 0},
     {NULL, NULL, 0}
 };

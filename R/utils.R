@@ -38,7 +38,12 @@ r_app_stdx <- function(stream) {
 }
 
 is_supported <- function(stream) {
-  isatty(stream) || r_studio_stdout(stream) || r_app_stdx(stream)
+  is_option_enabled() &&
+    (isatty(stream) || r_studio_stdout(stream) || r_app_stdx(stream))
+}
+
+is_option_enabled <- function() {
+  isTRUE(getOption("progress_enabled", TRUE))
 }
 
 default_stream <- function(stream) {

@@ -3,4 +3,5 @@
 importFrom(Rcpp,loadRcppModules)
 importFrom(progress,progress_bar)
 useDynLib(progresstest)
+export(my_is_option_enabled)
 export(my_test_progress)

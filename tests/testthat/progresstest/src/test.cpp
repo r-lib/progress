@@ -25,6 +25,18 @@ Rcpp::CharacterVector test_progress(Rcpp::CharacterVector formatSEXP =
 }
 
 // [[Rcpp::export]]
+Rcpp::LogicalVector test_is_option_enabled() {
+
+  BEGIN_RCPP
+
+  Rcpp::LogicalVector result(1);
+  result[0]  = RProgress::RProgress::is_option_enabled();
+  return result;
+
+  END_RCPP
+}
+
+// [[Rcpp::export]]
 Rcpp::CharacterVector test_units() {
   BEGIN_RCPP
 

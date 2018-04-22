@@ -274,7 +274,8 @@ class RProgress {
 
   bool is_supported() {
 
-    return isatty(1) || is_r_studio() || is_r_app();
+    return is_option_enabled() &&
+      (isatty(1) || is_r_studio() || is_r_app());
   }
 
   // gettimeofday for windows, from
@@ -369,6 +370,17 @@ public:
     buffer.precision(2);
     buffer << std::fixed << res << units[(long) idx];
     return buffer.str();
+  }
+
+  static bool is_option_enabled() {
+    SEXP opt = PROTECT(Rf_GetOption1(Rf_install("progress_enabled")));
+    if (Rf_isNull(opt)) {
+      UNPROTECT(1);
+      return true;
+    }
+    Rboolean t = R_compute_identical(opt, Rf_ScalarLogical(1), 16);
+    UNPROTECT(1);
+    return t;
   }
 
 }; // class RProgress

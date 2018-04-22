@@ -5,6 +5,10 @@ test_progress <- function(formatSEXP = "[:bar] :percent ") {
     .Call('_progresstest_test_progress', PACKAGE = 'progresstest', formatSEXP)
 }
 
+test_is_option_enabled <- function() {
+    .Call('_progresstest_test_is_option_enabled', PACKAGE = 'progresstest')
+}
+
 test_units <- function() {
     .Call('_progresstest_test_units', PACKAGE = 'progresstest')
 }
