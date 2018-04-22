@@ -50,7 +50,7 @@ class RProgress {
     first(true), format(format), total(total), current(0), width(width),
     complete_char(complete_char), incomplete_char(incomplete_char),
     clear(clear), show_after(show_after), last_draw(""), start(0),
-    toupdate(false), complete(false) {
+    toupdate(false), complete(false), count(1) {
 
     supported = is_supported();
     use_stderr = default_stderr();
