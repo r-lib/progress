@@ -12,9 +12,6 @@ install:
 
 # Adapt as necessary starting from here
 
-environment:
-  NOT_CRAN: true
-
 build_script:
   - travis-tool.sh install_deps
 
@@ -42,3 +39,8 @@ artifacts:
 
   - path: '\*_*.zip'
     name: Bits
+
+environment:
+  global:
+    NOT_CRAN: yes
+    USE_RTOOLS: true
