@@ -8,6 +8,14 @@ cursor_to_start <- function() {
   message("\r", appendLF = FALSE)
 }
 
+is_stdout <- function(stream) {
+  identical(stream, stdout()) && sink.number() == 0
+}
+
+is_stderr <- function(stream) {
+  identical(stream, stderr())
+}
+
 is_r_studio <- function() {
   Sys.getenv("RSTUDIO") == 1
 }
