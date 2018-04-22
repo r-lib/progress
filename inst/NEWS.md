@@ -1,5 +1,15 @@
 
-# 1.1.2.9003
+# 1.2.0
+
+* Option to change the 'current' character in the progress bar. #47
+
+* New `:tick_rate` token, similar to `:rate`, but units are not assumed
+  to be bytes. #45
+
+* Total number of ticks can be set to `NA` now, if unknown. #48
+
+* All progress bars (including the ones from the C++ API) can be turned
+  off via the `progress_enabled` option #44
 
 * The `stream` argument is deprecated and the progress bar is always
   printed with `message()` calls.
@@ -8,10 +18,10 @@
   cases better.
 
 * Add `finished` variable, which can be queried to see if a progress bar is
-  finished. @jimhester.
+  finished. #54 @jimhester.
 
 * Add a `terminate()` method, which can be called to explicitly remove the
-  progress bar, @jimhester.
+  progress bar, #53 @jimhester.
 
 * Outputs greater than the bar width are automatically trimmed, @jimhester.
 
@@ -19,6 +29,12 @@
   @jimhester.
 
 * :elapsedfull token: elapsed time in hh:mm:ss format.
+
+* Fix C++ compiler warnings. #43
+
+* Fix C++ API on Windows. #56
+
+* Pass `self` to the callback function. #55 @jimhester
 
 # 1.1.2
 
