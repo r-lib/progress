@@ -142,8 +142,12 @@ class RProgress {
     replace_all(str, ":eta", eta);
 
     // rate
-    double rate_num = current / elapsed_secs;
-    buffer << pretty_bytes(lround(rate_num)) << "/s";
+    if (elapsed_secs == 0) {
+      buffer << "?";
+    } else {
+      double rate_num = elapsed_secs == 0 ? 0 : current / elapsed_secs;
+      buffer << pretty_bytes(lround(rate_num)) << "/s";
+    }
     replace_all(str, ":rate", buffer.str());
     buffer.str(""); buffer.clear();
 
@@ -173,11 +177,12 @@ class RProgress {
     char *bar = (char*) calloc(bar_width + 1, sizeof(char));
     if (!bar) Rf_error("Progress bar: out of memory");
     for (int i = 0; i < complete_len; i++) { bar[i] = complete_char; }
-    for (long int i = lrint(complete_len); i < bar_width; i++) {
+    for (long int i = (long int) complete_len; i < bar_width; i++) {
       bar[i] = incomplete_char;
     }
     bar[bar_width] = '\0';
     replace_all(str, ":bar", bar);
+    free(bar);
 
     if (last_draw != str) {
       if (last_draw.length() > str.length()) { clear_line(use_stderr, width); }
@@ -189,7 +194,6 @@ class RProgress {
       }
       last_draw = str;
     }
-    free(bar);
   }
 
   void terminate() {
@@ -355,7 +359,7 @@ public:
 
     std::string units[] = { "B", "kB", "MB", "GB", "TB", "PB", "EB",
 			    "ZB", "YB" };
-    long int num_units = std::lrint(sizeof(units) / sizeof(units[0]));
+    long int num_units = (long int)(sizeof(units) / sizeof(units[0]));
     double idx = std::floor(std::log(bytes) / std::log(1000.0));
     if (idx >= num_units) { idx = num_units - 1; }
 
