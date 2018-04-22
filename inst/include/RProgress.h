@@ -169,7 +169,8 @@ class RProgress {
     if (bar_width < 0) bar_width = 0;
 
     double complete_len = round(bar_width * ratio_now);
-    char bar[bar_width + 1];
+    char *bar = (char*) calloc(bar_width + 1, sizeof char);
+    if (!bar) error("Progress bar: out of memory");
     for (int i = 0; i < complete_len; i++) { bar[i] = complete_char; }
     for (int i = complete_len; i < bar_width; i++) {
       bar[i] = incomplete_char;
@@ -187,6 +188,7 @@ class RProgress {
       }
       last_draw = str;
     }
+    free(bar);
   }
 
   void terminate() {
@@ -217,7 +219,8 @@ class RProgress {
 
   void clear_line(bool use_stderr, int width) {
 
-    char spaces[width + 2];
+    char *spaces = calloc(width + 2, sizeof char);
+    if (!spaces) error("Progress bar: out of memory");
     for (int i = 1; i <= width; i++) spaces[i] = ' ';
     spaces[0] = '\r';
     spaces[width + 1] = '\0';
@@ -227,6 +230,7 @@ class RProgress {
     } else {
       Rprintf(spaces);
     }
+    free(spaces);
   }
 
   void cursor_to_start(bool use_stderr) {
