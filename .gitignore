@@ -1,3 +1,6 @@
+Meta
+doc
+inst/doc
 /tags
 /src/*.o
 /src/progress.so

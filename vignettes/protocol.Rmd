@@ -1,0 +1,343 @@
+---
+title: "Message passing progress bar protocol v1.0.0 (draft)"
+author: "Gábor Csárdi"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Message passing progress bar protocol v1.0.0 (draft)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Architecture
+
+Since version 2.0.0, progress has a client side architecture. Clients
+report progress or status, and the server reports it on the screen, or in
+an IDE.
+
+## Message Conditions
+
+Clients communicate to the server via _message conditions._ The server
+does not communicate to the clients.
+
+The message conditions must have at least S3 classes `progress_message` and
+`condition`. They may have additional classes as well.
+
+A message condition is a named list, with at least an element named `type`.
+If the server catches a `progress_message` condition that does not contain
+a `type` member, it should re-throw it. If a condition contains a type that
+is unknown to the server, it should ignore it. The server may log these
+events.
+
+A message condition contains a `version` field, which is the client's
+protocol version.
+
+## Subprocesses
+
+The callr package automatically re-throws `progress_message` conditions
+in the parent process, so progress bars work across (sub)processes.
+
+To allow progress bars for subprocesses, progress conditions include
+the process id (pid) of the process, as the `pid` member. The server may
+optionally use the pid information for a better display.
+
+## Message condition types
+
+Here are all the (possibly optional) parameters the various condition
+types may contain. A client side API will usually not expose some of these
+parameters to the end user of the progress bar. E.g. `pid` can be easily
+added automatically, so it a new `id`  for `add_job()`, etc.
+
+### `add_job` -- add a job
+
+Add a new job. 
+
+Parameters:
+
+* `pid = Sys.getpid()`: integer, process id of the calling process.
+	This is added to allow the server to clean up all jobs that belong to a
+    process, without the process schedule (e.g. callr) having to know
+	about the progress bar protocol.
+* `id`: string, identifier that is unique in the calling
+    process. `pid` and `id` completely identify a job. See Section
+    "Job Ids" for details.
+* `name = NULL`: string, name of the job.
+* `type = "loop"`: string, job type. See Section "Job Types" for the
+	currently supported job types.
+* `format = NULL"`: string, if the job `type` is `custom`, then this is
+	used to specify a template for the progress bar.
+* `status = NULL"`: string, the initial label in the status display.
+* `total = 100`: numeric, total number of progress units for the job.
+* `estimate = NULL`: numeric, estimate for the running time, in seconds,
+    or `NULL` if no such estimate is available.
+* `auto-estimate = TRUE`: whether the server _should_ try to estimate
+    the running time of the job.
+* `tokens = list()`: extra job data. See Section "Custom Job Data"
+    below.
+* `group = NULL`: the job's group id, if this job is part of a group.
+	See Section "Job Groups".
+
+### `set_job_progress` -- set progress completeness status
+
+Parameters:
+
+* `pid`: process id.
+* `id`: string, job id.
+* `progress`: numeric, the current completeness status of a job.
+* `tokens = list()`: extra job data. See Section "Custom Job Data"
+    below.
+
+### `add_job_progress` -- add to progress status
+
+Parameters:
+
+* `pid`: process id.
+* `id`: string, job id.
+* `increment = 1L`: numeric, to number of additional progress units
+    completed.
+* `tokens = list()`: extra job data. See Section "Custom Job Data"
+    below.
+
+### `set_job_status` -- set the status display
+
+Parameters:
+
+* `pid`: process id.
+* `id`: string, job id.
+* `status`: string, the new status label.
+* `tokens = list()`: extra job data. See Section "Custom Job Data"
+    below.
+
+### `set_job_estimate` -- set estimate for a job
+
+Parameters:
+
+* `pid`: process id.
+* `id`: string, job id.
+* `seconds`: numeric, (new) estimate for the number of seconds
+    _remaining_.
+* `tokens = list()`: extra job data. See Section "Custom Job Data"
+    below.
+
+### `add_job_output` -- additional job output
+
+Parameters:
+
+* `pid`: process id.
+* `id`: string, job id.
+* `output`: string, job output to append.
+* `type`: type of the output: `message` or `warning` currently.
+
+### `complete_job` -- complete a job
+
+Parameters:
+
+* `pid`: process id.
+* `id`: string, job id.
+* `succeeded = TRUE`: logical, whether the job succeeded.
+* `error = NULL`: error message or error object, for failed jobs.
+* `tokens = list()`: extra job data. See Section "Custom Job Data"
+    below.
+
+### `complete_process` -- complete all jobs of a process
+
+Parameters:
+
+* `pid`: process id. The process that just terminated.
+* `error = NULL`: optional error message or error object.
+
+### `add_job_group` -- add a job group
+
+Parameters:
+
+* `id`: job group id. This should be generated the same way as job ids.
+* `type = "tasks"`: job group type.
+* `format = NULL"`: string, if the job `type` is `custom`, then this is
+	used to specify a template for the progress bar.
+* `status = NULL"`: string, the initial label in the status display.
+* `tokens = list()`: extra job data. See Section "Custom Job Data"
+    below.
+
+See Section "Job groups" below.
+
+## Job Ids
+
+The progress bar server can assume that job ids are unique for each
+process (i.e. `pid)`. Job ids are generated by the client, and they
+have to be a scalar string. A possible choice for job ids is a simple
+counter, that is stored in the R session, and it is incremented every
+a new job is created. A progress bar client can implement this.
+
+If a package wishes to emit progress message conditions, it can implement
+a job counter for itself, and prefix the id of the job with the package
+name.
+
+Another possible choice for ids is generating a random UUID for each new job.
+(E.g. via the uuid package.)
+
+## Job groups
+
+Jobs can be organized into job groups. Job groups have ids, similarly
+to jobs. Job groups cannot be nested.
+
+## Job types
+
+This version of the progress bar API supports the following job types:
+
+* `loop`: a `for` loops, or an iterator, i.e. `lapply` or `purrr::map`.
+* `tasks`: a number of tasks to perform.
+* `download`: downloading a file.
+* `custom`: job type with a custom format string.
+
+The currently supported job group types:
+
+* `gtasks`: similar to the job type with the same name, but implemented
+  as a job group.
+* `gdownloads`: similar to the job type with the same name, but implemented
+  as a job group.
+
+### Format strings
+
+A format string is a template that specifies how the progress bar of a job
+should be displayed. The progess bar server has a default format string
+(or graphical display) for each job type. This format string or display
+can be potentially configured by the end user.
+
+For `custom` jobs, the progress client must supply a custom format string.
+The format string is specified as a glue (https://glue.tidyverse.org/)
+template. Built in and custom tokens can be refered to as local variables
+in the format string.
+
+### Built in tokens
+
+In alphabetical order:
+
+* `bar`: visual display of a progress bar.
+* `current`: the current completeness status, i.e. a number between
+  zero and `total`. Initially this is zero.
+* `current_bytes`: current completion status, as human readable (kilo-,
+  mega-, etc.) bytes.
+* `elapsed`: the elapsed time since start of the job in human readable form.
+* `elapsed_clock`: elapsed time in `hh:mm:ss` format.
+* `elapsed_raw`: elapsed time in seconds.
+* `eta`: estimated completeion time in human readable form.
+* `eta_raw`: estimated completion time in seconds.
+* `id`: job id.
+* `name`: job name.
+* `percent`: percentage of completion, _not_ including the percent sign.
+* `pid`: job pid.
+* `rate`: tick rate, number of progress units completed per second, or
+  other appropriate time unit, in a human readable form.
+* `rate_raw`: number of ticks per second.
+* `rate_bytes`: download rate, human readable bytes per second.
+* `spin`: a spinner, that updates even when there is no progress. The server
+  need to be concurrent, or get regular updates (even if no progress)
+  from the client, for a working spinner.
+* `status`: the current status string.
+* `timestamp`: current time, in ISO 8601 format. E.g.
+  `2018-09-26T10:08:18+00:00`.
+* `total`: total number of progress units for a job.
+* `total_bytes`: total number of progress units, as human readable bytes. 
+
+For job groups, some tokens behave differently, and there are also some
+additional tokens. These tokens are totals across all jobs in the group:
+
+* `bar`: for all progress units in the job group.
+* `current`: the number of total completed progress units.
+* `current_bytes`: same as `current`, but as human readable (kilo-,
+  mega-, etc.) bytes.
+* `percent`: across all jobs in the group.
+* `rate`: tick rate, number of progress units completed per second, or
+  other appropriate time unit, in a human readable form.
+* `rate_raw`: number of ticks per second.
+* `rate_bytes`: download rate, human readable bytes per second.
+* `total`: total number of progress units across the jobs in the group.
+* `total_bytes`: total number of progress units, as human readable bytes. 
+
+These tokens are only defined for job groups:
+
+* `num_jobs`: for a job group, the total number of jobs in the group.
+* `num_jobs_done`: number of jobs done.
+* `num_jobs_running`: number of jobs _running_.
+
+### `loop` jobs
+
+A for loop, or another iterator. A possible format string is:
+```
+"{name} | {bar} {percent} | {status} ETA: {eta}"
+```
+A loop for which `total` is not known, must be displayed differently, e.g.
+as
+```
+"[{spin}] {elapsed} {name} {status} | {current} done ({rate})"
+```
+
+### `tasks` jobs
+
+A list of tasks to perform, each might take a different amount of time.
+If the number of tasks is known, a possible format string is:
+```
+"[{spin}] {current}/{total} ETA: {eta} | {name} {status}"
+```
+
+If the number of tasks is unknown:
+```
+"[{spin}] {elapsed} {name} {status} | {current} done ({rate})"
+```
+
+### `download` jobs
+
+If `total` is known, one possible display is:
+```
+"[{spin}] {name} {status} | {current_bytes}/{total_bytes} ETA: {eta}"
+```
+
+If `total` is unknown:
+```
+"[{spin}] {elapsed} {name} {status} | {current_bytes} ({rate})"
+```
+
+### `custom` jobs
+
+Custom jobs do not have a default format string, a custom one has to be
+specified in the `format` element of the condition  message that creates
+the job. The custom format string may refer to built in and custom tokens.
+
+### `gtasks` job groups
+
+This is similar to the `tasks` job type, but implemented as a job group.
+
+The default format strings can be the same as for `tasks`.
+
+### `downloads` job groups
+
+Multiple downloads, potentially concurrently. A possible display is
+
+```
+"{name} {status} | {current_bytes}/{total_bytes} {rate_bytes}"
+```
+
+## Custom job data
+
+Custom jobs might need extra data to display. You can add this extra
+data to any update condition, as the `token` list. The custom format
+string may refer to the custom data directly in the glue template.
+
+Custom tokens are stored in the server, until the progress bar has finished.
+If an update does not specify a new value for a custom token, the old
+value is kept. This allows setting up custom data when the progress bar
+is created, and using it later.
+
+## Combining multiple progress bars
+
+It is the server's discretion whether and how it will combine multiple
+progress bars.
