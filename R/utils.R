@@ -1,13 +1,4 @@
 
-clear_line <- function(width) {
-  str <- paste0(c("\r", rep(" ", width)), collapse = "")
-  message(str, appendLF = FALSE)
-}
-
-cursor_to_start <- function() {
-  message("\r", appendLF = FALSE)
-}
-
 is_stdout <- function(stream) {
   identical(stream, stdout()) && sink.number() == 0
 }

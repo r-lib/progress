@@ -421,3 +421,14 @@ test_that("terminate works", {
   expect_equal(out, sout)
 
 })
+
+test_that("custom message class", {
+  out <- get_output({
+    pb <- progress_bar$new(force = TRUE, message_class = "myclass",
+                          show_after = 0, width = 20)
+    msg <- tryCatch(pb$tick(25), message = function(x) x)
+    expect_s3_class(msg, "myclass")
+    msg <- tryCatch(pb$terminate(), message = function(x) x)
+    expect_s3_class(msg, "myclass")
+  })
+})

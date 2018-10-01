@@ -39,6 +39,8 @@ A progress bar is an R6 object, that can be created with
     tenth of a second.}
   \item{force}{Whether to force showing the progress bar,
     even if the given (or default) stream does not seem to support it.}
+  \item{message_class}{Extra classes to add to the message conditions
+    signalled by the progress bar.}
 }
 }
 

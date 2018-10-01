@@ -35,6 +35,8 @@
 #'     tenth of a second.}
 #'   \item{force}{Whether to force showing the progress bar,
 #'     even if the given (or default) stream does not seem to support it.}
+#'   \item{message_class}{Extra classes to add to the message conditions
+#'     signalled by the progress bar.}
 #' }
 #'
 #' @section Using the progress bar:
@@ -181,9 +183,10 @@ progress_bar <- R6Class("progress_bar",
     initialize = function(format = "[:bar] :percent", total = 100,
       width = getOption("width") - 2, stream = NULL, complete = "=",
       incomplete = "-", current = ">", callback = function(self) {},
-      clear = TRUE, show_after = 0.2, force = FALSE) {
+      clear = TRUE, show_after = 0.2, force = FALSE, message_class = NULL) {
         pb_init(self, private, format, total, width, stream, complete,
-          incomplete, current, callback, clear, show_after, force)
+                incomplete, current, callback, clear, show_after, force,
+                message_class)
     },
     tick = function(len = 1, tokens = list()) {
       pb_tick(self, private, len, tokens) },
@@ -199,6 +202,13 @@ progress_bar <- R6Class("progress_bar",
 
     render = function(tokens) { pb_render(self, private, tokens) },
     ratio = function() { pb_ratio(self, private) },
+    progress_message = function(..., domain = NULL, appendLF = TRUE) {
+      pb_progress_message(self, private, ..., domain = domain,
+                          appendLF = appendLF) },
+    clear_line = function(width) {
+      pb_clear_line(self, private, width) },
+    cursor_to_start = function() {
+      pb_cursor_to_start(self, private) },
 
     first = TRUE,
     supported = NA,
@@ -215,6 +225,7 @@ progress_bar <- R6Class("progress_bar",
     clear = NULL,
     show_after = NULL,
     last_draw = "",
+    message_class = NULL,
 
     start = NULL,
     toupdate = FALSE,
@@ -230,7 +241,7 @@ progress_bar <- R6Class("progress_bar",
 
 pb_init <- function(self, private, format, total, width, stream,
                     complete, incomplete, current, callback, clear,
-                    show_after, force) {
+                    show_after, force, message_class) {
 
   assert_character_scalar(format)
   assert_nonnegative_scalar(total <- as.numeric(total), na = TRUE)
@@ -254,6 +265,7 @@ pb_init <- function(self, private, format, total, width, stream,
   private$clear <- clear
   private$show_after <- as.difftime(show_after, units = "secs")
   private$spin <- spin_symbols()
+  private$message_class <- message_class
 
   private$has_token <- pb_update_has_token(private$has_token, format)
 
@@ -429,10 +441,10 @@ pb_render <- function(self, private, tokens) {
 
   if (private$last_draw != str) {
     if (col_nchar(private$last_draw) > col_nchar(str)) {
-      clear_line(private$width)
+      private$clear_line(private$width)
     }
-    cursor_to_start()
-    message(str, appendLF = FALSE)
+    private$cursor_to_start()
+    private$progress_message(str, appendLF = FALSE)
     private$last_draw <- str
   }
 
@@ -462,13 +474,13 @@ pb_message <- function(self, private, msg, set_width) {
   }
 
   if (!private$supported) {
-    message(paste0(msg, "\n"), appendLF = FALSE)
+    private$progress_message(paste0(msg, "\n"), appendLF = FALSE)
   } else {
-    clear_line(private$width)
-    cursor_to_start()
-    message(paste0(msg, "\n"), appendLF = FALSE)
+    private$clear_line(private$width)
+    private$cursor_to_start()
+    private$progress_message(paste0(msg, "\n"), appendLF = FALSE)
     if (!self$finished) {
-      message(private$last_draw, appendLF = FALSE)
+      private$progress_message(private$last_draw, appendLF = FALSE)
     }
   }
 }
@@ -477,10 +489,10 @@ pb_terminate <- function(self, private) {
   self$finished <- TRUE
   if (!private$supported || !private$toupdate) return(invisible())
   if (private$clear) {
-    clear_line(private$width)
-    cursor_to_start()
+    private$clear_line(private$width)
+    private$cursor_to_start()
   } else {
-    message("\n", appendLF = FALSE)
+    private$progress_message("\n", appendLF = FALSE)
   }
 }
 
@@ -491,4 +503,34 @@ spin_symbols <- function() {
   function() {
     sym[[i <<- if (i >= n) 1L else i + 1L]]
   }
+}
+
+pb_progress_message <- function(self, private, ..., domain = domain,
+                                appendLF = appendLF) {
+
+  msg <- .makeMessage(..., domain = domain, appendLF = appendLF)
+
+  cond <- structure(
+    list(message = msg, call = NULL),
+    class = c(private$message_class, "message", "condition"))
+
+  defaultHandler <- function(c) {
+    cat(conditionMessage(c), file = stderr(), sep = "")
+  }
+
+  withRestarts({
+    signalCondition(cond)
+    defaultHandler(cond)
+  }, muffleMessage = function() NULL)
+
+  invisible()
+}
+
+pb_clear_line <- function(self, private, width) {
+  str <- paste0(c("\r", rep(" ", width)), collapse = "")
+  private$progress_message(str, appendLF = FALSE)
+}
+
+pb_cursor_to_start <- function(self, private) {
+  private$progress_message("\r", appendLF = FALSE)
 }
