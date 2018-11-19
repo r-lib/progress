@@ -505,8 +505,7 @@ spin_symbols <- function() {
   }
 }
 
-pb_progress_message <- function(self, private, ..., domain = domain,
-                                appendLF = appendLF) {
+pb_progress_message <- function(self, private, ..., domain, appendLF) {
 
   msg <- .makeMessage(..., domain = domain, appendLF = appendLF)
 
