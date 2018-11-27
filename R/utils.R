@@ -51,7 +51,7 @@ rkward_stdx <- function(stream) {
 
 is_supported <- function(stream) {
   is_option_enabled() &&
-    (isatty(stream) || r_studio_stdx(stream) || r_app_stdx(stream)) || rkward_stdx(stream)
+    (isatty(stream) || r_studio_stdx(stream) || r_app_stdx(stream) || rkward_stdx(stream))
 }
 
 is_option_enabled <- function() {
