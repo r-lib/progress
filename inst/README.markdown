@@ -105,6 +105,26 @@ for (i in 1:1000) {
   downloading [=====================--------------] 00:00:08
 ```
 
+With number of number of ticks/total:
+
+```r
+total <- 1000
+pb <- progress_bar$new(format = "[:bar] :current/:total (:percent)", total = total)
+f <- function() {
+  pb$tick(0)
+  Sys.sleep(3)
+  for (i in 1:total) {
+    pb$tick(1)
+    Sys.sleep(1 / 100)
+  }
+}
+f()
+```
+
+```
+[============================-------------------------------------------------] 370/1000 ( 37%)
+```
+
 With custom tokens:
 
 ```r
