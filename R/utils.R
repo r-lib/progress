@@ -1,4 +1,6 @@
 
+`%||%` <- function(l, r) if (is.null(l)) r else l
+
 clear_line <- function(width) {
   str <- paste0(c("\r", rep(" ", width)), collapse = "")
   message(str, appendLF = FALSE)
@@ -69,10 +71,13 @@ assert_character <- function(x) {
   stopifnot(is.character(x),
             length(x) > 0)
 }
+
+is_string <- function(x)  {
+  is.character(x) && length(x) == 1 && !is.na(x)
+}
+
 assert_character_scalar <- function(x) {
-  stopifnot(is.character(x),
-            length(x) == 1,
-            !is.na(x))
+  stopifnot(is_string(x))
 }
 
 assert_scalar <- function(x, finite = TRUE, na = FALSE) {
@@ -122,4 +127,12 @@ assert_flag <- function(x) {
 
 assert_named_or_empty_list <- function(x) {
   stopifnot(length(x) == 0 || !is.null(names(x)))
+}
+
+progress_once_env <- new.env(parent = emptyenv())
+
+once <- function(key, expr) {
+  if (!is.null(progress_once_env[[key]])) return(invisible())
+  progress_once_env[[key]] <- TRUE
+  expr
 }

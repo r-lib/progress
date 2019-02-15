@@ -149,6 +149,8 @@ Parameters:
 * `output`: string, job output to append.
 * `output_type`: string, type of the output: `message` or `warning`
     currently.
+* `tokens = list()`: extra job data. See Section "Custom Job Data"
+    below.
 
 ### `complete_job` -- complete a job
 
