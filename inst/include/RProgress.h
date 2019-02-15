@@ -42,13 +42,14 @@ class RProgress {
   RProgress(std::string format = "[:bar] :percent",
 	    double total = 100,
 	    int width = Rf_GetOptionWidth() - 2,
-	    char complete_char = '=',
-	    char incomplete_char = '-',
+	    const char* cursor_char = "=",
+	    const char* complete_char = "=",
+	    const char* incomplete_char = "-",
 	    bool clear = true,
 	    double show_after = 0.2) :
 
     first(true), format(format), total(total), current(0), count(0),
-    width(width), complete_char(complete_char),
+    width(width), cursor_char(cursor_char), complete_char(complete_char),
     incomplete_char(incomplete_char), clear(clear), show_after(show_after),
     last_draw(""), start(0), toupdate(false), complete(false) {
 
@@ -61,14 +62,19 @@ class RProgress {
   void set_format(std::string format)    { this->format = format;         }
   void set_total(double total)           { this->total = total;           }
   void set_width(int width)              { this->width = width;           }
-  void set_complete_char(char complete_char) {
+  void set_cursor_char(const char* cursor_char) {
+    this->cursor_char = cursor_char;
+  }
+  void set_complete_char(const char* complete_char) {
     this->complete_char = complete_char;
   }
-  void set_incomplete_char(char incomplete_char) {
+  void set_incomplete_char(const char* incomplete_char) {
     this->incomplete_char = incomplete_char;
   }
   void set_clear(bool clear)             { this->clear = clear;           }
   void set_show_after(double show_after) { this->show_after = show_after; }
+
+  void set_reverse(bool reverse)         { this->reverse = reverse;       }
 
   void tick(double len = 1) {
     // Start the timer
@@ -105,8 +111,9 @@ class RProgress {
   int count;                    // Total number of calls
   int width;			// Width of progress bar
   bool use_stderr;		// Whether to print to stderr
-  char complete_char;		// Character for completed ticks
-  char incomplete_char;		// Character for incomplete ticks
+  const char* cursor_char;		// Character for cursor tick
+  const char* complete_char;		// Character for completed ticks
+  const char* incomplete_char;		// Character for incomplete ticks
   bool clear;			// Should we clear the line at the end?
   double show_after;		// Delay to show/increase the progress bar
   std::string last_draw;	// Last progress bar drawn
@@ -114,6 +121,7 @@ class RProgress {
   double start;			// Start time
   bool toupdate;		// Are we updating? (After show_after.)
   bool complete;		// Are we complete?
+  bool reverse;  // go from right to left rather than left to right
 
   void render() {
     if (!supported) return;
@@ -174,15 +182,26 @@ class RProgress {
     if (bar_width < 0) bar_width = 0;
 
     double complete_len = round(bar_width * ratio_now);
-    char *bar = (char*) calloc(bar_width + 1, sizeof(char));
-    if (!bar) Rf_error("Progress bar: out of memory");
-    for (int i = 0; i < complete_len; i++) { bar[i] = complete_char; }
-    for (long int i = (long int) complete_len; i < bar_width; i++) {
-      bar[i] = incomplete_char;
+    std::string bar;
+
+    if (reverse) {
+      for (long int i = (long int) complete_len; i < bar_width; i++) {
+        bar += incomplete_char;
+      }
+      if (complete_len > 0) {
+        bar += cursor_char;
+      }
+      for (int i = 0; i < (complete_len - 1); i++) { bar += complete_char; }
+    } else {
+      for (int i = 0; i < (complete_len - 1); i++) { bar += complete_char; }
+      if (complete_len > 0) {
+        bar += cursor_char;
+      }
+      for (long int i = (long int) complete_len; i < bar_width; i++) {
+        bar += incomplete_char;
+      }
     }
-    bar[bar_width] = '\0';
     replace_all(str, ":bar", bar);
-    free(bar);
 
     if (last_draw != str) {
       if (last_draw.length() > str.length()) { clear_line(use_stderr, width); }
