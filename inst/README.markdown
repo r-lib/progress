@@ -19,8 +19,10 @@ the https://github.com/tj/node-progress JavaScript project.
 
 ## Installation
 
+Install the package from CRAN:
+
 ```r
-devtools::install_github("r-lib/progress")
+install.packages("progress")
 ```
 
 ## Usage
