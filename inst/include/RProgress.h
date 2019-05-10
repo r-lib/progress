@@ -16,6 +16,7 @@
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
+#include <cerrno>
 
 #include <R.h>
 #include <Rinternals.h>
