@@ -154,7 +154,7 @@ class RProgress {
       buffer << "?";
     } else {
       double rate_num = elapsed_secs == 0 ? 0 : current / elapsed_secs;
-      buffer << pretty_bytes(lround(rate_num)) << "/s";
+      buffer << pretty_bytes(rate_num) << "/s";
     }
     replace_all(str, ":rate", buffer.str());
     buffer.str(""); buffer.clear();
@@ -170,7 +170,7 @@ class RProgress {
     buffer.str(""); buffer.clear();
 
     // bytes
-    replace_all(str, ":bytes", pretty_bytes(lround(current)));
+    replace_all(str, ":bytes", pretty_bytes(current));
 
     // spin
     replace_all(str, ":spin", spin_symbol());
@@ -373,7 +373,13 @@ public:
     return buffer.str();
   }
 
-  static std::string pretty_bytes(long bytes) {
+  static std::string pretty_bytes(double rate) {
+
+    errno = 0;
+    long bytes = lround(bytes);
+    if (errno == ERANGE) {
+      bytes = LONG_MAX;
+    }
 
     if (bytes == 0) { return "0B"; }
 
