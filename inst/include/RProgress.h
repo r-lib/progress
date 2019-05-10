@@ -39,14 +39,14 @@ class RProgress {
 
  public:
 
-  RProgress(std::string format = "[:bar] :percent",
-	    double total = 100,
-	    int width = Rf_GetOptionWidth() - 2,
-	    const char* cursor_char = "=",
-	    const char* complete_char = "=",
-	    const char* incomplete_char = "-",
-	    bool clear = true,
-	    double show_after = 0.2) :
+  RProgress(std::string format,
+	    double total,
+	    int width,
+	    const char* cursor_char,
+	    const char* complete_char,
+	    const char* incomplete_char,
+	    bool clear,
+	    double show_after) :
 
     first(true), format(format), total(total), current(0), count(0),
     width(width), cursor_char(cursor_char), complete_char(complete_char),
@@ -56,7 +56,16 @@ class RProgress {
     supported = is_supported();
     use_stderr = default_stderr();
   }
-
+   
+   RProgress(std::string format = "[:bar] :percent",
+             double total = 100,
+             int width = Rf_GetOptionWidth() - 2,
+             char complete_char = '=',
+             char incomplete_char = '-',
+             bool clear = true,
+             double show_after = 0.2) : RProgress(format, total, width, &complete_char, &complete_char, &incomplete_char, clear, show_after) {}
+   
+   
   ~RProgress() { }
 
   void set_format(std::string format)    { this->format = format;         }
