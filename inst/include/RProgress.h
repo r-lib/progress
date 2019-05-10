@@ -394,7 +394,7 @@ public:
   static std::string pretty_bytes(double rate) {
 
     errno = 0;
-    long bytes = lround(bytes);
+    long bytes = lround(rate);
     if (errno == ERANGE) {
       bytes = LONG_MAX;
     }
