@@ -16,6 +16,7 @@
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
+#include <cerrno>
 
 #include <R.h>
 #include <Rinternals.h>
@@ -39,14 +40,14 @@ class RProgress {
 
  public:
 
-  RProgress(std::string format = "[:bar] :percent",
-	    double total = 100,
-	    int width = Rf_GetOptionWidth() - 2,
-	    const char* cursor_char = "=",
-	    const char* complete_char = "=",
-	    const char* incomplete_char = "-",
-	    bool clear = true,
-	    double show_after = 0.2) :
+   RProgress(std::string format,
+       double total,
+       int width,
+       std::string cursor_char,
+       std::string complete_char,
+       std::string incomplete_char,
+       bool clear,
+       double show_after) :
 
     first(true), format(format), total(total), current(0), count(0),
     width(width), cursor_char(cursor_char), complete_char(complete_char),
@@ -56,6 +57,24 @@ class RProgress {
     supported = is_supported();
     use_stderr = default_stderr();
   }
+
+   RProgress(std::string format = "[:bar] :percent",
+       double total = 100,
+       int width = Rf_GetOptionWidth() - 2,
+       char complete_char = '=',
+       char incomplete_char = '-',
+       bool clear = true,
+       double show_after = 0.2) :
+
+    first(true), format(format), total(total), current(0), count(0),
+    width(width), cursor_char(&complete_char), complete_char(&complete_char),
+    incomplete_char(&incomplete_char), clear(clear), show_after(show_after),
+    last_draw(""), start(0), toupdate(false), complete(false) {
+
+    supported = is_supported();
+    use_stderr = default_stderr();
+  }
+
 
   ~RProgress() { }
 
@@ -111,9 +130,9 @@ class RProgress {
   int count;                    // Total number of calls
   int width;			// Width of progress bar
   bool use_stderr;		// Whether to print to stderr
-  const char* cursor_char;		// Character for cursor tick
-  const char* complete_char;		// Character for completed ticks
-  const char* incomplete_char;		// Character for incomplete ticks
+  std::string cursor_char;		// Character for cursor tick
+  std::string complete_char;		// Character for completed ticks
+  std::string incomplete_char;		// Character for incomplete ticks
   bool clear;			// Should we clear the line at the end?
   double show_after;		// Delay to show/increase the progress bar
   std::string last_draw;	// Last progress bar drawn
@@ -154,7 +173,7 @@ class RProgress {
       buffer << "?";
     } else {
       double rate_num = elapsed_secs == 0 ? 0 : current / elapsed_secs;
-      buffer << pretty_bytes(lround(rate_num)) << "/s";
+      buffer << pretty_bytes(rate_num) << "/s";
     }
     replace_all(str, ":rate", buffer.str());
     buffer.str(""); buffer.clear();
@@ -170,7 +189,7 @@ class RProgress {
     buffer.str(""); buffer.clear();
 
     // bytes
-    replace_all(str, ":bytes", pretty_bytes(lround(current)));
+    replace_all(str, ":bytes", pretty_bytes(current));
 
     // spin
     replace_all(str, ":spin", spin_symbol());
@@ -373,7 +392,13 @@ public:
     return buffer.str();
   }
 
-  static std::string pretty_bytes(long bytes) {
+  static std::string pretty_bytes(double rate) {
+
+    errno = 0;
+    long bytes = lround(rate);
+    if (errno == ERANGE) {
+      bytes = LONG_MAX;
+    }
 
     if (bytes == 0) { return "0B"; }
 
