@@ -1,5 +1,5 @@
 
-# dev
+# 1.2.1
 
 * Add the `message_class` argument, to add extra classes to the messages
   thrown by progress.
