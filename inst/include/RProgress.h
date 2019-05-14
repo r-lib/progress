@@ -52,7 +52,7 @@ class RProgress {
     first(true), format(format), total(total), current(0), count(0),
     width(width), cursor_char(cursor_char), complete_char(complete_char),
     incomplete_char(incomplete_char), clear(clear), show_after(show_after),
-    last_draw(""), start(0), toupdate(false), complete(false) {
+    last_draw(""), start(0), toupdate(false), complete(false), reverse(false) {
 
     supported = is_supported();
     use_stderr = default_stderr();
@@ -69,7 +69,7 @@ class RProgress {
     first(true), format(format), total(total), current(0), count(0),
     width(width), cursor_char(&complete_char), complete_char(&complete_char),
     incomplete_char(&incomplete_char), clear(clear), show_after(show_after),
-    last_draw(""), start(0), toupdate(false), complete(false) {
+    last_draw(""), start(0), toupdate(false), complete(false), reverse(false) {
 
     supported = is_supported();
     use_stderr = default_stderr();
