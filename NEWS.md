@@ -1,6 +1,9 @@
 
 # dev
 
+* Fix two bugs in the C++ API that can potentially cause irregular
+  behavior (#94, @jimhester).
+
 # 1.2.1
 
 * Add the `message_class` argument, to add extra classes to the messages
