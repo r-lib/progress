@@ -129,10 +129,11 @@ assert_named_or_empty_list <- function(x) {
   stopifnot(length(x) == 0 || !is.null(names(x)))
 }
 
-progress_once_env <- new.env(parent = emptyenv())
+generate_id <- function() {
+  id <- progress_env$lastid <- progress_env$lastid + 1L
+  as.character(id)
+}
 
-once <- function(key, expr) {
-  if (!is.null(progress_once_env[[key]])) return(invisible())
-  progress_once_env[[key]] <- TRUE
-  expr
+split_lines <- function(x) {
+  strsplit(x, "\n", fixed = TRUE)[[1]]
 }

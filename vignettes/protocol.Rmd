@@ -5,6 +5,7 @@ date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     toc: true
+    smart: true
 vignette: >
   %\VignetteIndexEntry{Message passing progress bar protocol v1.0.0 (draft)}
   %\VignetteEngine{knitr::rmarkdown}
@@ -31,13 +32,14 @@ does not communicate to the clients. The message conditions must have at
 least S3 classes `progress_message` and `condition`. They may have
 additional classes.
 
-The server uses top level handlers (when they'll be available in R), or a
-wrapper function `with_progress(expr)` to catch `progress_message`
-conditions and report them.
+The server uses top level handlers. Top level handlers are collected in
+a global option, called `progress_handlers`. The progress package has an
+API to add, query and remove progress handlers. It also has API to
+auto-remove handlers, via `on.exit()` expressions.
 
-A message condition is a named list, with at least an element named
+A message condition is a named list, with at least an entry named
 `msgtype`. If the server catches a `progress_message` condition that does
-not contain an `msgtype` member, it should re-throw it. If a condition
+not contain a `msgtype` member, it should re-throw it. If a condition
 contains a message type that is unknown to the server, it should ignore it.
 The server may log these events.
 
@@ -67,7 +69,7 @@ be present in every message condition object.
 
 ### `add_job` -- add a job
 
-Add a new job. 
+Add a new job.
 
 Parameters:
 
@@ -264,7 +266,7 @@ In alphabetical order:
 * `timestamp`: current time, in ISO 8601 format. E.g.
   `2018-09-26T10:08:18+00:00`.
 * `total`: total number of progress units for a job.
-* `total_bytes`: total number of progress units, as human readable bytes. 
+* `total_bytes`: total number of progress units, as human readable bytes.
 
 For job groups, some tokens behave differently, and there are also some
 additional tokens. These tokens are totals across all jobs in the group:
@@ -279,7 +281,7 @@ additional tokens. These tokens are totals across all jobs in the group:
 * `rate_raw`: number of ticks per second.
 * `rate_bytes`: download rate, human readable bytes per second.
 * `total`: total number of progress units across the jobs in the group.
-* `total_bytes`: total number of progress units, as human readable bytes. 
+* `total_bytes`: total number of progress units, as human readable bytes.
 
 These tokens are only defined for job groups:
 
@@ -328,7 +330,7 @@ If `total` is unknown:
 ### `custom` jobs
 
 Custom jobs do not have a default format string, a custom one has to be
-specified in the `format` element of the `add_job` condition message that
+specified in the `format` entry of the `add_job` condition message that
 creates the job. The custom format string may refer to built in and custom
 tokens.
 
@@ -346,7 +348,7 @@ Multiple downloads, potentially concurrently. A possible display is
 "{name} {status} | {current_bytes}/{total_bytes} {rate_bytes}"
 ```
 
-## Custom job data
+### Custom job data
 
 Custom jobs might need extra data to display. You can add this extra
 data to any update condition, as the `token` list. The custom format
@@ -357,7 +359,20 @@ If an update does not specify a new value for a custom token, the old
 value is kept. This allows setting up custom data when the progress bar
 is created, and using it later.
 
-## Combining multiple progress bars
+### Combining multiple progress bars
 
 It is the server's discretion whether and how it will combine multiple
 progress bars.
+
+## Progress Handlers
+
+Custom progress handlers are stored in the `progress_handlers` global
+option. This option must be set to a list of functions, or `NULL`.
+The progress package comes with a default progress handler, by default
+this is used, unless the `progress_handler_default` option is set to
+`FALSE. The default progress handler behaves diffefently in various GUIs
+and terminals, to show the best display possible.
+
+If `progress_handlers` contains a list of handler functions, then all
+of them are called, in the order they appear. Errors in progress handlers
+are converted to warnings.

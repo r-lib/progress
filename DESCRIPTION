@@ -12,7 +12,9 @@ License: MIT + file LICENSE
 LazyData: true
 URL: https://github.com/r-lib/progress#readme
 BugReports: https://github.com/r-lib/progress/issues
-Imports: 
+Imports:
+    cli (>= 1.9.9.9000),
+    glue,
     hms,
     prettyunits,
     R6,
@@ -23,6 +25,8 @@ Suggests:
     withr,
     knitr,
     rmarkdown
-RoxygenNote: 6.1.0
+Remotes:
+    r-lib/cli
+RoxygenNote: 6.1.1.9000
 Encoding: UTF-8
 VignetteBuilder: knitr
