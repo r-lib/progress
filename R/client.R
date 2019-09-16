@@ -1,4 +1,5 @@
 
+#' @useDynLib progress, .registration = TRUE, .fixes = "c_"
 #' @export
 
 job_add <- function(name = NULL, id = NULL, status = NULL, total = 100,

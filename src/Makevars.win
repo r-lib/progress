@@ -1,0 +1,2 @@
+
+OBJECTS = init.o progress-api.o thread-win.o

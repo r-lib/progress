@@ -1,0 +1,5 @@
+
+OBJECTS = init.o progress-api.o thread-unix.o
+
+PKG_CPPFLAGS = -pthread
+PKG_LIBS = -pthread
