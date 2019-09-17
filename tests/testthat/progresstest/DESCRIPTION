@@ -10,3 +10,4 @@ Imports:
 LinkingTo:
     progress,
     Rcpp
+Encoding: UTF-8

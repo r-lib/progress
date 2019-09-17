@@ -25,9 +25,26 @@ SEXP test1() {
   return ScalarInteger(res);
 }
 
+SEXP test2() {
+  int i = 0;
+  int res = 0;
+  struct progress_bar *bar;
+  progress_job_add(&bar, "name", "id", NULL, 100, "iterator", NULL, -1, 0);
+  int s, final, step = 2000000000 / 1000;
+  for (s = 0; s < 1000; s++) {
+    final = (s + 1) * step;
+    for (i = s * step; i < final; i++) {
+      res += i % 2;
+    }
+    TICK_BY(bar, step);
+  }
+  return ScalarInteger(res);
+}
+
 static const R_CallMethodDef CallEntries[] = {
   { "test0", (DL_FUNC) test0, 0 },
   { "test1", (DL_FUNC) test1, 0 },
+  { "test2", (DL_FUNC) test2, 0 },
   { NULL, NULL, 0 }
 };
 

@@ -2,4 +2,5 @@
 
 export(test0)
 export(test1)
+export(test2)
 useDynLib(progresstest2, .registration = TRUE, .fixes = "c_")

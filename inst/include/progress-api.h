@@ -9,6 +9,7 @@ struct progress_bar {
 };
 
 #define TICK(x) do { x->current++; SHOW(x); } while (0)
+#define TICK_BY(x,i) do { x->current+=i; SHOW(x); } while (0)
 #define SHOW(x) do { if (*progress__trigger) progress__show(x); } while (0)
 
 /* --------------------------------------------------------------------- */

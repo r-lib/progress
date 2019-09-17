@@ -13,3 +13,9 @@ test0 <- function() {
 test1 <- function() {
   .Call(c_test1)
 }
+
+#' @export
+
+test2 <- function() {
+  .Call(c_test2)
+}
