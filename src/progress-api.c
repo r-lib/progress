@@ -1,5 +1,5 @@
 
-#include "progress-api.h"
+#include "progress.h"
 
 #include <string.h>
 #include <time.h>

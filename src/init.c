@@ -3,7 +3,7 @@
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
 
-#include "progress-api.h"
+#include "progress.h"
 
 #ifdef Win32
 #include <windows.h>

@@ -1,5 +1,5 @@
 
-#include "progress-api.h"
+#include "progress.h"
 
 #include <pthread.h>
 #include <time.h>
