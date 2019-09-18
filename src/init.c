@@ -22,10 +22,13 @@ void R_init_progress(DllInfo *dll) {
 
   R_RegisterCCallable("progress", "progress_get_trigger",
                       (DL_FUNC) &progress_get_trigger);
-  R_RegisterCCallable("progress", "progress_job_add",
-                      (DL_FUNC) &progress_job_add);
   R_RegisterCCallable("progress", "progress__show",
                       (DL_FUNC) &progress__show);
+
+  R_RegisterCCallable("progress", "progress_job_add",
+                      (DL_FUNC) &progress_job_add);
+  R_RegisterCCallable("progress", "progress_job_destroy",
+                      (DL_FUNC) &progress_job_destroy);
 
   if (start_thread()) warning("Cannot initialize progress bars");
 }

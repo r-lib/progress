@@ -37,6 +37,8 @@ int progress_job_add(struct progress_bar **bar,
                      int estimate,
                      int auto_estimate);
 
+void progress_job_destroy(struct progress_bar *bar);
+
 int start_thread();
 int stop_thread();
 

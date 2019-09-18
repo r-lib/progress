@@ -3,12 +3,9 @@
 
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
 
 int progress__trigger = 0;
-
-#define PROGRESS_BAR_STACK_SIZE 100
-static struct progress_bar progress_bar_stack[PROGRESS_BAR_STACK_SIZE];
-static int progress_bar_stack_ptr = 0;
 
 void progress_get_trigger(progress_trigger_t *trigger) {
   *trigger = (progress_trigger_t) &progress__trigger;
@@ -29,12 +26,10 @@ int progress_job_add(struct progress_bar **bar,
                      int estimate,
                      int auto_estimate) {
 
-  /* TODO: more progress bars, allocate the one by one */
-  if (progress_bar_stack_ptr == PROGRESS_BAR_STACK_SIZE) {
-    error("Cannot create more progress bars :(");
+  *bar = calloc(1, sizeof(struct progress_bar));
+  if (!*bar) {
+    error("Cannot allocate memory for progress bar");
   }
-
-  *bar = &progress_bar_stack[progress_bar_stack_ptr++];
   (*bar)->name = name ? strdup(name) : NULL;
   (*bar)->id = id ? strdup(id) : NULL; /* TODO: generate id */
   (*bar)->status = status ? strdup(status) : NULL;
@@ -44,4 +39,8 @@ int progress_job_add(struct progress_bar **bar,
   (*bar)->auto_estimate = auto_estimate;
 
   return 0;
+}
+
+void progress_job_destroy(struct progress_bar *bar) {
+  if (bar) free(bar);
 }

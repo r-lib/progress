@@ -56,6 +56,18 @@ static R_INLINE int progress_job_add(struct progress_bar **bar,
              auto_estimate);
 }
 
+typedef void (*progress__job_destroy_t)(struct progress_bar *bar);
+
+static R_INLINE void progress_job_destroy(struct progress_bar **bar) {
+  static progress__job_destroy_t ptr = NULL;
+  if (ptr == NULL) {
+    ptr = (progress__job_destroy_t)
+      R_GetCCallable("progress", "progress_job_destroy");
+  }
+  ptr(*bar);
+  *bar = 0;
+}
+
 /* --------------------------------------------------------------------- */
 
 typedef int (*progress__show_t)(struct progress_bar *bar);

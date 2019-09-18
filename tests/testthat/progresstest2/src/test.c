@@ -22,6 +22,7 @@ SEXP test1() {
     TICK(bar);
     res += i % 2;
   }
+  progress_job_destroy(&bar);
   return ScalarInteger(res);
 }
 
@@ -38,6 +39,7 @@ SEXP test2() {
     }
     TICK_BY(bar, step);
   }
+  progress_job_destroy(&bar);
   return ScalarInteger(res);
 }
 
