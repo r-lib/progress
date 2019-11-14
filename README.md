@@ -195,7 +195,7 @@ If you prefer to do your iterative tasks using the `purrr` family of functional 
 
 2. Define the task and increment the ticks in a separate wrapper function. 
 
-***Option 1*** is concise for simple one-line tasks (*e.g.* requiring only a single function call), while ***Option 2*** is probably preferred for more complex multi-line tasks wrapped in a function.
+***Option 1*** is concise for simple one-line tasks (*e.g.* requiring only a single function call), while ***Option 2*** is probably preferred for more complex multi-line tasks.
 
 ```r
 # Option 1
