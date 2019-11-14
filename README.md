@@ -187,6 +187,40 @@ f()
 
 See the manual for details and other options.
 
+## Usage with `purrr` iterators
+
+If you prefer to do your iterative tasks using the `purrr` family of functional programming tools, rather than with `for` loops, there are two straightforward ways to add progress bars: 
+
+1. Increment the ticks *in-line* when calling the `purrr` iterator.
+
+2. Define the task and increment the ticks in a separate wrapper function. 
+
+***Option 1*** is concise for simple one-line tasks (*e.g.* requiring only a single function call), while ***Option 2*** is probably preferred for more complex multi-line tasks.
+
+```r
+# Option 1
+pb <- progress_bar$new(total = 100)
+purrr::walk(1:100, ~{pb$tick(); Sys.sleep(0.1)})
+```
+```
+[================================================>------]  89%
+```
+
+```r
+# Option 2
+pb <- progress_bar$new(total = 100)
+
+foo <- function(x){
+  pb$tick()
+  Sys.sleep(0.1)
+}
+
+purrr::walk(1:100, foo)
+```
+```
+[==================>------------------------------------]  34%
+```
+
 ## Creating a plyr compatible progress bar
 
 It is easy to create progress bars for
