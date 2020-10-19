@@ -421,6 +421,7 @@ pb_render <- function(self, private, tokens) {
 
     ratio <- private$ratio()
     complete_len <- round(bar_width * ratio)
+    if (is.na(complete_len)) { complete_len <- 0 }
     complete <- paste(rep("", complete_len),
                       collapse = private$chars$complete)
     current <- if (private$complete) {
