@@ -318,6 +318,7 @@ pb_tick <- function(self, private, len, tokens) {
 
 pb_ratio <- function(self, private) {
   ratio <- (private$current / private$total)
+  if (is.nan(ratio)) { ratio <- 0 }
   ratio <- max(ratio, 0)
   ratio <- min(ratio, 1)
   ratio
