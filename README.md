@@ -254,8 +254,8 @@ plyr::l_ply(
 ## C++ API
 
 The package also provides a C++ API, that can be used with or
-without Rcpp. See [the example package](tests/testthat/progresstest/src/test.cpp) that
-is [included](tests/testthat/progresstest) within `progress`. Here is a short excerpt
+without Rcpp. See [the example package](https://github.com/r-lib/progress/blob/HEAD/tests/testthat/progresstest/src/test.cpp) that
+is [included](https://github.com/r-lib/progress/blob/HEAD/tests/testthat/progresstest) within `progress`. Here is a short excerpt
 that shows how it works:
 
 ```CPP
