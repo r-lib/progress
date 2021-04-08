@@ -108,9 +108,14 @@ assert_connection <- function(x) {
   stopifnot(inherits(x, "connection"))
 }
 
-assert_single_char <- function(x) {
+#' @importFrom crayon col_nchar
+assert_single_char <- function(x, strip_color = FALSE) {
   assert_character_scalar(x)
-  stopifnot(nchar(x) == 1)
+  if (strip_color) {
+    stopifnot(col_nchar(x) == 1)
+  } else {
+    stopifnot(nchar(x) == 1)
+  }
 }
 
 assert_function <- function(x) {
