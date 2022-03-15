@@ -3,13 +3,6 @@
 #ifndef R_PROGRESS_H
 #define R_PROGRESS_H
 
-#ifdef __MUSL__
-typedef unsigned uid_t;
-typedef unsigned gid_t;
-typedef long suseconds_t;
-struct timeval { time_t tv_sec; suseconds_t tv_usec; };
-#endif
-
 #include <unistd.h>
 #include <sys/time.h>
 
