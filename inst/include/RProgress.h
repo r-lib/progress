@@ -152,7 +152,7 @@ class RProgress {
     double ratio_now = ratio();
 
     // percent
-    buffer << std::setw(3) << ratio_now * 100 << "%";
+    buffer << std::setw(3) << round(ratio_now * 100) << "%";
     replace_all(str, ":percent", buffer.str());
     buffer.str(""); buffer.clear();
 
@@ -226,9 +226,10 @@ class RProgress {
       if (last_draw.length() > str.length()) { clear_line(use_stderr, width); }
       cursor_to_start(use_stderr);
       if (use_stderr) {
-	REprintf(str.c_str());
+  // use a format to avoid special treatment for in string %
+  REprintf("%s", str.c_str());
       } else {
-	Rprintf(str.c_str());
+  Rprintf("%s", str.c_str());
       }
       last_draw = str;
     }
@@ -287,16 +288,34 @@ class RProgress {
 
   bool is_r_studio() {
 
-    char *v = std::getenv("RSTUDIO");
+  	if (char *v = std::getenv("RSTUDIO")) {
+  		if (std::strcmp(v, "1") == 0) {
+  			return true;
+  		}
+  	}
 
-    return v != 0 && v[0] == '1' && v[1] == '\0';
+  	// For Desktop install check RS_SHARED_SECRET
+  	if (std::getenv("RS_SHARED_SECRET")) {
+  		return true;
+  	}
+
+  	return false;
+
   }
 
   bool is_r_app() {
 
-    char *v = std::getenv("R_GUI_APP_VERSION");
+  	if (std::getenv("R_GUI_APP_VERSION")) {
+  		return true;
+  	}
 
-    return v != 0;
+  	return false;
+  }
+
+  bool is_a_tty() {
+
+  	// WIN isatty @ for _isatty return int > 0
+  	return isatty(1) > 0;
   }
 
   // In R Studio we should print to stdout, because priting a \r
@@ -313,7 +332,7 @@ class RProgress {
   bool is_supported() {
 
     return is_option_enabled() &&
-      (isatty(1) || is_r_studio() || is_r_app());
+      (is_a_tty() || is_r_studio() || is_r_app());
   }
 
   // gettimeofday for windows, from

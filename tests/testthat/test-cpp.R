@@ -9,7 +9,7 @@ test_that("C++ API works", {
 
   dir.create(lib <- tempfile())
   on.exit(unlink(lib, recursive = TRUE), add = TRUE)
-  install.packages("progresstest_1.0.0.tar.gz", lib = lib, quiet = FALSE)
+  install.packages("progresstest_1.0.0.tar.gz", repos = NULL, lib = lib, quiet = FALSE)
 
   on.exit(unloadNamespace("progresstest"), add = TRUE)
   withr::with_libpaths(lib, action = "prefix", {
