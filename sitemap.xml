@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://r-lib.github.io/progress/404.html</loc>
+  </url>
+  <url>
+    <loc>http://r-lib.github.io/progress/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>http://r-lib.github.io/progress/authors.html</loc>
+  </url>
+  <url>
+    <loc>http://r-lib.github.io/progress/index.html</loc>
+  </url>
+  <url>
+    <loc>http://r-lib.github.io/progress/news/index.html</loc>
+  </url>
+  <url>
+    <loc>http://r-lib.github.io/progress/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>http://r-lib.github.io/progress/reference/progress-package.html</loc>
+  </url>
+  <url>
+    <loc>http://r-lib.github.io/progress/reference/progress_bar.html</loc>
+  </url>
+</urlset>
