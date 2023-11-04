@@ -12,22 +12,23 @@ Description: Configurable Progress bars, they may include percentage,
     'macOS' 'R.app'. The package also provides a 'C++' 'API', that works
     with or without 'Rcpp'.
 License: MIT + file LICENSE
-LazyData: true
-URL: https://github.com/r-lib/progress#readme, http://r-lib.github.io/progress/
+URL: https://github.com/r-lib/progress#readme,
+    http://r-lib.github.io/progress/
 BugReports: https://github.com/r-lib/progress/issues
+Depends: 
+    R (>= 3.6)
 Imports: 
+    crayon,
     hms,
     prettyunits,
-    R6,
-    crayon
+    R6
 Suggests:
     Rcpp,
     testthat (>= 3.0.0),
     withr
-RoxygenNote: 7.2.3
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
-Depends: 
-    R (>= 3.6)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
