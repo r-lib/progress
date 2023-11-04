@@ -93,12 +93,15 @@
 <p>Install the package from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"progress"</span><span class="op">)</span></span></code></pre></div>
+<p>If you need the development version, install it from GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"r-lib/progress"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <p>Use the <code>progress_bar</code> R6 class:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-lib/progress#readme" class="external-link">progress</a></span><span class="op">)</span></span>
 <span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>total <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span> <span class="op">{</span></span>
@@ -107,7 +110,7 @@
 <span><span class="op">}</span></span></code></pre></div>
 <pre><code>[==========================================================-------------]  81%</code></pre>
 <p>The progress bar is displayed after the first <code>tick</code> command. This might not be desirable for long computations, because nothing is shown before the first tick. It is good practice to call <code>tick(0)</code> at the beginning of the computation or download, which shows the progress bar immediately.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>total <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">pb</span><span class="op">$</span><span class="fu">tick</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
@@ -119,7 +122,7 @@
 <span><span class="op">}</span></span>
 <span><span class="fu">f</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Custom format, with estimated time of completion:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  format <span class="op">=</span> <span class="st">"  downloading [:bar] :percent eta: :eta"</span>,</span>
 <span>  total <span class="op">=</span> <span class="fl">100</span>, clear <span class="op">=</span> <span class="cn">FALSE</span>, width<span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
@@ -129,7 +132,7 @@
 <span><span class="op">}</span></span></code></pre></div>
 <pre><code>  downloading [========----------------------]  28% eta:  1s</code></pre>
 <p>With elapsed time:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  format <span class="op">=</span> <span class="st">"  downloading [:bar] :percent in :elapsed"</span>,</span>
 <span>  total <span class="op">=</span> <span class="fl">100</span>, clear <span class="op">=</span> <span class="cn">FALSE</span>, width<span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
@@ -138,7 +141,7 @@
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <pre><code>  downloading [==========================------]  80% in  1s</code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  format <span class="op">=</span> <span class="st">"  downloading [:bar] :elapsedfull"</span>,</span>
 <span>  total <span class="op">=</span> <span class="fl">1000</span>, clear <span class="op">=</span> <span class="cn">FALSE</span>, width<span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
@@ -148,7 +151,7 @@
 <span><span class="op">}</span></span></code></pre></div>
 <pre><code>  downloading [=====================--------------] 00:00:08</code></pre>
 <p>With number of number of ticks/total:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">total</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
 <span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>format <span class="op">=</span> <span class="st">"[:bar] :current/:total (:percent)"</span>, total <span class="op">=</span> <span class="va">total</span><span class="op">)</span></span>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
@@ -162,7 +165,7 @@
 <span><span class="fu">f</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[============================-------------------------------------------------] 370/1000 ( 37%)</code></pre>
 <p>With custom tokens:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  format <span class="op">=</span> <span class="st">"  downloading :what [:bar] :percent eta: :eta"</span>,</span>
 <span>  clear <span class="op">=</span> <span class="cn">FALSE</span>, total <span class="op">=</span> <span class="fl">200</span>, width <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
@@ -179,7 +182,7 @@
 <span><span class="fu">f</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>  downloading foo    [======------------------]  27% eta:  4s</code></pre>
 <p>It can show download rates for files with unknown sizes:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  format <span class="op">=</span> <span class="st">"  downloading foobar at :rate, got :bytes in :elapsed"</span>,</span>
 <span>  clear <span class="op">=</span> <span class="cn">FALSE</span>, total <span class="op">=</span> <span class="fl">1e7</span>, width <span class="op">=</span> <span class="fl">60</span><span class="op">)</span></span>
@@ -194,7 +197,7 @@
 <span><span class="fu">f</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>  downloading foobar at 5.42 MB/s, got 15.45 MB in  3s</code></pre>
 <p>Progress bars can also digress, by supplying negative values to <code>tick()</code>:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">f</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">pb</span><span class="op">$</span><span class="fu">tick</span><span class="op">(</span><span class="fl">50</span><span class="op">)</span>  ; <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
@@ -215,12 +218,12 @@
 <li><p>Define the task and increment the ticks in a separate wrapper function.</p></li>
 </ol>
 <p><strong><em>Option 1</em></strong> is concise for simple one-line tasks (<em>e.g.</em> requiring only a single function call), while <strong><em>Option 2</em></strong> is probably preferred for more complex multi-line tasks.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Option 1</span></span>
 <span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>total <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">walk</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="op">~</span><span class="op">{</span><span class="va">pb</span><span class="op">$</span><span class="fu">tick</span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">0.1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[================================================&gt;------]  89%</code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Option 2</span></span>
 <span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>total <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
@@ -236,7 +239,7 @@
 <h2 id="creating-a-plyr-compatible-progress-bar">Creating a plyr compatible progress bar<a class="anchor" aria-label="anchor" href="#creating-a-plyr-compatible-progress-bar"></a>
 </h2>
 <p>It is easy to create progress bars for <a href="https://github.com/hadley/plyr" class="external-link">plyr</a>:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">progress_progress</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">pb</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -250,7 +253,7 @@
 <span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>You can try it with</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">plyr</span><span class="fu">::</span><span class="fu">l_ply</span><span class="op">(</span></span>
 <span>  <span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,</span>
 <span>  .fun <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span>,</span>
@@ -261,20 +264,20 @@
 <h2 id="c-api">C++ API<a class="anchor" aria-label="anchor" href="#c-api"></a>
 </h2>
 <p>The package also provides a C++ API, that can be used with or without Rcpp. See <a href="https://github.com/r-lib/progress/blob/HEAD/tests/testthat/progresstest/src/test.cpp" class="external-link">the example package</a> that is <a href="https://github.com/r-lib/progress/blob/HEAD/tests/testthat/progresstest" class="external-link">included</a> within <code>progress</code>. Here is a short excerpt that shows how it works:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;RProgress.h&gt;</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>RProgress<span class="op">::</span>RProgress pb<span class="op">(</span><span class="st">"Downloading [:bar] ETA: :eta"</span><span class="op">);</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  pb<span class="op">.</span>tick<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">100</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    usleep<span class="op">(</span><span class="fl">2.0</span> <span class="op">/</span> <span class="dv">100</span> <span class="op">*</span> <span class="dv">1000000</span><span class="op">);</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    pb<span class="op">.</span>tick<span class="op">();</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;RProgress.h&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>RProgress<span class="op">::</span>RProgress pb<span class="op">(</span><span class="st">"Downloading [:bar] ETA: :eta"</span><span class="op">);</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  pb<span class="op">.</span>tick<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">100</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    usleep<span class="op">(</span><span class="fl">2.0</span> <span class="op">/</span> <span class="dv">100</span> <span class="op">*</span> <span class="dv">1000000</span><span class="op">);</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    pb<span class="op">.</span>tick<span class="op">();</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span></code></pre></div>
 <p>The C++ API has almost the same functionality as the R API, except that it does not currently support custom tokens, custom streams, and callback functions.</p>
 <p>Note that the C++ and the R APIs are independent and for a single progress bar you need to use either one exclusively.</p>
 </div>
@@ -296,12 +299,17 @@
 <div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li><a href="LICENSE.html">Full license</a></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
 
+<div class="community">
+<h2 data-toc-skip>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
+</ul>
+</div>
 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>

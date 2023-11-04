@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://r-lib.github.io/progress/dev/CODE_OF_CONDUCT.html</loc>
+  </url>
+  <url>
     <loc>http://r-lib.github.io/progress/dev/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>http://r-lib.github.io/progress/dev/LICENSE.html</loc>
   </url>
   <url>
     <loc>http://r-lib.github.io/progress/dev/authors.html</loc>
