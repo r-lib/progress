@@ -8,9 +8,11 @@
     <br>
 </h1>
 
-[![Linux Build Status](https://travis-ci.org/r-lib/progress.svg?branch=master)](https://travis-ci.org/r-lib/progress)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/r-lib/progress?svg=true)](https://ci.appveyor.com/project/gaborcsardi/progress)
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/r-lib/progress/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/progress/actions/workflows/R-CMD-check.yaml)
 [![](https://www.r-pkg.org/badges/version/progress)](https://r-pkg.org/pkg/progress)
+[![Codecov test coverage](https://codecov.io/gh/r-lib/progress/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/progress?branch=main)
+<!-- badges: end -->
 
 > Progress bar in your R terminal
 
