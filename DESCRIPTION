@@ -23,5 +23,6 @@ Suggests:
     Rcpp,
     testthat,
     withr
-RoxygenNote: 6.1.0
+RoxygenNote: 7.2.3
 Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
