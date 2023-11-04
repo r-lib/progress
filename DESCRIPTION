@@ -29,3 +29,5 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Config/Needs/website: tidyverse/tidytemplate
 Config/testthat/edition: 3
+Depends: 
+    R (>= 3.6)
