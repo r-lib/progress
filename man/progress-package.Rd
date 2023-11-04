@@ -27,5 +27,10 @@ Authors:
   \item Rich FitzJohn
 }
 
+Other contributors:
+\itemize{
+  \item Posit Software, PBC [copyright holder, funder]
+}
+
 }
 \keyword{internal}
