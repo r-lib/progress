@@ -1,6 +1,3 @@
-
-context("C++ API")
-
 test_that("C++ API works", {
 
   skip_on_cran()

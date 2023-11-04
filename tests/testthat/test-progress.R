@@ -1,6 +1,3 @@
-
-context("Progress bar")
-
 test_that("Vanilla progress bar works", {
 
   out <- get_output({

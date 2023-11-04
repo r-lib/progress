@@ -21,9 +21,10 @@ Imports:
     crayon
 Suggests:
     Rcpp,
-    testthat,
+    testthat (>= 3.0.0),
     withr
 RoxygenNote: 7.2.3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Config/Needs/website: tidyverse/tidytemplate
+Config/testthat/edition: 3
