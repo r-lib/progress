@@ -4,3 +4,7 @@
 ^inst/progresstest/src/.*\.o$
 ^inst/progresstest/src/.*\.so$
 ^revdep$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
