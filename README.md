@@ -27,6 +27,12 @@ Install the package from CRAN:
 install.packages("progress")
 ```
 
+If you need the development version, install it from GitHub:
+
+```r
+pak::pak("r-lib/progress")
+```
+
 ## Usage
 
 Use the `progress_bar` R6 class:
