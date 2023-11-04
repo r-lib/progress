@@ -1,8 +1,10 @@
 Package: progress
 Title: Terminal Progress Bars
 Version: 1.2.2.9000
-Author: Gábor Csárdi [aut, cre], Rich FitzJohn [aut]
-Maintainer: Gábor Csárdi <csardi.gabor@gmail.com>
+Authors@R: c(
+    person("Gábor", "Csárdi", , "csardi.gabor@gmail.com", role = c("aut", "cre")),
+    person("Rich", "FitzJohn", role = "aut")
+  )
 Description: Configurable Progress bars, they may include percentage,
     elapsed time, and/or the estimated completion time. They work in
     terminals, in 'Emacs' 'ESS', 'RStudio', 'Windows' 'Rgui' and the
