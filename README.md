@@ -197,11 +197,11 @@ See the manual for details and other options.
 
 ## Usage with `purrr` iterators
 
-If you prefer to do your iterative tasks using the `purrr` family of functional programming tools, rather than with `for` loops, there are two straightforward ways to add progress bars: 
+If you prefer to do your iterative tasks using the `purrr` family of functional programming tools, rather than with `for` loops, there are two straightforward ways to add progress bars:
 
 1. Increment the ticks *in-line* when calling the `purrr` iterator.
 
-2. Define the task and increment the ticks in a separate wrapper function. 
+2. Define the task and increment the ticks in a separate wrapper function.
 
 ***Option 1*** is concise for simple one-line tasks (*e.g.* requiring only a single function call), while ***Option 2*** is probably preferred for more complex multi-line tasks.
 
@@ -262,8 +262,8 @@ plyr::l_ply(
 ## C++ API
 
 The package also provides a C++ API, that can be used with or
-without Rcpp. See [the example package](https://github.com/r-lib/progress/blob/HEAD/tests/testthat/progresstest/src/test.cpp) that
-is [included](https://github.com/r-lib/progress/blob/HEAD/tests/testthat/progresstest) within `progress`. Here is a short excerpt
+without Rcpp. See [the example package](tests/testthat/progresstest/src/test.cpp) that
+is [included](tests/testthat/progresstest) within `progress`. Here is a short excerpt
 that shows how it works:
 
 ```CPP
