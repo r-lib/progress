@@ -1,6 +1,9 @@
 
 # dev
 
+* Compiling packages linking to progress with `-Wformat-security` does
+  not produce warnings now.
+
 # 1.2.2
 
 * Fix two bugs in the C++ API that can potentially cause irregular
