@@ -11,7 +11,7 @@
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/r-lib/progress/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/r-lib/progress/actions/workflows/R-CMD-check.yaml)
 [![](https://www.r-pkg.org/badges/version/progress)](https://r-pkg.org/pkg/progress)
-[![Codecov test coverage](https://codecov.io/gh/r-lib/progress/branch/main/graph/badge.svg)](https://app.codecov.io/gh/r-lib/progress?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/r-lib/progress/graph/badge.svg)](https://app.codecov.io/gh/r-lib/progress)
 <!-- badges: end -->
 
 > Progress bar in your R terminal
