@@ -8,27 +8,27 @@
 #'
 #' @section Creating the progress bar:
 #' A progress bar is an R6 object, that can be created with
-#' \code{progress_bar$new()}. It has the following arguments:
+#' `progress_bar$new()`. It has the following arguments:
 #' \describe{
 #'   \item{format}{The format of the progress bar. A number of
 #'     tokens can be used here, see them below. It defaults to
-#'     \code{"[:bar] :percent"}, which means that the progress
+#'     `"[:bar] :percent"`, which means that the progress
 #'     bar is within brackets on the left, and the percentage
 #'     is printed on the right.}
 #'   \item{total}{Total number of ticks to complete. If it is unknown,
-#'      use \code{NA} here. Defaults to 100.}
+#'      use `NA` here. Defaults to 100.}
 #'   \item{width}{Width of the progress bar. Default is the current
-#'     terminal width (see \code{options()} and \code{width}) minus two.}
-#'   \item{stream}{This argument is deprecated, and \code{message()} is
+#'     terminal width (see `options()` and `width`) minus two.}
+#'   \item{stream}{This argument is deprecated, and `message()` is
 #'     used to print the progress bar.}
-#'   \item{complete}{Completion character, defaults to \code{=}.}
-#'   \item{incomplete}{Incomplete character, defaults to \code{-}.}
-#'   \item{current}{Current character, defaults to \code{>}.}
+#'   \item{complete}{Completion character, defaults to `=`.}
+#'   \item{incomplete}{Incomplete character, defaults to `-`.}
+#'   \item{current}{Current character, defaults to `>`.}
 #'   \item{callback}{Callback function to call when the progress
 #'     bar finishes. The progress bar object itself is passed to it
 #'     as the single parameter.}
 #'   \item{clear}{Whether to clear the progress bar on completion.
-#'     Defaults to \code{TRUE}.}
+#'     Defaults to `TRUE`.}
 #'   \item{show_after}{Amount of time in seconds, after which the progress
 #'     bar is shown on the screen. For very short processes,
 #'     it is probably not worth showing it at all. Defaults to two
@@ -40,22 +40,22 @@
 #' }
 #'
 #' @section Using the progress bar:
-#' Three functions can update a progress bar. \code{progress_bar$tick()}
+#' Three functions can update a progress bar. `progress_bar$tick()`
 #' increases the number of ticks by one (or another specified value).
-#' \code{progress_bar$update()} sets a given ratio and
-#' \code{progress_bar$terminate()} removes the progress bar.
-#' \code{progress_bar$finished} can be used to see if the progress bar has
+#' `progress_bar$update()` sets a given ratio and
+#' `progress_bar$terminate()` removes the progress bar.
+#' `progress_bar$finished` can be used to see if the progress bar has
 #' finished.
 #'
 #' Note that the progress bar is not shown immediately, but only after
-#' \code{show_after} seconds. (Set this to zero, and call `tick(0)` to
+#' `show_after` seconds. (Set this to zero, and call `tick(0)` to
 #' force showing the progress bar.)
 #'
-#' \code{progress_bar$message()} prints a message above the progress bar.
+#' `progress_bar$message()` prints a message above the progress bar.
 #' It fails if the progress bar has already finished.
 #'
 #' @section Tokens:
-#' They can be used in the \code{format} argument when creating the
+#' They can be used in the `format` argument when creating the
 #' progress bar.
 #' \describe{
 #'   \item{:bar}{The progress bar itself.}
@@ -66,7 +66,7 @@
 #'   \item{:eta}{Estimated completion time in seconds.}
 #'   \item{:percent}{Completion percentage.}
 #'   \item{:rate}{Download rate, bytes per second. See example below.}
-#'   \item{:tick_rate}{Similar to \code{:rate}, but we don't assume that
+#'   \item{:tick_rate}{Similar to `:rate`, but we don't assume that
 #'      the units are bytes, we just print the raw number of ticks per
 #'      second.}
 #'   \item{:bytes}{Shows :current, formatted as bytes. Useful
@@ -77,7 +77,7 @@
 #' }
 #'
 #' Custom tokens are also supported, and you need to pass their
-#' values to \code{progress_bar$tick()} or \code{progress_bar$update()},
+#' values to `progress_bar$tick()` or `progress_bar$update()`,
 #' in a named list. See example below.
 #'
 #' @section Options:

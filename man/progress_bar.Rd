@@ -14,33 +14,33 @@ https://github.com/tj/node-progress
 A progress bar is an R6 object, that can be created with
 \code{progress_bar$new()}. It has the following arguments:
 \describe{
-  \item{format}{The format of the progress bar. A number of
-    tokens can be used here, see them below. It defaults to
-    \code{"[:bar] :percent"}, which means that the progress
-    bar is within brackets on the left, and the percentage
-    is printed on the right.}
-  \item{total}{Total number of ticks to complete. If it is unknown,
-     use \code{NA} here. Defaults to 100.}
-  \item{width}{Width of the progress bar. Default is the current
-    terminal width (see \code{options()} and \code{width}) minus two.}
-  \item{stream}{This argument is deprecated, and \code{message()} is
-    used to print the progress bar.}
-  \item{complete}{Completion character, defaults to \code{=}.}
-  \item{incomplete}{Incomplete character, defaults to \code{-}.}
-  \item{current}{Current character, defaults to \code{>}.}
-  \item{callback}{Callback function to call when the progress
-    bar finishes. The progress bar object itself is passed to it
-    as the single parameter.}
-  \item{clear}{Whether to clear the progress bar on completion.
-    Defaults to \code{TRUE}.}
-  \item{show_after}{Amount of time in seconds, after which the progress
-    bar is shown on the screen. For very short processes,
-    it is probably not worth showing it at all. Defaults to two
-    tenth of a second.}
-  \item{force}{Whether to force showing the progress bar,
-    even if the given (or default) stream does not seem to support it.}
-  \item{message_class}{Extra classes to add to the message conditions
-    signalled by the progress bar.}
+\item{format}{The format of the progress bar. A number of
+tokens can be used here, see them below. It defaults to
+\code{"[:bar] :percent"}, which means that the progress
+bar is within brackets on the left, and the percentage
+is printed on the right.}
+\item{total}{Total number of ticks to complete. If it is unknown,
+use \code{NA} here. Defaults to 100.}
+\item{width}{Width of the progress bar. Default is the current
+terminal width (see \code{options()} and \code{width}) minus two.}
+\item{stream}{This argument is deprecated, and \code{message()} is
+used to print the progress bar.}
+\item{complete}{Completion character, defaults to \code{=}.}
+\item{incomplete}{Incomplete character, defaults to \code{-}.}
+\item{current}{Current character, defaults to \code{>}.}
+\item{callback}{Callback function to call when the progress
+bar finishes. The progress bar object itself is passed to it
+as the single parameter.}
+\item{clear}{Whether to clear the progress bar on completion.
+Defaults to \code{TRUE}.}
+\item{show_after}{Amount of time in seconds, after which the progress
+bar is shown on the screen. For very short processes,
+it is probably not worth showing it at all. Defaults to two
+tenth of a second.}
+\item{force}{Whether to force showing the progress bar,
+even if the given (or default) stream does not seem to support it.}
+\item{message_class}{Extra classes to add to the message conditions
+signalled by the progress bar.}
 }
 }
 
@@ -54,7 +54,7 @@ increases the number of ticks by one (or another specified value).
 finished.
 
 Note that the progress bar is not shown immediately, but only after
-\code{show_after} seconds. (Set this to zero, and call `tick(0)` to
+\code{show_after} seconds. (Set this to zero, and call \code{tick(0)} to
 force showing the progress bar.)
 
 \code{progress_bar$message()} prints a message above the progress bar.
@@ -66,22 +66,22 @@ It fails if the progress bar has already finished.
 They can be used in the \code{format} argument when creating the
 progress bar.
 \describe{
-  \item{:bar}{The progress bar itself.}
-  \item{:current}{Current tick number.}
-  \item{:total}{Total ticks.}
-  \item{:elapsed}{Elapsed time in seconds.}
-  \item{:elapsedfull}{Elapsed time in hh:mm:ss format.}
-  \item{:eta}{Estimated completion time in seconds.}
-  \item{:percent}{Completion percentage.}
-  \item{:rate}{Download rate, bytes per second. See example below.}
-  \item{:tick_rate}{Similar to \code{:rate}, but we don't assume that
-     the units are bytes, we just print the raw number of ticks per
-     second.}
-  \item{:bytes}{Shows :current, formatted as bytes. Useful
-     for downloads or file reads if you don't know the size of the
-     file in advance. See example below.}
-  \item{:spin}{Shows a spinner that updates even when progress is
-     advanced by zero.}
+\item{:bar}{The progress bar itself.}
+\item{:current}{Current tick number.}
+\item{:total}{Total ticks.}
+\item{:elapsed}{Elapsed time in seconds.}
+\item{:elapsedfull}{Elapsed time in hh:mm:ss format.}
+\item{:eta}{Estimated completion time in seconds.}
+\item{:percent}{Completion percentage.}
+\item{:rate}{Download rate, bytes per second. See example below.}
+\item{:tick_rate}{Similar to \verb{:rate}, but we don't assume that
+the units are bytes, we just print the raw number of ticks per
+second.}
+\item{:bytes}{Shows :current, formatted as bytes. Useful
+for downloads or file reads if you don't know the size of the
+file in advance. See example below.}
+\item{:spin}{Shows a spinner that updates even when progress is
+advanced by zero.}
 }
 
 Custom tokens are also supported, and you need to pass their
@@ -91,7 +91,7 @@ in a named list. See example below.
 
 \section{Options}{
 
-The `progress_enabled` option can be set to `FALSE` to turn off the
+The \code{progress_enabled} option can be set to \code{FALSE} to turn off the
 progress bar. This works for the C++ progress bar as well.
 }
 
