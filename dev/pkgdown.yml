@@ -2,7 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2025-04-28T10:32Z
+last_built: 2025-04-28T10:34Z
 urls:
   reference: http://r-lib.github.io/progress/reference
   article: http://r-lib.github.io/progress/articles

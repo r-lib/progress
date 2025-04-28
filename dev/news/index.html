@@ -38,6 +38,59 @@
 <h2 class="pkg-version" data-toc-text="1.2.3" id="progress-123">progress 1.2.3<a class="anchor" aria-label="anchor" href="#progress-123"></a></h2><p class="text-muted">CRAN release: 2023-12-06</p>
 <ul><li>Compiling packages linking to progress with <code>-Wformat-security</code> does not produce warnings now.</li>
 </ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.2" id="progress-122">progress 1.2.2<a class="anchor" aria-label="anchor" href="#progress-122"></a></h2><p class="text-muted">CRAN release: 2019-05-16</p>
+<ul><li>Fix two bugs in the C++ API that can potentially cause irregular behavior (<a href="https://github.com/r-lib/progress/issues/94" class="external-link">#94</a>, 1).</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.1" id="progress-121">progress 1.2.1<a class="anchor" aria-label="anchor" href="#progress-121"></a></h2><p class="text-muted">CRAN release: 2019-05-13</p>
+<ul><li><p>Add the <code>message_class</code> argument, to add extra classes to the messages thrown by progress.</p></li>
+<li><p>Add support for RKWard, running interactive session (<a href="https://github.com/r-lib/progress/issues/76" class="external-link">#76</a>, <a href="https://github.com/devillemereuil" class="external-link">@devillemereuil</a>).</p></li>
+<li><p>Add support for unicode characters and a right to left progress bar (<a href="https://github.com/r-lib/progress/issues/86" class="external-link">#86</a>, 1).</p></li>
+<li><p>Fix a potential crash in the C++ API (<a href="https://github.com/r-lib/progress/issues/91" class="external-link">#91</a>, 1).</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.2.0" id="progress-120">progress 1.2.0<a class="anchor" aria-label="anchor" href="#progress-120"></a></h2><p class="text-muted">CRAN release: 2018-06-14</p>
+<ul><li><p>Option to change the ‘current’ character in the progress bar. <a href="https://github.com/r-lib/progress/issues/47" class="external-link">#47</a></p></li>
+<li><p>New <code>:tick_rate</code> token, similar to <code>:rate</code>, but units are not assumed to be bytes. <a href="https://github.com/r-lib/progress/issues/45" class="external-link">#45</a></p></li>
+<li><p>Total number of ticks can be set to <code>NA</code> now, if unknown. <a href="https://github.com/r-lib/progress/issues/48" class="external-link">#48</a></p></li>
+<li><p>All progress bars (including the ones from the C++ API) can be turned off via the <code>progress_enabled</code> option <a href="https://github.com/r-lib/progress/issues/44" class="external-link">#44</a></p></li>
+<li><p>The <code>stream</code> argument is deprecated and the progress bar is always printed with <code><a href="https://rdrr.io/r/base/message.html" class="external-link">message()</a></code> calls.</p></li>
+<li><p>Total number of iterations can be zero, to support special cases better.</p></li>
+<li><p>Add <code>finished</code> variable, which can be queried to see if a progress bar is finished. <a href="https://github.com/r-lib/progress/issues/54" class="external-link">#54</a> 1.</p></li>
+<li><p>Add a <code>terminate()</code> method, which can be called to explicitly remove the progress bar, <a href="https://github.com/r-lib/progress/issues/53" class="external-link">#53</a> 1.</p></li>
+<li><p>Outputs greater than the bar width are automatically trimmed, 1.</p></li>
+<li>
+<p>Add a <code><a href="https://rdrr.io/r/base/message.html" class="external-link">message()</a></code> method to print a message line(s) above the progress bar,</p>
+<ol class="example" style="list-style-type: decimal"><li>
+</li></ol></li>
+<li><p>:elapsedfull token: elapsed time in hh:mm:ss format.</p></li>
+<li><p>Fix C++ compiler warnings. <a href="https://github.com/r-lib/progress/issues/43" class="external-link">#43</a></p></li>
+<li><p>Fix C++ API on Windows. <a href="https://github.com/r-lib/progress/issues/56" class="external-link">#56</a></p></li>
+<li><p>Pass <code>self</code> to the callback function. <a href="https://github.com/r-lib/progress/issues/55" class="external-link">#55</a> 1</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.2" id="progress-112">progress 1.1.2<a class="anchor" aria-label="anchor" href="#progress-112"></a></h2><p class="text-muted">CRAN release: 2016-12-14</p>
+<ul><li>Do not run tests on CRAN, Solaris does not have microbenchmark</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.1" id="progress-111">progress 1.1.1<a class="anchor" aria-label="anchor" href="#progress-111"></a></h2><p class="text-muted">CRAN release: 2016-12-13</p>
+<ul><li>Move README.md, so that it is not parsed on CRAN</li>
+<li>Use https URLs instead of http, whenever possible</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.1.0" id="progress-110">progress 1.1.0<a class="anchor" aria-label="anchor" href="#progress-110"></a></h2>
+<ul><li>Support for the <code>:spin</code> token which adds a simple ASCII spinner, <a href="https://github.com/richfitz" class="external-link">@richfitz</a></li>
+<li>Respect custom token width for calculation of the bar width, <a href="https://github.com/mllg" class="external-link">@mllg</a></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.2" id="progress-102">progress 1.0.2<a class="anchor" aria-label="anchor" href="#progress-102"></a></h2><p class="text-muted">CRAN release: 2015-06-05</p>
+<ul><li>Fix the C++ API on Windows, and on older compilers in general.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.1" id="progress-101">progress 1.0.1<a class="anchor" aria-label="anchor" href="#progress-101"></a></h2><p class="text-muted">CRAN release: 2015-05-30</p>
+<p>First version on CRAN.</p>
+</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
