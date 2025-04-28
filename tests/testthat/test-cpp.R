@@ -1,9 +1,9 @@
-
-context("C++ API")
-
 test_that("C++ API works", {
 
   skip_on_cran()
+  if (getRversion() < "4.0.0" && .Platform$OS.type == "windows") {
+    skip("Fails on older R")
+  }
 
   Sys.setenv("R_TESTS" = "")
 

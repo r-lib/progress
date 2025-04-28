@@ -1,5 +1,9 @@
+# progress (development version)
 
-# dev
+# progress 1.2.3
+
+* Compiling packages linking to progress with `-Wformat-security` does
+  not produce warnings now.
 
 # 1.2.2
 

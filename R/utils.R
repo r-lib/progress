@@ -8,7 +8,7 @@ is_stderr <- function(stream) {
 }
 
 is_r_studio <- function() {
-  Sys.getenv("RSTUDIO") == 1
+  Sys.getenv("RSTUDIO") == 1 || Sys.getenv("POSITRON") == 1
 }
 
 r_studio_stdx <- function(stream) {
