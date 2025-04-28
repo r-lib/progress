@@ -2,7 +2,7 @@
 % Please edit documentation in R/replicate.R
 \name{replicate}
 \alias{replicate}
-\title{Same as \code{\link{base::replicate}} but with a progress bar.}
+\title{Same as \code{\link[base:lapply]{base::replicate()}} but with a progress bar.}
 \usage{
 replicate(
   n,
@@ -12,13 +12,22 @@ replicate(
   ...
 )
 }
+\arguments{
+\item{n}{Integer: the number of replications.}
+
+\item{expr}{The expression (a language object, usually a call) to
+evaluate repeatedly.}
+
+\item{simplify}{Passed to \code{\link[base:lapply]{base::sapply()}}, see the docs there.}
+
+\item{format}{Progress bar format.}
+
+\item{...}{Extra arguments are passed to \code{progress_bar$new()}.}
+}
 \description{
-Same as \code{\link{base::replicate}} but with a progress bar.
+Same as \code{\link[base:lapply]{base::replicate()}} but with a progress bar.
 }
 \examples{
-library(dplyr)
-replicate_pb(50000, {rnorm(1)>1.65}) \%>\% {paste(mean(.), " - ", sd(.))}
-}
-\seealso{
-\code{\link{s2a}}
+replicate(50000, rnorm(1) > 1.65) |>
+    (\(x) list(mean = mean(x), sd = sd(x)))()
 }
