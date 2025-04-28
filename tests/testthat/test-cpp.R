@@ -1,5 +1,4 @@
 test_that("C++ API works", {
-
   skip_on_cran()
   if (getRversion() < "4.0.0" && .Platform$OS.type == "windows") {
     skip("Fails on older R")
@@ -20,7 +19,8 @@ test_that("C++ API works", {
   })
 
   withr::with_libpaths(lib, action = "prefix", {
-    withr::with_options(list(progress_enabled = FALSE),
+    withr::with_options(
+      list(progress_enabled = FALSE),
       expect_false(progresstest::my_is_option_enabled())
     )
   })

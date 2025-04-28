@@ -208,7 +208,7 @@ If you prefer to do your iterative tasks using the `purrr` family of functional 
 ```r
 # Option 1
 pb <- progress_bar$new(total = 100)
-purrr::walk(1:100, ~{pb$tick(); Sys.sleep(0.1)})
+purrr::walk(1:100, \(...) { pb$tick(); Sys.sleep(0.1) })
 ```
 ```
 [================================================>------]  89%

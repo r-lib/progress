@@ -1,4 +1,3 @@
-
 is_stdout <- function(stream) {
   identical(stream, stdout()) && sink.number() == 0
 }
@@ -40,7 +39,7 @@ r_app_stdx <- function(stream) {
 }
 
 is_rkward <- function() {
-    "rkward" %in% (.packages())
+  "rkward" %in% (.packages())
 }
 
 rkward_stdx <- function(stream) {
@@ -51,7 +50,10 @@ rkward_stdx <- function(stream) {
 
 is_supported <- function(stream) {
   is_option_enabled() &&
-    (isatty(stream) || r_studio_stdx(stream) || r_app_stdx(stream) || rkward_stdx(stream))
+    (isatty(stream) ||
+      r_studio_stdx(stream) ||
+      r_app_stdx(stream) ||
+      rkward_stdx(stream))
 }
 
 is_option_enabled <- function() {
@@ -59,7 +61,7 @@ is_option_enabled <- function() {
 }
 
 default_stream <- function(stream) {
-  if (! is.null(stream)) {
+  if (!is.null(stream)) {
     stream
   } else {
     if (is_r_studio()) stdout() else stderr()
@@ -67,20 +69,19 @@ default_stream <- function(stream) {
 }
 
 assert_character <- function(x) {
-  stopifnot(is.character(x),
-            length(x) > 0)
+  stopifnot(is.character(x), length(x) > 0)
 }
 assert_character_scalar <- function(x) {
-  stopifnot(is.character(x),
-            length(x) == 1,
-            !is.na(x))
+  stopifnot(is.character(x), length(x) == 1, !is.na(x))
 }
 
 assert_scalar <- function(x, finite = TRUE, na = FALSE) {
-  stopifnot(is.numeric(x),
-            length(x) == 1,
-            na || !is.na(x),
-            na || !finite || is.finite(x))
+  stopifnot(
+    is.numeric(x),
+    length(x) == 1,
+    na || !is.na(x),
+    na || !finite || is.finite(x)
+  )
 }
 
 assert_positive_scalar <- function(x, finite = TRUE) {
