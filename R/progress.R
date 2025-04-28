@@ -1,4 +1,3 @@
-
 #' Progress bar in the terminal
 #'
 #' Progress bars are configurable, may include percentage, elapsed time,
@@ -176,39 +175,79 @@
 #' @name progress_bar
 NULL
 
-progress_bar <- R6Class("progress_bar",
+progress_bar <- R6Class(
+  "progress_bar",
 
   public = list(
-
-    initialize = function(format = "[:bar] :percent", total = 100,
-      width = getOption("width") - 2, stream = NULL, complete = "=",
-      incomplete = "-", current = ">", callback = function(self) {},
-      clear = TRUE, show_after = 0.2, force = FALSE, message_class = NULL) {
-        pb_init(self, private, format, total, width, stream, complete,
-                incomplete, current, callback, clear, show_after, force,
-                message_class)
+    initialize = function(
+      format = "[:bar] :percent",
+      total = 100,
+      width = getOption("width") - 2,
+      stream = NULL,
+      complete = "=",
+      incomplete = "-",
+      current = ">",
+      callback = function(self) {
+      },
+      clear = TRUE,
+      show_after = 0.2,
+      force = FALSE,
+      message_class = NULL
+    ) {
+      pb_init(
+        self,
+        private,
+        format,
+        total,
+        width,
+        stream,
+        complete,
+        incomplete,
+        current,
+        callback,
+        clear,
+        show_after,
+        force,
+        message_class
+      )
     },
     tick = function(len = 1, tokens = list()) {
-      pb_tick(self, private, len, tokens) },
+      pb_tick(self, private, len, tokens)
+    },
     update = function(ratio, tokens = list()) {
-      pb_update(self, private, ratio, tokens) },
+      pb_update(self, private, ratio, tokens)
+    },
     message = function(msg, set_width = TRUE) {
-      pb_message(self, private, msg, set_width) },
-    terminate = function() { pb_terminate(self, private) },
+      pb_message(self, private, msg, set_width)
+    },
+    terminate = function() {
+      pb_terminate(self, private)
+    },
     finished = FALSE
   ),
 
   private = list(
-
-    render = function(tokens) { pb_render(self, private, tokens) },
-    ratio = function() { pb_ratio(self, private) },
+    render = function(tokens) {
+      pb_render(self, private, tokens)
+    },
+    ratio = function() {
+      pb_ratio(self, private)
+    },
     progress_message = function(..., domain = NULL, appendLF = TRUE) {
-      pb_progress_message(self, private, ..., domain = domain,
-                          appendLF = appendLF) },
+      pb_progress_message(
+        self,
+        private,
+        ...,
+        domain = domain,
+        appendLF = appendLF
+      )
+    },
     clear_line = function(width) {
-      pb_clear_line(self, private, width) },
+      pb_clear_line(self, private, width)
+    },
     cursor_to_start = function() {
-      pb_cursor_to_start(self, private) },
+      pb_cursor_to_start(self, private)
+    },
 
     first = TRUE,
     supported = NA,
@@ -233,16 +272,38 @@ progress_bar <- R6Class("progress_bar",
 
     spin = NULL,
 
-    has_token = c(current = FALSE, total = FALSE, elapsedfull = FALSE,
-      elapsed = FALSE, eta = FALSE, percent = FALSE, rate = FALSE,
-      bytes = FALSE, bar = FALSE, spin = FALSE, tick_rate = FALSE)
+    has_token = c(
+      current = FALSE,
+      total = FALSE,
+      elapsedfull = FALSE,
+      elapsed = FALSE,
+      eta = FALSE,
+      percent = FALSE,
+      rate = FALSE,
+      bytes = FALSE,
+      bar = FALSE,
+      spin = FALSE,
+      tick_rate = FALSE
+    )
   )
 )
 
-pb_init <- function(self, private, format, total, width, stream,
-                    complete, incomplete, current, callback, clear,
-                    show_after, force, message_class) {
-
+pb_init <- function(
+  self,
+  private,
+  format,
+  total,
+  width,
+  stream,
+  complete,
+  incomplete,
+  current,
+  callback,
+  clear,
+  show_after,
+  force,
+  message_class
+) {
   assert_character_scalar(format)
   assert_nonnegative_scalar(total <- as.numeric(total), na = TRUE)
   assert_nonzero_count(width)
@@ -281,7 +342,6 @@ pb_update_has_token <- function(tokens, format) {
 }
 
 pb_tick <- function(self, private, len, tokens) {
-
   assert_scalar(len)
   assert_named_or_empty_list(tokens)
   stopifnot(!self$finished)
@@ -318,7 +378,9 @@ pb_tick <- function(self, private, len, tokens) {
 
 pb_ratio <- function(self, private) {
   ratio <- (private$current / private$total)
-  if (is.nan(ratio)) { ratio <- 0 }
+  if (is.nan(ratio)) {
+    ratio <- 0
+  }
   ratio <- max(ratio, 0)
   ratio <- min(ratio, 1)
   ratio
@@ -328,15 +390,17 @@ pb_ratio <- function(self, private) {
 #' @importFrom crayon col_nchar col_substr
 
 pb_render <- function(self, private, tokens) {
-
-  if (! private$supported) return(invisible())
+  if (!private$supported) return(invisible())
 
   str <- private$format
 
   if (private$has_token["percent"]) {
     percent <- private$ratio() * 100
-    str <- sub(str, pattern = ":percent", replacement =
-                 paste0(format(round(percent), width = 3), "%"))
+    str <- sub(
+      str,
+      pattern = ":percent",
+      replacement = paste0(format(round(percent), width = 3), "%")
+    )
   }
 
   if (private$has_token["elapsedfull"]) {
@@ -390,8 +454,7 @@ pb_render <- function(self, private, tokens) {
   }
 
   if (private$has_token["current"]) {
-    str <- sub(str, pattern = ":current",
-               replacement = round(private$current))
+    str <- sub(str, pattern = ":current", replacement = round(private$current))
   }
 
   if (private$has_token["total"]) {
@@ -407,7 +470,12 @@ pb_render <- function(self, private, tokens) {
     ## NOTE: fixed = TRUE is needed here or "\\" causes trouble with
     ## the replacement (I think it's interpreted as an invalid
     ## backreference).
-    str <- sub(str, pattern = ":spin", replacement = private$spin(), fixed = TRUE)
+    str <- sub(
+      str,
+      pattern = ":spin",
+      replacement = private$spin(),
+      fixed = TRUE
+    )
   }
 
   for (t in names(tokens)) {
@@ -422,19 +490,25 @@ pb_render <- function(self, private, tokens) {
 
     ratio <- private$ratio()
     complete_len <- round(bar_width * ratio)
-    if (is.na(complete_len)) { complete_len <- 0 }
-    complete <- paste(rep("", complete_len),
-                      collapse = private$chars$complete)
+    if (is.na(complete_len)) {
+      complete_len <- 0
+    }
+    complete <- paste(rep("", complete_len), collapse = private$chars$complete)
     current <- if (private$complete) {
       private$chars$complete
     } else if (complete_len >= 1) {
       private$chars$current
     }
-    incomplete <- paste(rep("", bar_width - complete_len + 1),
-                        collapse = private$chars$incomplete)
+    incomplete <- paste(
+      rep("", bar_width - complete_len + 1),
+      collapse = private$chars$incomplete
+    )
 
     str <- sub(
-      ":bar", paste0(complete, current, incomplete), str)
+      ":bar",
+      paste0(complete, current, incomplete),
+      str
+    )
   }
 
   if (col_nchar(str) > private$width) {
@@ -508,21 +582,24 @@ spin_symbols <- function() {
 }
 
 pb_progress_message <- function(self, private, ..., domain, appendLF) {
-
   msg <- .makeMessage(..., domain = domain, appendLF = appendLF)
 
   cond <- structure(
     list(message = msg, call = NULL),
-    class = c(private$message_class, "message", "condition"))
+    class = c(private$message_class, "message", "condition")
+  )
 
   defaultHandler <- function(c) {
     cat(conditionMessage(c), file = stderr(), sep = "")
   }
 
-  withRestarts({
-    signalCondition(cond)
-    defaultHandler(cond)
-  }, muffleMessage = function() NULL)
+  withRestarts(
+    {
+      signalCondition(cond)
+      defaultHandler(cond)
+    },
+    muffleMessage = function() NULL
+  )
 
   invisible()
 }

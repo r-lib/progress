@@ -12,9 +12,13 @@
 #' replicate(50000, rnorm(1) > 1.65) |>
 #'     (\(x) list(mean = mean(x), sd = sd(x)))()
 
-replicate <- function(n, expr, simplify = "array",
-                      format = "Replicating : [:bar] :percent in :elapsed",
-                      ...) {
+replicate <- function(
+  n,
+  expr,
+  simplify = "array",
+  format = "Replicating : [:bar] :percent in :elapsed",
+  ...
+) {
   pb <- progress_bar$new(format = format, total = n, clear = T, ...)
   sapply(
     integer(n),
