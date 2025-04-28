@@ -1,6 +1,9 @@
 
 # dev
 
+# New function `replicate()`: like `base::replicate()`, but with
+  a progress bar (@DanChaltiel, #99).
+
 # 1.2.2
 
 * Fix two bugs in the C++ API that can potentially cause irregular
