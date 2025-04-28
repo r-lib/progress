@@ -226,9 +226,9 @@ class RProgress {
       if (last_draw.length() > str.length()) { clear_line(use_stderr, width); }
       cursor_to_start(use_stderr);
       if (use_stderr) {
-	REprintf(str.c_str());
+        REprintf("%s", str.c_str());
       } else {
-	Rprintf(str.c_str());
+        Rprintf("%s", str.c_str());
       }
       last_draw = str;
     }
@@ -269,9 +269,9 @@ class RProgress {
     spaces[width + 1] = '\0';
 
     if (use_stderr) {
-      REprintf(spaces);
+      REprintf("%s", spaces);
     } else {
-      Rprintf(spaces);
+      Rprintf("%s", spaces);
     }
     free(spaces);
   }
