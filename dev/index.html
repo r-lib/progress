@@ -194,7 +194,7 @@
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Option 1</span></span>
 <span><span class="va">pb</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/progress_bar.html">progress_bar</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>total <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">walk</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="op">~</span><span class="op">{</span><span class="va">pb</span><span class="op">$</span><span class="fu">tick</span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">0.1</span><span class="op">)</span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">walk</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, \<span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span> <span class="va">pb</span><span class="op">$</span><span class="fu">tick</span><span class="op">(</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">0.1</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[================================================&gt;------]  89%</code></pre>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Option 2</span></span>
@@ -297,6 +297,7 @@
 <li>Gábor Csárdi <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Rich FitzJohn <br><small class="roles"> Author </small>  </li>
 <li>Posit Software, PBC <br><small class="roles"> Copyright holder, funder </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
