@@ -1,16 +1,19 @@
 # progress (development version)
 
+# New function `replicate()`: like `base::replicate()`, but with
+  a progress bar (@DanChaltiel, #99).
+
 # progress 1.2.3
 
 * Compiling packages linking to progress with `-Wformat-security` does
   not produce warnings now.
 
-# 1.2.2
+# progress 1.2.2
 
 * Fix two bugs in the C++ API that can potentially cause irregular
   behavior (#94, @jimhester).
 
-# 1.2.1
+# progress 1.2.1
 
 * Add the `message_class` argument, to add extra classes to the messages
   thrown by progress.
@@ -23,7 +26,7 @@
 
 * Fix a potential crash in the C++ API (#91, @jimhester).
 
-# 1.2.0
+# progress 1.2.0
 
 * Option to change the 'current' character in the progress bar. #47
 
@@ -60,24 +63,24 @@
 
 * Pass `self` to the callback function. #55 @jimhester
 
-# 1.1.2
+# progress 1.1.2
 
 * Do not run tests on CRAN, Solaris does not have microbenchmark
 
-# 1.1.1
+# progress 1.1.1
 
 * Move README.md, so that it is not parsed on CRAN
 * Use https URLs instead of http, whenever possible
 
-# 1.1.0
+# progress 1.1.0
 
 * Support for the `:spin` token which adds a simple ASCII spinner, @richfitz
 * Respect custom token width for calculation of the bar width, @mllg
 
-# 1.0.2
+# progress 1.0.2
 
 * Fix the C++ API on Windows, and on older compilers in general.
 
-# 1.0.1
+# progress 1.0.1
 
 First version on CRAN.
